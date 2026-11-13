@@ -1,4 +1,4 @@
-const CACHE='manas-news24-shell-v2';
+const CACHE='manas-news24-shell-v3';
 const ASSETS=['./','./index.html','./manifest.webmanifest','./icon-192.png','./icon-512.png'];
 self.addEventListener('install',event=>{
  event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)));

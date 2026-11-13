@@ -45,6 +45,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:18px}
 <button id="refresh" class="secondary">खबरें अपडेट करें</button>
 <button id="install" class="light" hidden>ऐप इंस्टॉल करें</button>
 <button id="showSaved" class="light">सेव खबरें देखें</button>
+<button id="shareApp" class="light">ऐप शेयर करें</button>
 </div>
 <section id="listView">
 <h2 id="listTitle">ताजा खबरें</h2>
@@ -123,6 +124,18 @@ function loadFeed(){
  document.head.append(script);
 }
 function fallback(){const old=saved();stories=old;render(old,'पहले से सेव खबरें');setStatus(old.length?'नई खबरें नहीं मिल सकीं। पहले से सेव खबरें उपलब्ध हैं।':'खबरें लोड नहीं हो सकीं। इंटरनेट जाँचें।');}
+
+document.getElementById('shareApp').addEventListener('click',async()=>{
+ const shareData={title:'मानस न्यूज-24',text:'मानस न्यूज-24 ऐप खोलें और ताजा खबरें पढ़ें।',url:'https://manasnews24.github.io/manas-news24-pwa/'};
+ try{
+  if(navigator.share){await navigator.share(shareData);setStatus('ऐप साझा करने के लिए खुल गया।');}
+  else if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(shareData.url);setStatus('ऐप का लिंक कॉपी हो गया। अब WhatsApp पर भेज सकते हैं।');}
+  else{window.prompt('मानस न्यूज-24 ऐप का लिंक कॉपी करें:',shareData.url);}
+ }catch(err){
+  if(err&&err.name!=='AbortError')setStatus('शेयर नहीं हो सका। कृपया दोबारा प्रयास करें।');
+ }
+});
+
 document.getElementById('refresh').addEventListener('click',loadFeed);
 document.getElementById('showSaved').addEventListener('click',()=>{const old=saved();render(old,'पहले से सेव खबरें');setStatus(old.length+' खबरें डिवाइस में सेव हैं।');});
 window.addEventListener('online',loadFeed);
