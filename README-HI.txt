@@ -1,0 +1,2 @@
+सभी छह फाइलें Repository के मुख्य स्तर पर अपलोड करें। GitHub Pages चालू होने के बाद ऐप URL: https://sandeepmishra2801-commits.github.io/manas-news24-pwa/
+यह एक PWA लॉन्चर है; इसके बटन से Blogger वेबसाइट खुलेगी।

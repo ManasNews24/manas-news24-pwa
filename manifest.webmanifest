@@ -1,0 +1,27 @@
+{
+  "id": "https://sandeepmishra2801-commits.github.io/manas-news24-pwa/",
+  "name": "मानस न्यूज-24",
+  "short_name": "मानस न्यूज",
+  "description": "मानस न्यूज-24 की ताजा खबरें पढ़ें",
+  "lang": "hi-IN",
+  "start_url": "https://sandeepmishra2801-commits.github.io/manas-news24-pwa/",
+  "scope": "https://sandeepmishra2801-commits.github.io/manas-news24-pwa/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f5f7fb",
+  "theme_color": "#0f2a4c",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
