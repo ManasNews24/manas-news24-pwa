@@ -1,2 +1,1 @@
-# manas-news24-pwa
-Manas News-24 PWA files
+# Manas News-24 PWA\nOffline shell and locally saved Blogger feed stories. See README-HI.txt.\n

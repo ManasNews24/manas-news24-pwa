@@ -1,12 +1,11 @@
-
 {
-  "id": "https://manasnews24.github.io/manas-news24-pwa/",
+  "id": "./",
   "name": "मानस न्यूज-24",
   "short_name": "मानस न्यूज-24",
-  "description": "जनता की आवाज — मानस न्यूज-24 की ताजा खबरें",
+  "description": "मानस न्यूज-24 की खबरें पढ़ें और इंटरनेट न होने पर पहले से लोड खबरें पढ़ें।",
   "lang": "hi-IN",
-  "start_url": "https://manasnews24.github.io/manas-news24-pwa/",
-  "scope": "https://manasnews24.github.io/manas-news24-pwa/",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#ffffff",
