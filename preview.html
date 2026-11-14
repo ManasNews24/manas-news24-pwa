@@ -56,6 +56,29 @@ body.reading .status,body.reading .actions,body.reading .note{display:none}body.
 @media(max-width:420px){.story{grid-template-columns:minmax(0,1fr) 76px}.story-image{width:76px;min-height:88px;max-height:120px}.story-main{padding:13px 11px}.story h3{font-size:24px;line-height:1.9;font-weight:800}.story .meta,.meta{font-size:13px}.story p{font-size:17px;line-height:2}header{padding:15px 12px 16px}header img{width:52px;height:52px;flex-basis:52px}header h1{font-size:23px}header p{font-size:12px}main{padding:12px 12px 24px}.actions{gap:8px;margin-bottom:21px}button,a.btn{min-height:49px;padding:11px 7px;font-size:14px}#listTitle{font-size:21px;margin-bottom:12px}#stories{gap:12px}.story-main{padding:13px 13px 14px}.story:not(.has-image) .story-main{padding-top:14px}.story h3{font-size:20px;line-height:1.7}.story .meta,.meta{font-size:12px}.story p{font-size:16px;line-height:1.9;-webkit-line-clamp:3}.story button{min-height:44px;margin-top:11px;font-size:14px}#reader{padding:14px}#articleBody{font-size:18px;line-height:2}#articleBody>h2{font-size:23px}}
 @media(max-width:350px){main{padding-left:9px;padding-right:9px}.actions{grid-template-columns:1fr}.story{grid-template-columns:minmax(0,1fr) 68px}.story-image{width:68px;min-height:82px}.story h3{font-size:23px;line-height:1.85}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
+
+/* Mobile reading-first overrides */
+@media(max-width:600px){
+  main{padding:16px 12px 30px}
+  #listTitle{font-size:26px;line-height:1.6;margin:0 0 18px}
+  #stories{gap:20px}
+  .story{grid-template-columns:minmax(0,1fr) 82px;border-radius:14px}
+  .story-main{padding:18px 14px 18px}
+  .story-image{width:82px;min-height:100px;max-height:140px}
+  .story h3{font-size:28px;line-height:1.8;font-weight:800;margin:0 0 12px;color:#101827}
+  .story .meta,.story-main .meta{font-size:16px;line-height:1.7;margin:0 0 12px}
+  .story p{font-size:20px;line-height:2.05;color:#26364e;-webkit-line-clamp:3}
+  .story button{min-height:52px;margin-top:16px;font-size:18px;padding:12px}
+  .status{font-size:16px;line-height:1.8;padding:12px}
+  button,a.btn{font-size:17px;min-height:54px;line-height:1.6}
+}
+@media(max-width:350px){
+  .story{grid-template-columns:minmax(0,1fr) 70px}
+  .story-image{width:70px}
+  .story h3{font-size:26px}
+  .story p{font-size:19px}
+}
+
 </style>
 </head>
 <body>
