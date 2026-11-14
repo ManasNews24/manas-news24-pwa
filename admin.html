@@ -37,7 +37,16 @@
   <div class="field"><label for="email">ईमेल पता</label><input id="email" type="email" autocomplete="username" required placeholder="आपका पंजीकृत ईमेल"></div>
   <div class="field"><label for="password">पासवर्ड</label><input id="password" type="password" autocomplete="current-password" required placeholder="पासवर्ड"></div>
   <button class="btn primary" id="loginBtn" type="submit">सुरक्षित लॉगिन करें</button>
+  <button class="btn soft" type="button" id="forgotPasswordBtn" style="margin-top:10px">पासवर्ड भूल गए? ईमेल से रीसेट करें</button>
   <div class="foot">यह निजी न्यूज़रूम है। केवल अधिकृत पत्रकार, संपादक और एडमिन ही प्रवेश कर सकते हैं। पासवर्ड किसी के साथ साझा न करें।</div>
+ </form>
+ <form id="recoveryView" class="login hidden">
+  <div class="brandmark">म</div><div class="eyebrow">MANAS NEWS-24 • PASSWORD RESET</div>
+  <h2>नया पासवर्ड बनाएँ</h2><p>अपने न्यूज़रूम खाते के लिए नया सुरक्षित पासवर्ड दर्ज करें।</p>
+  <div class="field"><label for="newPassword">नया पासवर्ड</label><input id="newPassword" type="password" autocomplete="new-password" minlength="8" required placeholder="कम से कम 8 अक्षर"></div>
+  <div class="field"><label for="confirmPassword">पासवर्ड दोबारा लिखें</label><input id="confirmPassword" type="password" autocomplete="new-password" minlength="8" required placeholder="नया पासवर्ड दोहराएँ"></div>
+  <button class="btn primary" id="saveNewPasswordBtn" type="submit">नया पासवर्ड सुरक्षित करें</button>
+  <div class="foot">पासवर्ड कम से कम 8 अक्षरों का रखें। इसे किसी के साथ साझा न करें।</div>
  </form>
 </div>
 <div id="appView" class="hidden">
@@ -124,6 +133,7 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.119.0';
 const SUPABASE_URL='https://umgtkiwnvzahvdxafypt.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_VsLBwd7OWwnbpCiBXnWyQA_FtRaDTh_';
+const NEWSROOM_REDIRECT_URL='https://manasnews24.github.io/manas-news24-pwa/admin.html?reset=1';
 const supabase=createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 const $=id=>document.getElementById(id);
 let currentUser=null,profile=null,role='reporter',categories=[],articles=[],overview=null;
@@ -134,11 +144,15 @@ function slugify(s){return s.toLowerCase().trim().replace(/[^\p{L}\p{N}]+/gu,'-'
 function canEditAll(){return role==='admin'||role==='editor'}
 function showPage(page){document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));$('page-'+page).classList.remove('hidden');document.querySelectorAll('.navbtn').forEach(x=>x.classList.toggle('active',x.dataset.page===page));if(page==='articles')loadArticles();if(page==='media')loadMedia();if(page==='team')loadTeam();if(page==='ads')loadAds();if(page==='overview')loadOverview()}
 function setRoleUI(){document.querySelector('[data-page="team"]').classList.toggle('hidden',role!=='admin');document.querySelector('[data-page="ads"]').classList.toggle('hidden',role!=='admin');}
-async function boot(){const {data:{session}}=await supabase.auth.getSession();if(session)await enterApp(session.user);else{$('loginView').classList.remove('hidden');$('appView').classList.add('hidden')}}
+function showLogin(){ $('recoveryView').classList.add('hidden');$('loginForm').classList.remove('hidden');$('loginView').classList.remove('hidden');$('appView').classList.add('hidden') }
+function showPasswordRecovery(){ $('loginForm').classList.add('hidden');$('recoveryView').classList.remove('hidden');$('loginView').classList.remove('hidden');$('appView').classList.add('hidden') }
+async function boot(){const {data:{session}}=await supabase.auth.getSession();if(new URLSearchParams(location.search).has('reset')){showPasswordRecovery();return}if(session)await enterApp(session.user);else showLogin()}
+$('forgotPasswordBtn').onclick=async()=>{const email=$('email').value.trim();if(!email){toast('पहले अपना पंजीकृत Gmail पता लिखें।');$('email').focus();return}const btn=$('forgotPasswordBtn');btn.disabled=true;const {error}=await supabase.auth.resetPasswordForEmail(email,{redirectTo:NEWSROOM_REDIRECT_URL});btn.disabled=false;if(error){toast('रीसेट ईमेल नहीं भेजा गया: '+error.message);return}toast('यदि यह पंजीकृत खाता है, तो पासवर्ड रीसेट ईमेल भेज दिया गया है। Gmail का Inbox और Spam देखें।')};
+$('recoveryView').onsubmit=async e=>{e.preventDefault();const password=$('newPassword').value,confirmPassword=$('confirmPassword').value;if(password.length<8){toast('पासवर्ड कम से कम 8 अक्षरों का होना चाहिए।');return}if(password!==confirmPassword){toast('दोनों पासवर्ड एक जैसे नहीं हैं।');return}const btn=$('saveNewPasswordBtn');btn.disabled=true;btn.textContent='पासवर्ड सुरक्षित हो रहा है…';const {error}=await supabase.auth.updateUser({password});btn.disabled=false;btn.textContent='नया पासवर्ड सुरक्षित करें';if(error){toast('पासवर्ड अपडेट नहीं हुआ: '+error.message);return}await supabase.auth.signOut();$('recoveryView').reset();showLogin();toast('नया पासवर्ड सुरक्षित हो गया। अब नए पासवर्ड से लॉगिन करें।')};
 async function enterApp(user){currentUser=user;const {data:p,error}=await supabase.from('user_profiles').select('id,display_name,role,created_at').eq('id',user.id).maybeSingle();if(error||!p){toast('प्रोफाइल नहीं मिली। एडमिन से संपर्क करें।');await supabase.auth.signOut();return}profile=p;role=p.role;$('loginView').classList.add('hidden');$('appView').classList.remove('hidden');$('userBadge').textContent=(p.display_name||user.email)+' • '+role.toUpperCase();$('today').textContent=new Date().toLocaleDateString('hi-IN',{dateStyle:'full'});$('profileInfo').textContent='नाम: '+(p.display_name||'—')+' | ईमेल: '+user.email+' | भूमिका: '+role;setRoleUI();await loadCategories();await loadOverview()}
 $('loginForm').addEventListener('submit',async e=>{e.preventDefault();$('loginBtn').disabled=true;$('loginBtn').textContent='जाँच हो रही है…';const {data,error}=await supabase.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});$('loginBtn').disabled=false;$('loginBtn').textContent='सुरक्षित लॉगिन करें';if(error){toast('लॉगिन नहीं हुआ: '+error.message);return}await enterApp(data.user)});
 $('logoutBtn').onclick=async()=>{await supabase.auth.signOut();currentUser=null;profile=null;$('appView').classList.add('hidden');$('loginView').classList.remove('hidden');toast('सुरक्षित लॉगआउट हो गया।')};
-supabase.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'){$('appView').classList.add('hidden');$('loginView').classList.remove('hidden')}});
+supabase.auth.onAuthStateChange((event,session)=>{if(event==='PASSWORD_RECOVERY'){showPasswordRecovery()}if(event==='SIGNED_OUT'){if(!new URLSearchParams(location.search).has('reset'))showLogin()}});
 document.querySelectorAll('.navbtn').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
 document.querySelectorAll('[data-goto]').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.goto)));
 $('refreshBtn').onclick=()=>showPage('overview');
