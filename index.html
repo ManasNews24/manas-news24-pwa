@@ -30,6 +30,39 @@ h2{font-size:20px;margin:18px 0 10px}
 .empty{padding:18px;background:white;border-radius:12px;color:var(--muted);font-size:14px}
 footer{text-align:center;color:var(--muted);font-size:12px;padding:18px}
 @media(max-width:390px){.actions{grid-template-columns:1fr}}
+
+/* Mobile-first app layout */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{min-height:100vh;overflow-x:hidden}
+header{padding:clamp(16px,5vw,28px) 14px 18px}
+header img{width:clamp(58px,18vw,76px);height:clamp(58px,18vw,76px)}
+h1{font-size:clamp(21px,6vw,27px);line-height:1.25}
+header p{font-size:clamp(12px,3.5vw,14px);line-height:1.5}
+main{width:100%;max-width:760px;padding:clamp(10px,3.5vw,20px)}
+.actions{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+button,a.btn{min-height:44px;display:flex;align-items:center;justify-content:center;padding:12px 10px;font-size:14px;line-height:1.35;overflow-wrap:anywhere}
+.story{padding:14px;border-radius:13px;margin:10px 0}
+.story h3{font-size:clamp(16px,4.5vw,18px);line-height:1.5;overflow-wrap:anywhere}
+.story p{font-size:14px;line-height:1.75;overflow-wrap:anywhere}
+#reader{padding:clamp(13px,4vw,20px);overflow-wrap:anywhere}
+#reader img{max-width:100%;height:auto}
+#reader button{width:100%;margin-bottom:10px}
+#articleBody{max-width:100%;overflow-wrap:anywhere}
+#articleBody *{max-width:100%}
+#articleBody table{display:block;max-width:100%;overflow-x:auto}
+.note{line-height:1.75}
+@media(max-width:420px){
+ main{padding:10px}
+ .actions{gap:8px}
+ button,a.btn{font-size:13px;padding:11px 8px;border-radius:10px}
+ .story{padding:12px}
+ .story button{width:100%}
+}
+@media(max-width:340px){
+ .actions{grid-template-columns:1fr}
+ header p{max-width:280px;margin-inline:auto}
+}
+
 </style>
 </head>
 <body>
