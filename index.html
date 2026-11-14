@@ -83,8 +83,10 @@ function cleanHtml(html){
    }
    if(urlAttrs.has(name)){
     const value=(a.value||'').trim().replace(/[\u0000-\u0020]+/g,'');
-    const allowed=name==='href'?/^(https?:|mailto:|tel:)/i.test(value):/^https?:/i.test(value);
-    if(value && !allowed)n.removeAttribute(a.name);
+    const hasScheme=/^[a-z][a-z0-9+.-]*:/i.test(value);
+    const safeRelative=!hasScheme&&!value.startsWith('//')&&!value.includes('\\');
+    const allowedScheme=name==='href'?/^(https?:|mailto:|tel:)/i.test(value):/^https?:/i.test(value);
+    if(value&&!(hasScheme?allowedScheme:safeRelative))n.removeAttribute(a.name);
    }
   });
  });

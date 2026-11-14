@@ -1,4 +1,4 @@
-# Manas News-24 PWA (V5)
+# Manas News-24 PWA (V6)
 
 Security and stability update for the existing Manas News-24 progressive web app.
 
