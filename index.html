@@ -76,30 +76,24 @@ body.reading .status,body.reading .actions,body.reading .note{display:none}body.
 </div>
 <section id="listView">
 <h2 id="listTitle">ताजा खबरें</h2>
-<div id="stories"><div class="empty">इंटरनेट मिलने पर खबरें यहाँ दिखाई देंfunction render(items,title){
- document.getElementById('listTitle').textContent=title;
- storiesBox.innerHTML='';
- if(!items.length){storiesBox.innerHTML='<div class="empty">अभी कोई खबर सेव नहीं है। इंटरनेट चालू करके खबरें अपडेट करें।</div>';return;}
- items.forEach(s=>{
-  const card=document.createElement('article');card.className='story';
-  const content=document.createElement('div');content.className='story-main';
-  const h=document.createElement('h3');h.textContent=s.title||'बिना शीर्षक की खबर';
-  const m=document.createElement('div');m.className='meta';m.textContent=s.date||'';
-  const p=document.createElement('p');p.textContent=(s.text||'').slice(0,220);
-  const b=document.createElement('button');b.className='light';b.textContent='पूरी खबर पढ़ें';b.addEventListener('click',()=>openStory(s));
-  content.append(h,m,p,b);card.append(content);
-  try{
-   const doc=new DOMParser().parseFromString(cleanHtml(s.html||''),'text/html');
-   const source=doc.querySelector('img')?.getAttribute('src')||'';
-   const url=new URL(source,location.href);
-   if(source&&['https:','http:'].includes(url.protocol)){
-    const thumb=document.createElement('img');thumb.className='story-image';thumb.src=url.href;thumb.alt=s.title||'खबर की तस्वीर';thumb.loading='lazy';thumb.decoding='async';
-    card.classList.add('has-image');card.append(thumb);
-   }
-  }catch(e){}
-  storiesBox.append(card);
- });
-};
+<div id="stories"><div class="empty">इंटरनेट मिलने पर खबरें यहाँ दिखाई देंगी।</div></div>
+</section>
+<section id="reader">
+<button id="back" class="light">← खबरों पर वापस जाएँ</button>
+<div id="articleBody"></div>
+</section>
+<p class="note">ऑफलाइन सुविधा: ऐप में पहले से लोड हुई खबरें इस डिवाइस में सेव रहेंगी। इंटरनेट बंद होने पर वही सेव खबरें पढ़ी जा सकती हैं। नई खबरें और बाहरी तस्वीरें इंटरनेट के बिना उपलब्ध न भी हों।</p>
+</main>
+<footer>मानस न्यूज-24 | जनता की आवाज</footer>
+<script>
+(() => {
+'use strict';
+const FEED='https://manasnews.blogspot.com/feeds/posts/default?alt=json-in-script&max-results=25';
+const KEY='manasnews24_saved_stories_v2';
+const statusBox=document.getElementById('status');
+const storiesBox=document.getElementById('stories');
+const reader=document.getElementById('reader');
+const listView=document.getElementById('listView');
 let stories=[];
 function saved(){try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return []}}
 function setStatus(t){statusBox.textContent=t}
@@ -129,13 +123,24 @@ function render(items,title){
  document.getElementById('listTitle').textContent=title;
  storiesBox.innerHTML='';
  if(!items.length){storiesBox.innerHTML='<div class="empty">अभी कोई खबर सेव नहीं है। इंटरनेट चालू करके खबरें अपडेट करें।</div>';return;}
- items.forEach((s,i)=>{
+ items.forEach(s=>{
   const card=document.createElement('article');card.className='story';
+  const content=document.createElement('div');content.className='story-main';
   const h=document.createElement('h3');h.textContent=s.title||'बिना शीर्षक की खबर';
   const m=document.createElement('div');m.className='meta';m.textContent=s.date||'';
   const p=document.createElement('p');p.textContent=(s.text||'').slice(0,220);
-  const b=document.createElement('button');b.className='light';b.textContent='खबर पढ़ें';b.addEventListener('click',()=>openStory(s));
-  card.append(h,m,p,b);storiesBox.append(card);
+  const b=document.createElement('button');b.className='light';b.textContent='पूरी खबर पढ़ें';b.addEventListener('click',()=>openStory(s));
+  content.append(h,m,p,b);card.append(content);
+  try{
+   const doc=new DOMParser().parseFromString(cleanHtml(s.html||''),'text/html');
+   const source=doc.querySelector('img')?.getAttribute('src')||'';
+   const url=new URL(source,location.href);
+   if(source&&['https:','http:'].includes(url.protocol)){
+    const thumb=document.createElement('img');thumb.className='story-image';thumb.src=url.href;thumb.alt=s.title||'खबर की तस्वीर';thumb.loading='lazy';thumb.decoding='async';
+    card.classList.add('has-image');card.append(thumb);
+   }
+  }catch(e){}
+  storiesBox.append(card);
  });
 }
 function openStory(s){
