@@ -4,7 +4,7 @@ on:
   pull_request:
     branches: [main]
   push:
-    branches: [feature/newsroom-dashboard-v1]
+    branches: [main, feature/newsroom-dashboard-v1]
 
 jobs:
   newsroom-checks:
@@ -20,11 +20,11 @@ jobs:
           import re
           from pathlib import Path
           html = Path("admin.html").read_text(encoding="utf-8")
-          scripts = re.findall(r"<script\b[^>]*>([\s\S]*?)</script>", html, re.I)
+          scripts = re.findall(r"<script\\b[^>]*>([\\s\\S]*?)</script>", html, re.I)
           inline = [s for s in scripts if s.strip()]
           if not inline:
               raise SystemExit("No inline JavaScript found")
-          Path("/tmp/newsroom-check.mjs").write_text("\n".join(inline), encoding="utf-8")
+          Path("/tmp/newsroom-check.mjs").write_text("\\n".join(inline), encoding="utf-8")
           for required in ["loginForm", "articleForm", "ai-news-editor", "aiApplyBtn"]:
               if required not in html:
                   raise SystemExit(f"Missing required newsroom element: {required}")
