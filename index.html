@@ -72,8 +72,24 @@ function saved(){try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e)
 function setStatus(t){statusBox.textContent=t}
 function cleanHtml(html){
  const doc=new DOMParser().parseFromString(html||'','text/html');
- doc.querySelectorAll('script,style,iframe,object,embed,form,button').forEach(n=>n.remove());
- doc.querySelectorAll('*').forEach(n=>{[...n.attributes].forEach(a=>{if(/^on/i.test(a.name)||a.name==='srcdoc')n.removeAttribute(a.name)});});
+ const blocked='script,style,iframe,object,embed,form,button,svg,math,template,meta,base,link';
+ doc.querySelectorAll(blocked).forEach(n=>n.remove());
+ const urlAttrs=new Set(['href','src','poster','xlink:href']);
+ doc.querySelectorAll('*').forEach(n=>{
+  [...n.attributes].forEach(a=>{
+   const name=a.name.toLowerCase();
+   if(name.startsWith('on')||['srcdoc','style','formaction','action','srcset','ping','autofocus'].includes(name)){
+    n.removeAttribute(a.name);return;
+   }
+   if(urlAttrs.has(name)){
+    const value=(a.value||'').trim().replace(/[\u0000-\u0020]+/g,'');
+    const hasScheme=/^[a-z][a-z0-9+.-]*:/i.test(value);
+    const safeRelative=!hasScheme&&!value.startsWith('//')&&!value.includes('\\');
+    const allowedScheme=name==='href'?/^(https?:|mailto:|tel:)/i.test(value):/^https?:/i.test(value);
+    if(value&&!(hasScheme?allowedScheme:safeRelative))n.removeAttribute(a.name);
+   }
+  });
+ });
  return doc.body.innerHTML;
 }
 function render(items,title){
@@ -112,7 +128,7 @@ function loadFeed(){
   try{
    const entries=(data.feed&&data.feed.entry)||[];
    const fresh=entries.map(entryToStory);
-   const merged=[...fresh,...saved().filter(old=>!fresh.some(n=>n.id===old.id))].slice(0,20);
+   const merged=[...fresh,...saved().filter(old=>!fresh.some(n=>n.id===old.id))].slice(0,25);
    localStorage.setItem(KEY,JSON.stringify(merged));stories=merged;render(fresh,'ताजा खबरें');
    setStatus('खबरें अपडेट हो गई हैं। '+fresh.length+' खबरें इस डिवाइस में सेव की गई हैं।');
   }catch(err){fallback();}
@@ -126,7 +142,7 @@ function loadFeed(){
 function fallback(){const old=saved();stories=old;render(old,'पहले से सेव खबरें');setStatus(old.length?'नई खबरें नहीं मिल सकीं। पहले से सेव खबरें उपलब्ध हैं।':'खबरें लोड नहीं हो सकीं। इंटरनेट जाँचें।');}
 
 document.getElementById('shareApp').addEventListener('click',async()=>{
- const shareData={title:'मानस न्यूज-24',text:'मानस न्यूज-24 ऐप खोलें और ताजा खबरें पढ़ें।',url:'https://manasnews24.github.io/manas-news24-pwa/'};
+ const shareData={title:'मानस न्यूज-24',text:'मानस न्यूज-24 ऐप खोलें और ताजा खबरें पढ़ें।',url:new URL('./',location.href).href};
  try{
   if(navigator.share){await navigator.share(shareData);setStatus('ऐप साझा करने के लिए खुल गया।');}
   else if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(shareData.url);setStatus('ऐप का लिंक कॉपी हो गया। अब WhatsApp पर भेज सकते हैं।');}
