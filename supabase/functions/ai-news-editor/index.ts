@@ -14,7 +14,7 @@ Deno.serve(async (req: Request) => {
   if (req.method !== "POST") return reply(405, { error: "केवल POST अनुरोध स्वीकार है।" });
 
   const auth = req.headers.get("Authorization") || "";
-  const token = auth.replace(/^Bearer\\s+/i, "");
+  const token = auth.replace(/^Bearer\s+/i, "");
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
   if (!token) return reply(401, { error: "लॉगिन आवश्यक है।" });
