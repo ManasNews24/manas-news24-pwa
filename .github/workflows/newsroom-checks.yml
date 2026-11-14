@@ -1,0 +1,49 @@
+name: Newsroom safety checks
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [feature/newsroom-dashboard-v1]
+
+jobs:
+  newsroom-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Check newsroom HTML and JavaScript syntax
+        shell: bash
+        run: |
+          test -s admin.html
+          python3 - <<'PY'
+          import re
+          from pathlib import Path
+          html = Path("admin.html").read_text(encoding="utf-8")
+          scripts = re.findall(r"<script\b[^>]*>([\s\S]*?)</script>", html, re.I)
+          inline = [s for s in scripts if s.strip()]
+          if not inline:
+              raise SystemExit("No inline JavaScript found")
+          Path("/tmp/newsroom-check.mjs").write_text("\n".join(inline), encoding="utf-8")
+          for required in ["loginForm", "articleForm", "ai-news-editor", "aiApplyBtn"]:
+              if required not in html:
+                  raise SystemExit(f"Missing required newsroom element: {required}")
+          print(f"Found {len(inline)} inline script block(s) and required UI elements.")
+          PY
+          node --check /tmp/newsroom-check.mjs
+      - name: Check frontend contains no privileged secrets
+        shell: bash
+        run: |
+          if grep -Eiq 'service_role|SUPABASE_SERVICE_ROLE_KEY|GEMINI_API_KEY' admin.html; then
+            echo "Privileged secret reference found in frontend."
+            exit 1
+          fi
+          echo "No privileged service-role or Gemini secret reference in admin.html."
+      - name: Check AI function security guards
+        shell: bash
+        run: |
+          grep -q 'auth/v1/user' supabase/functions/ai-news-editor/index.ts
+          grep -q 'user_profiles' supabase/functions/ai-news-editor/index.ts
+          grep -q 'GEMINI_API_KEY' supabase/functions/ai-news-editor/index.ts
+          grep -q 'facts.length > 12000' supabase/functions/ai-news-editor/index.ts
+          echo "AI function security guard checks passed."
