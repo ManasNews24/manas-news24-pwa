@@ -81,6 +81,11 @@
        <div class="field"><label for="statusInput">स्थिति</label><select id="statusInput"><option value="draft">ड्राफ्ट</option><option value="submitted">समीक्षा हेतु भेजें</option></select></div>
        <div class="field full"><label for="summary">संक्षिप्त परिचय / डेक</label><textarea id="summary" style="min-height:76px" maxlength="500" placeholder="खबर का 1-2 वाक्यों में सार"></textarea></div>
        <div class="field full"><label for="body">पूरी खबर *</label><textarea id="body" required placeholder="स्थान/डेटलाइन के साथ खबर लिखें…"></textarea><span class="hint">न्यूज़रूम में सादा टेक्स्ट सुरक्षित रहेगा। HTML या स्क्रिप्ट न डालें।</span></div>
+       <div class="field full"><div class="notice" style="margin:0"><strong>AI समाचार संपादक</strong><br>कच्चे तथ्य लिखें और AI से खबर का प्रारूप या भाषा सुधार तैयार कराएं। AI तथ्य नहीं गढ़ेगा। तैयार सामग्री लागू करने से पहले आप जांच सकते हैं।</div>
+        <div class="formactions" style="margin-top:8px"><button class="btn gold" type="button" id="aiDraftBtn">✦ तथ्यों से खबर तैयार करें</button><button class="btn soft" type="button" id="aiPolishBtn">भाषा और व्याकरण सुधारें</button></div>
+        <div id="aiStatus" class="small muted" aria-live="polite"></div><div id="aiResult" class="notice hidden" style="white-space:pre-wrap"></div>
+        <button class="btn primary hidden" type="button" id="aiApplyBtn">तैयार खबर फॉर्म में लगाएं</button>
+       </div>
        <div class="field"><label for="sourceNote">स्रोत / सत्यापन नोट</label><input id="sourceNote" placeholder="स्रोत, दस्तावेज, पुष्टि की स्थिति"></div>
        <div class="field"><label for="imageUrl">मुख्य फोटो URL</label><input id="imageUrl" type="url" placeholder="मीडिया लाइब्रेरी से कॉपी किया URL"></div>
        <div class="field"><label for="seoTitle">SEO शीर्षक</label><input id="seoTitle" maxlength="180"></div>
@@ -156,6 +161,31 @@ async function loadAds(){if(role!=='admin')return;const {data,error}=await supab
 $('adForm').onsubmit=async e=>{e.preventDefault();const id=$('adId').value;const p={title:$('adTitle').value.trim(),advertiser_name:$('advertiser').value.trim(),placement:$('placement').value,image_url:$('adImage').value.trim()||null,target_url:$('adTarget').value.trim()||null,starts_at:$('adStart').value?new Date($('adStart').value).toISOString():null,ends_at:$('adEnd').value?new Date($('adEnd').value).toISOString():null,is_active:$('adActive').checked};const r=id?await supabase.from('ad_campaigns').update(p).eq('id',id):await supabase.from('ad_campaigns').insert(p);if(r.error){toast('विज्ञापन सेव नहीं हुआ: '+r.error.message);return}$('adForm').reset();$('adId').value='';toast('विज्ञापन अभियान सेव हो गया।');loadAds()};
 $('resetAd').onclick=()=>$('adForm').reset();$('reloadAds').onclick=loadAds;
 $('refreshProfile').onclick=()=>enterApp(currentUser);
+
+let aiDraftResult=null;
+async function runAiEditor(mode){
+ const raw=$('body').value.trim();
+ if(!raw){toast('पहले खबर के तथ्य या कच्ची खबर लिखें।');$('body').focus();return}
+ const btn=mode==='draft'?$('aiDraftBtn'):$('aiPolishBtn');
+ btn.disabled=true;btn.textContent='AI खबर तैयार कर रहा है…';$('aiResult').classList.add('hidden');$('aiApplyBtn').classList.add('hidden');$('aiStatus').textContent='तथ्यों और भाषा की जांच की जा रही है…';
+ try{
+  const {data:{session}}=await supabase.auth.getSession();
+  if(!session)throw new Error('लॉगिन सत्र समाप्त है। दोबारा लॉगिन करें।');
+  const response=await fetch(SUPABASE_URL+'/functions/v1/ai-news-editor',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token,'apikey':SUPABASE_PUBLISHABLE_KEY},body:JSON.stringify({mode,headline:$('title').value.trim(),summary:$('summary').value.trim(),facts:raw,category:$('category').selectedOptions[0]?.textContent||'',source_note:$('sourceNote').value.trim()})});
+  const payload=await response.json().catch(()=>({error:'सर्वर से सही उत्तर नहीं मिला।'}));
+  if(!response.ok)throw new Error(payload.error||'AI सेवा अभी उपलब्ध नहीं है।');
+  aiDraftResult=payload.result;
+  const missing=(aiDraftResult.missing_facts||[]).map(x=>'• '+x).join('\n');
+  const cautions=(aiDraftResult.cautions||[]).map(x=>'• '+x).join('\n');
+  $('aiResult').textContent='शीर्षक: '+(aiDraftResult.title||'')+'\n\nसंक्षिप्त परिचय: '+(aiDraftResult.summary||'')+'\n\nतैयार खबर:\n'+(aiDraftResult.body||'')+(missing?'\n\nअधूरे/पुष्टि योग्य तथ्य:\n'+missing:'')+(cautions?'\n\nसावधानी:\n'+cautions:'');
+  $('aiResult').classList.remove('hidden');$('aiApplyBtn').classList.remove('hidden');$('aiStatus').textContent='मसौदा तैयार है। मूल खबर अभी नहीं बदली गई है। कृपया तथ्यों की जांच करें।';
+ }catch(err){$('aiStatus').textContent='';toast(err.message)}
+ finally{btn.disabled=false;btn.textContent=mode==='draft'?'✦ तथ्यों से खबर तैयार करें':'भाषा और व्याकरण सुधारें'}
+}
+$('aiDraftBtn').onclick=()=>runAiEditor('draft');
+$('aiPolishBtn').onclick=()=>runAiEditor('polish');
+$('aiApplyBtn').onclick=()=>{if(!aiDraftResult)return;if(!confirm('AI का मसौदा शीर्षक, परिचय और खबर के फॉर्म में लगाया जाए? मूल खबर बदल जाएगी, लेकिन अभी सेव नहीं होगी।'))return;$('title').value=aiDraftResult.title||$('title').value;$('summary').value=aiDraftResult.summary||$('summary').value;$('body').value=aiDraftResult.body||$('body').value;$('seoTitle').value=aiDraftResult.seo_title||$('seoTitle').value;$('seoDescription').value=aiDraftResult.seo_description||$('seoDescription').value;toast('AI मसौदा फॉर्म में लगाया गया। जांचकर खबर सुरक्षित करें।')};
+
 boot();
 </script>
 </body>
