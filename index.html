@@ -63,6 +63,41 @@ button,a.btn{min-height:44px;display:flex;align-items:center;justify-content:cen
  header p{max-width:280px;margin-inline:auto}
 }
 
+
+/* Readability and spacing refinement based on the supplied phone screenshot */
+body{padding-bottom:env(safe-area-inset-bottom)}
+header{padding:18px 14px 17px}
+header img{width:72px;height:72px}
+main{max-width:700px;padding:12px clamp(12px,3.5vw,20px) 24px}
+.status{font-size:13px;line-height:1.55;padding:10px 12px}
+.actions{margin-bottom:16px;gap:9px}
+.actions .btn,.actions button{min-height:46px}
+#listTitle{font-size:21px;line-height:1.4;margin:18px 0 11px}
+.story{padding:15px;margin:11px 0;border:1px solid #edf0f5;box-shadow:0 2px 10px #10294b0a}
+.story h3{font-size:18px;line-height:1.55;margin-bottom:7px}
+.story .meta{font-size:12px;line-height:1.5;margin-bottom:8px}
+.story p{font-size:15px;line-height:1.8;color:#3f4b5d}
+.story button{margin-top:11px;min-height:44px;font-size:14px}
+#reader{padding:18px;line-height:1.9}
+#articleBody{font-size:16px;line-height:1.9}
+#articleBody p{margin:0 0 1em}
+#articleBody h1,#articleBody h2,#articleBody h3{line-height:1.5}
+.note{font-size:13px;line-height:1.8;margin:18px 2px 24px}
+footer{padding:18px 12px calc(22px + env(safe-area-inset-bottom));line-height:1.6}
+@media(max-width:420px){
+ header{padding:15px 12px 14px}
+ header img{width:66px;height:66px}
+ main{padding:10px 11px 24px}
+ .actions{gap:8px;margin-bottom:14px}
+ button,a.btn{font-size:13px;padding:11px 8px}
+ #listTitle{font-size:20px}
+ .story{padding:13px;margin:10px 0}
+ .story h3{font-size:17px;line-height:1.6}
+ .story p{font-size:14.5px;line-height:1.8}
+ #reader{padding:14px}
+ #articleBody{font-size:15.5px}
+}
+
 </style>
 </head>
 <body>
