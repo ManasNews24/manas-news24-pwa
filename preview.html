@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b2554">
+<meta name="description" content="मानस न्यूज-24 मोबाइल डिजाइन का परीक्षण संस्करण">
+
+<link rel="icon" href="./icon-192.png">
+<title>मानस न्यूज-24 | मोबाइल डिजाइन परीक्षण</title>
+<style>
+:root{color-scheme:light;--navy:#102f68;--navy-deep:#09214d;--red:#c92336;--ink:#17243b;--muted:#65738a;--paper:#f4f6fa;--line:#e2e7ef;--white:#fff;--shadow:0 3px 14px rgba(17,38,75,.07)}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;min-height:100vh;overflow-x:hidden;background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,"Noto Sans Devanagari",sans-serif;padding-bottom:env(safe-area-inset-bottom)}
+button,a{font:inherit}button{cursor:pointer}
+header{background:var(--navy-deep);color:#fff;padding:17px 16px 18px}
+.header-inner{width:100%;max-width:820px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:13px}
+header img{width:58px;height:58px;flex:0 0 58px;object-fit:contain;background:#fff;border-radius:12px;padding:3px}
+.brand-copy{min-width:0}header h1{font-size:clamp(23px,5.5vw,30px);line-height:1.25;letter-spacing:0;margin:0 0 4px;font-weight:850}
+header p{margin:0;color:#dce7fb;font-size:13px;line-height:1.5}
+main{width:100%;max-width:820px;margin:0 auto;padding:15px 16px 28px}
+.status{display:flex;align-items:center;gap:9px;min-height:42px;padding:10px 13px;border:1px solid #dce5f2;border-radius:10px;background:#eaf0f9;color:#18396e;font-size:14px;line-height:1.55;margin-bottom:13px}
+.status:before{content:"";width:8px;height:8px;flex:0 0 8px;border-radius:50%;background:#259667}
+.actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0 0 24px}
+button,a.btn{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;min-width:0;min-height:50px;padding:12px 10px;border:1px solid transparent;border-radius:10px;font-size:15px;line-height:1.4;font-weight:750;text-align:center;text-decoration:none;overflow-wrap:anywhere}
+button:active,a.btn:active{transform:scale(.99)}button:focus-visible,a:focus-visible{outline:3px solid #eab84c;outline-offset:2px}
+.primary{background:var(--red);color:#fff}.secondary{background:var(--navy);color:#fff}.light{background:#fff;color:var(--navy);border-color:#d9e1ed}
+.actions [hidden]{display:none!important}
+#listTitle{display:flex;align-items:center;gap:10px;font-size:22px;line-height:1.4;font-weight:850;margin:0 0 13px}
+#listTitle:before{content:"";width:5px;height:25px;flex:0 0 5px;border-radius:4px;background:var(--red)}
+#stories{display:grid;grid-template-columns:1fr;gap:14px}
+.story{display:flex;flex-direction:column;gap:0;min-width:0;margin:0;padding:0;overflow:hidden;background:var(--white);border:1px solid var(--line);border-radius:13px;box-shadow:var(--shadow)}
+.story-main{display:flex;flex-direction:column;align-items:stretch;min-width:0;padding:14px 15px 15px}
+.story-image{display:block;order:-1;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;background:#e8edf5}
+.story:not(.has-image) .story-main{padding-top:16px}
+.story h3{font-size:19px;line-height:1.55;letter-spacing:0;margin:0 0 6px;font-weight:850;overflow-wrap:anywhere;color:#15233b}
+.story .meta,.meta{font-size:13px;line-height:1.55;color:var(--muted);margin:0 0 8px}
+.story p{font-size:15px;line-height:1.8;color:#40506a;margin:0;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.story button{width:100%;min-height:44px;margin-top:13px;padding:10px 14px;border-radius:9px;font-size:15px}
+.empty{padding:24px 17px;border:1px dashed #cbd6e6;border-radius:12px;background:#fff;color:#53627a;font-size:15px;line-height:1.8;text-align:center}
+#reader{display:none;background:#fff;border:1px solid var(--line);border-radius:13px;padding:18px;line-height:1.9;box-shadow:var(--shadow);overflow-wrap:anywhere}
+#reader #back{position:sticky;top:8px;z-index:2;width:auto;min-height:44px;margin:0 0 16px;padding:10px 14px;box-shadow:0 2px 8px #10294b12}
+#articleBody{max-width:100%;font-size:17px;line-height:1.95;overflow-wrap:anywhere;color:#26354d}
+#articleBody>h2{font-size:clamp(23px,5.8vw,30px);line-height:1.45;letter-spacing:0;color:#14284c;margin:3px 0 9px}
+#articleBody .meta{padding-bottom:12px;border-bottom:1px solid var(--line);margin-bottom:16px}
+#articleBody p{margin:0 0 1.05em}#articleBody h1,#articleBody h2,#articleBody h3{line-height:1.5;overflow-wrap:anywhere}
+#articleBody img{display:block;max-width:100%;height:auto;object-fit:contain;border-radius:10px;margin:15px auto}
+#articleBody figure{max-width:100%;margin:14px 0}#articleBody table{display:block;max-width:100%;overflow-x:auto;border-collapse:collapse}#articleBody iframe,#articleBody video{max-width:100%}
+.note{font-size:13px;color:var(--muted);line-height:1.8;margin:19px 2px 8px;padding:12px 13px;border-radius:10px;background:#eaf0f8}
+footer{text-align:center;color:#66758c;font-size:12px;line-height:1.7;padding:18px 12px calc(22px + env(safe-area-inset-bottom));background:#eaf0f7}
+body.reading .status,body.reading .actions,body.reading .note{display:none}body.reading main{padding-top:13px}
+@media(min-width:700px){header{padding:21px 24px}header img{width:66px;height:66px;flex-basis:66px}main{padding:22px 22px 34px}.actions{grid-template-columns:repeat(3,minmax(0,1fr))}#stories{gap:16px}.story-main{padding:17px 19px 18px}.story h3{font-size:21px}.story p{font-size:16px}#reader{padding:26px}}
+@media(max-width:420px){header{padding:15px 12px 16px}header img{width:52px;height:52px;flex-basis:52px}header h1{font-size:23px}header p{font-size:12px}main{padding:12px 12px 24px}.actions{gap:8px;margin-bottom:21px}button,a.btn{min-height:49px;padding:11px 7px;font-size:14px}#listTitle{font-size:21px;margin-bottom:12px}#stories{gap:12px}.story-main{padding:13px 13px 14px}.story:not(.has-image) .story-main{padding-top:14px}.story h3{font-size:18px;line-height:1.6}.story .meta,.meta{font-size:12px}.story p{font-size:14px;line-height:1.8;-webkit-line-clamp:3}.story button{min-height:44px;margin-top:11px;font-size:14px}#reader{padding:14px}#articleBody{font-size:16px;line-height:1.95}#articleBody>h2{font-size:23px}}
+@media(max-width:350px){main{padding-left:9px;padding-right:9px}.actions{grid-template-columns:1fr}.story h3{font-size:17px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header>
+<div class="header-inner">
+<img src="./icon-192.png" alt="मानस न्यूज-24 लोगो">
+<div class="brand-copy">
+<h1>मानस न्यूज-24</h1>
+<p>प्रयागराज • उत्तर प्रदेश • देश-दुनिया की खबरें</p>
+</div>
+</div>
+</header>
+<main>
+<div id="status" class="status" role="status">खबरें लोड की जा रही हैं…</div>
+<div class="actions">
+<a class="btn primary" href="https://manasnews.blogspot.com/" target="_blank" rel="noopener">मुख्य वेबसाइट खोलें</a>
+<button id="refresh" class="secondary">खबरें अपडेट करें</button>
+<button id="install" class="light" hidden>ऐप इंस्टॉल करें</button>
+<button id="showSaved" class="light">सेव खबरें देखें</button>
+<button id="shareApp" class="light">ऐप शेयर करें</button>
+</div>
+<section id="listView">
+<h2 id="listTitle">ताजा खबरें</h2>
+<div id="stories"><div class="empty">इंटरनेट मिलने पर खबरें यहाँ दिखाई देंगी।</div></div>
+</section>
+<section id="reader">
+<button id="back" class="light">← खबरों पर वापस जाएँ</button>
+<div id="articleBody"></div>
+</section>
+<p class="note">ऑफलाइन सुविधा: ऐप में पहले से लोड हुई खबरें इस डिवाइस में सेव रहेंगी। इंटरनेट बंद होने पर वही सेव खबरें पढ़ी जा सकती हैं। नई खबरें और बाहरी तस्वीरें इंटरनेट के बिना उपलब्ध न भी हों।</p>
+</main>
+<footer>मानस न्यूज-24 | जनता की आवाज</footer>
+<script>
+(() => {
+'use strict';
+const FEED='https://manasnews.blogspot.com/feeds/posts/default?alt=json-in-script&max-results=25';
+const KEY='manasnews24_saved_stories_v2';
+const statusBox=document.getElementById('status');
+const storiesBox=document.getElementById('stories');
+const reader=document.getElementById('reader');
+const listView=document.getElementById('listView');
+let stories=[];
+function saved(){try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return []}}
+function setStatus(t){statusBox.textContent=t}
+function cleanHtml(html){
+ const doc=new DOMParser().parseFromString(html||'','text/html');
+ const blocked='script,style,iframe,object,embed,form,button,svg,math,template,meta,base,link';
+ doc.querySelectorAll(blocked).forEach(n=>n.remove());
+ const urlAttrs=new Set(['href','src','poster','xlink:href']);
+ doc.querySelectorAll('*').forEach(n=>{
+  [...n.attributes].forEach(a=>{
+   const name=a.name.toLowerCase();
+   if(name.startsWith('on')||['srcdoc','style','formaction','action','srcset','ping','autofocus'].includes(name)){
+    n.removeAttribute(a.name);return;
+   }
+   if(urlAttrs.has(name)){
+    const value=(a.value||'').trim().replace(/[\u0000-\u0020]+/g,'');
+    const hasScheme=/^[a-z][a-z0-9+.-]*:/i.test(value);
+    const safeRelative=!hasScheme&&!value.startsWith('//')&&!value.includes('\\');
+    const allowedScheme=name==='href'?/^(https?:|mailto:|tel:)/i.test(value):/^https?:/i.test(value);
+    if(value&&!(hasScheme?allowedScheme:safeRelative))n.removeAttribute(a.name);
+   }
+  });
+ });
+ return doc.body.innerHTML;
+}
+function render(items,title){
+ document.getElementById('listTitle').textContent=title;
+ storiesBox.innerHTML='';
+ if(!items.length){storiesBox.innerHTML='<div class="empty">अभी कोई खबर सेव नहीं है। इंटरनेट चालू करके खबरें अपडेट करें।</div>';return;}
+ items.forEach(s=>{
+  const card=document.createElement('article');card.className='story';
+  const content=document.createElement('div');content.className='story-main';
+  const h=document.createElement('h3');h.textContent=s.title||'बिना शीर्षक की खबर';
+  const m=document.createElement('div');m.className='meta';m.textContent=s.date||'';
+  const p=document.createElement('p');p.textContent=(s.text||'').slice(0,220);
+  const b=document.createElement('button');b.className='light';b.textContent='पूरी खबर पढ़ें';b.addEventListener('click',()=>openStory(s));
+  content.append(h,m,p,b);card.append(content);
+  try{
+   const doc=new DOMParser().parseFromString(cleanHtml(s.html||''),'text/html');
+   const source=doc.querySelector('img')?.getAttribute('src')||'';
+   const url=new URL(source,location.href);
+   if(source&&['https:','http:'].includes(url.protocol)){
+    const thumb=document.createElement('img');thumb.className='story-image';thumb.src=url.href;thumb.alt=s.title||'खबर की तस्वीर';thumb.loading='lazy';thumb.decoding='async';
+    card.classList.add('has-image');card.append(thumb);
+   }
+  }catch(e){}
+  storiesBox.append(card);
+ });
+}
+function openStory(s){
+ document.body.classList.add('reading'); listView.style.display='none';reader.style.display='block';
+ const wrap=document.getElementById('articleBody');wrap.innerHTML='';
+ const h=document.createElement('h2');h.textContent=s.title||'';wrap.append(h);
+ const meta=document.createElement('div');meta.className='meta';meta.textContent=s.date||'';wrap.append(meta);
+ const body=document.createElement('div');body.innerHTML=cleanHtml(s.html||'');wrap.append(body);
+ window.scrollTo(0,0);
+}
+document.getElementById('back').addEventListener('click',()=>{document.body.classList.remove('reading');reader.style.display='none';listView.style.display='block';});
+function entryToStory(e){
+ const links=e.link||[];const link=links.find(x=>x.rel==='alternate');
+ const raw=e.content?.$t||e.summary?.$t||'';
+ const html=raw.slice(0,90000);
+ const tmp=document.createElement('div');tmp.innerHTML=cleanHtml(html);
+ return {id:e.id?.$t||link?.href||e.title?.$t,title:e.title?.$t||'',date:e.published?.$t?new Date(e.published.$t).toLocaleDateString('hi-IN'):'',url:link?.href||'',html:cleanHtml(html),text:(tmp.textContent||'').replace(/\s+/g,' ').trim()};
+}
+function loadFeed(){
+ if(!navigator.onLine){const old=saved();stories=old;render(old,'पहले से सेव खबरें');setStatus(old.length?'आप ऑफलाइन हैं। सेव की गई खबरें पढ़ सकते हैं।':'आप ऑफलाइन हैं। अभी कोई खबर सेव नहीं है।');return;}
+ const callback='manasFeedCallback';
+ window[callback]=(data)=>{
+  try{
+   const entries=(data.feed&&data.feed.entry)||[];
+   const fresh=entries.map(entryToStory);
+   const merged=[...fresh,...saved().filter(old=>!fresh.some(n=>n.id===old.id))].slice(0,25);
+   localStorage.setItem(KEY,JSON.stringify(merged));stories=merged;render(fresh,'ताजा खबरें');
+   setStatus('खबरें अपडेट हो गई हैं। '+fresh.length+' खबरें इस डिवाइस में सेव की गई हैं।');
+  }catch(err){fallback();}
+  finally{delete window[callback];document.getElementById('feedScript')?.remove();}
+ };
+ const script=document.createElement('script');script.id='feedScript';
+ script.src=FEED+'&callback='+callback;
+ script.onerror=()=>{delete window[callback];script.remove();fallback();};
+ document.head.append(script);
+}
+function fallback(){const old=saved();stories=old;render(old,'पहले से सेव खबरें');setStatus(old.length?'नई खबरें नहीं मिल सकीं। पहले से सेव खबरें उपलब्ध हैं।':'खबरें लोड नहीं हो सकीं। इंटरनेट जाँचें।');}
+
+document.getElementById('shareApp').addEventListener('click',async()=>{
+ const shareData={title:'मानस न्यूज-24',text:'मानस न्यूज-24 ऐप खोलें और ताजा खबरें पढ़ें।',url:new URL('./',location.href).href};
+ try{
+  if(navigator.share){await navigator.share(shareData);setStatus('ऐप साझा करने के लिए खुल गया।');}
+  else if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(shareData.url);setStatus('ऐप का लिंक कॉपी हो गया। अब WhatsApp पर भेज सकते हैं।');}
+  else{window.prompt('मानस न्यूज-24 ऐप का लिंक कॉपी करें:',shareData.url);}
+ }catch(err){
+  if(err&&err.name!=='AbortError')setStatus('शेयर नहीं हो सका। कृपया दोबारा प्रयास करें।');
+ }
+});
+
+document.getElementById('refresh').addEventListener('click',loadFeed);
+document.getElementById('showSaved').addEventListener('click',()=>{const old=saved();render(old,'पहले से सेव खबरें');setStatus(old.length+' खबरें डिवाइस में सेव हैं।');});
+window.addEventListener('online',loadFeed);
+window.addEventListener('offline',()=>{const old=saved();render(old,'पहले से सेव खबरें');setStatus(old.length?'इंटरनेट बंद है। सेव खबरें पढ़ें।':'इंटरनेट बंद है।');});
+let deferred=null;const installBtn=document.getElementById('install');
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;installBtn.hidden=false;});
+installBtn.addEventListener('click',async()=>{if(!deferred)return;deferred.prompt();await deferred.userChoice;deferred=null;installBtn.hidden=true;});
+
+loadFeed();
+})();
+</script>
+</body>
+</html>
