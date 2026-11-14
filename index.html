@@ -84,6 +84,8 @@ main{max-width:700px;padding:12px clamp(12px,3.5vw,20px) 24px}
 #articleBody h1,#articleBody h2,#articleBody h3{line-height:1.5}
 .note{font-size:13px;line-height:1.8;margin:18px 2px 24px}
 footer{padding:18px 12px calc(22px + env(safe-area-inset-bottom));line-height:1.6}
+/* Keep the reading view focused on the article on small screens */
+body.reading .status,body.reading .actions,body.reading .note{display:none}
 @media(max-width:420px){
  header{padding:15px 12px 14px}
  header img{width:66px;height:66px}
@@ -174,14 +176,14 @@ function render(items,title){
  });
 }
 function openStory(s){
- listView.style.display='none';reader.style.display='block';
+ document.body.classList.add('reading'); listView.style.display='none';reader.style.display='block';
  const wrap=document.getElementById('articleBody');wrap.innerHTML='';
  const h=document.createElement('h2');h.textContent=s.title||'';wrap.append(h);
  const meta=document.createElement('div');meta.className='meta';meta.textContent=s.date||'';wrap.append(meta);
  const body=document.createElement('div');body.innerHTML=cleanHtml(s.html||'');wrap.append(body);
  window.scrollTo(0,0);
 }
-document.getElementById('back').addEventListener('click',()=>{reader.style.display='none';listView.style.display='block';});
+document.getElementById('back').addEventListener('click',()=>{document.body.classList.remove('reading');reader.style.display='none';listView.style.display='block';});
 function entryToStory(e){
  const links=e.link||[];const link=links.find(x=>x.rel==='alternate');
  const raw=e.content?.$t||e.summary?.$t||'';
