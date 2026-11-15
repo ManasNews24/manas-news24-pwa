@@ -1,6 +1,6 @@
-const CACHE='manas-news24-launch-v7';
+const CACHE='manas-news24-launch-v8';
 const CACHE_PREFIX='manas-news24-';
-const ASSETS=['./','./index.html','./manifest.webmanifest','./icon-192.png','./icon-512.png'];
+const ASSETS=['./','./index.html','./notify.html','./manifest.webmanifest','./icon-192.png','./icon-512.png'];
 self.addEventListener('install',event=>{
  event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)));
  self.skipWaiting();
@@ -16,10 +16,34 @@ self.addEventListener('fetch',event=>{
  if(request.method!=='GET'||url.origin!==self.location.origin)return;
  if(request.mode==='navigate'){
   event.respondWith(fetch(request).then(response=>{
-   if(response.ok){const copy=response.clone();event.waitUntil(caches.open(CACHE).then(cache=>cache.put('./index.html',copy)));}
+   if(response.ok){const copy=response.clone();event.waitUntil(caches.open(CACHE).then(cache=>cache.put(new URL(request.url).pathname.endsWith('/notify.html')?'./notify.html':'./index.html',copy)));}
    return response;
-  }).catch(()=>caches.match('./index.html').then(cached=>cached||new Response('इंटरनेट कनेक्शन उपलब्ध नहीं है। कृपया इंटरनेट चालू करके मानस न्यूज-24 खोलें।',{headers:{'Content-Type':'text/plain; charset=utf-8'}}))));
+  }).catch(()=>caches.match(request).then(cached=>cached||caches.match('./index.html').then(home=>home||new Response('इंटरनेट कनेक्शन उपलब्ध नहीं है।',{headers:{'Content-Type':'text/plain; charset=utf-8'}})))));
   return;
  }
  event.respondWith(fetch(request).catch(()=>caches.match(request)));
+});
+self.addEventListener('push',event=>{
+ let data={};
+ try{data=event.data?event.data.json():{};}catch(_){data={body:event.data?.text()||''};}
+ const title=data.title||'मानस न्यूज-24';
+ const options={
+  body:data.body||'नई खबर पढ़ने के लिए टैप करें।',
+  icon:data.icon||'./icon-192.png',
+  badge:data.badge||'./icon-192.png',
+  image:data.image||undefined,
+  data:{url:data.url||'https://manasnews.blogspot.com/'},
+  tag:data.tag||'manas-news24-news',
+  renotify:false,
+  vibrate:[120,60,120]
+ };
+ event.waitUntil(self.registration.showNotification(title,options));
+});
+self.addEventListener('notificationclick',event=>{
+ event.notification.close();
+ const target=event.notification.data?.url||'https://manasnews.blogspot.com/';
+ event.waitUntil(self.clients.matchAll({type:'window',includeUncontrolled:true}).then(list=>{
+  for(const client of list){if('focus' in client){client.navigate(target);return client.focus();}}
+  return self.clients.openWindow(target);
+ }));
 });
