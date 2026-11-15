@@ -15,6 +15,13 @@ body{display:grid;place-items:center;background:#fff}
 .logo{width:min(44vw,190px);height:auto;display:block}
 </style>
 <script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('./sw.js').catch(function(error) {
+      console.error('Service worker registration failed:', error);
+    });
+  });
+}
 window.addEventListener("load",function(){
   window.setTimeout(function(){
     window.location.replace("https://manasnews.blogspot.com/");
