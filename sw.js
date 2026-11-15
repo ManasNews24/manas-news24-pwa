@@ -1,5 +1,5 @@
-const CACHE='manas-news24-shell-v5';
-const CACHE_PREFIX='manas-news24-shell-';
+const CACHE='manas-news24-launch-v6';
+const CACHE_PREFIX='manas-news24-';
 const ASSETS=['./','./index.html','./manifest.webmanifest','./icon-192.png','./icon-512.png'];
 self.addEventListener('install',event=>{
  event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)));
@@ -18,11 +18,8 @@ self.addEventListener('fetch',event=>{
   event.respondWith(fetch(request).then(response=>{
    if(response.ok){const copy=response.clone();event.waitUntil(caches.open(CACHE).then(cache=>cache.put('./index.html',copy)));}
    return response;
-  }).catch(()=>caches.match('./index.html').then(cached=>cached||new Response('मानस न्यूज-24 ऐप ऑफलाइन है। कृपया इंटरनेट चालू करके दोबारा प्रयास करें।',{headers:{'Content-Type':'text/plain; charset=utf-8'}}))));
+  }).catch(()=>caches.match('./index.html').then(cached=>cached||new Response('इंटरनेट कनेक्शन उपलब्ध नहीं है। कृपया इंटरनेट चालू करके मानस न्यूज-24 खोलें।',{headers:{'Content-Type':'text/plain; charset=utf-8'}}))));
   return;
  }
- event.respondWith(caches.match(request).then(cached=>cached||fetch(request).then(response=>{
-  if(response.ok){const copy=response.clone();event.waitUntil(caches.open(CACHE).then(cache=>cache.put(request,copy)));}
-  return response;
- })));
+ event.respondWith(fetch(request).catch(()=>caches.match(request)));
 });
