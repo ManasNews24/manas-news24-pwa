@@ -7,161 +7,22 @@
 <meta name="description" content="मानस न्यूज-24 — जनता की आवाज">
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" href="./icon-192.png">
+<meta http-equiv="refresh" content="0;url=https://manasnews.blogspot.com/">
 <title>मानस न्यूज-24</title>
 <style>
-:root{--navy:#082a70;--red:#b81c27;--ink:#172033;--muted:#64748b}
-*{box-sizing:border-box}body{margin:0;background:#f2f5fa;color:var(--ink);font-family:system-ui,-apple-system,sans-serif}
-header{background:var(--navy);color:white;padding:18px 16px 16px;text-align:center}
-header img{width:76px;height:76px;object-fit:contain;background:white;border-radius:15px;padding:4px}
-h1{font-size:25px;margin:8px 0 2px}header p{margin:0;color:#e1eaff;font-size:14px}
-main{max-width:720px;margin:auto;padding:16px}
-.status{padding:11px 13px;border-radius:12px;background:#e8eef9;color:#17356c;font-size:14px;margin-bottom:14px}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
-button,a.btn{border:0;border-radius:11px;padding:13px 12px;font-size:15px;font-weight:700;text-align:center;text-decoration:none;cursor:pointer}
-.primary{background:var(--red);color:white}.secondary{background:var(--navy);color:white}.light{background:#e7edf7;color:var(--navy)}
-h2{font-size:20px;margin:18px 0 10px}
-.story{background:white;border-radius:13px;padding:14px;margin:10px 0;box-shadow:0 3px 12px #10294b0c}
-.story h3{font-size:17px;line-height:1.45;margin:0 0 7px}.meta{font-size:12px;color:var(--muted);margin-bottom:8px}
-.story p{font-size:14px;line-height:1.65;margin:0;color:#465367}
-.story button{margin-top:10px;width:100%}
-#reader{display:none;background:white;border-radius:13px;padding:16px;line-height:1.8}
-#reader img{max-width:100%;height:auto}#reader h2{line-height:1.4}
-.note{font-size:12px;color:var(--muted);line-height:1.6;margin:18px 2px}
-.empty{padding:18px;background:white;border-radius:12px;color:var(--muted);font-size:14px}
-footer{text-align:center;color:var(--muted);font-size:12px;padding:18px}
-@media(max-width:390px){.actions{grid-template-columns:1fr}}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:#f4f6fa;color:#102f68;font-family:"Noto Sans Devanagari","Nirmala UI",sans-serif;text-align:center}
+main{max-width:420px}img{width:84px;height:84px;object-fit:contain;background:white;border-radius:16px;padding:5px}
+h1{font-size:26px;margin:14px 0 8px}p{font-size:17px;line-height:1.8;color:#42516a}
+a{display:inline-block;margin-top:12px;padding:13px 22px;border-radius:10px;background:#c92336;color:white;text-decoration:none;font-weight:700;font-size:17px}
 </style>
+<script>window.location.replace("https://manasnews.blogspot.com/");</script>
 </head>
 <body>
-<header>
-<img src="./icon-192.png" alt="मानस न्यूज-24 लोगो">
-<h1>मानस न्यूज-24</h1>
-<p>जनता की आवाज — आपके क्षेत्र की ताजा खबरें</p>
-</header>
 <main>
-<div id="status" class="status" role="status">खबरें लोड की जा रही हैं…</div>
-<div class="actions">
-<a class="btn primary" href="https://manasnews.blogspot.com/" target="_blank" rel="noopener">मुख्य वेबसाइट खोलें</a>
-<button id="refresh" class="secondary">खबरें अपडेट करें</button>
-<button id="install" class="light" hidden>ऐप इंस्टॉल करें</button>
-<button id="showSaved" class="light">सेव खबरें देखें</button>
-<button id="shareApp" class="light">ऐप शेयर करें</button>
-</div>
-<section id="listView">
-<h2 id="listTitle">ताजा खबरें</h2>
-<div id="stories"><div class="empty">इंटरनेट मिलने पर खबरें यहाँ दिखाई देंगी।</div></div>
-</section>
-<section id="reader">
-<button id="back" class="light">← खबरों पर वापस जाएँ</button>
-<div id="articleBody"></div>
-</section>
-<p class="note">ऑफलाइन सुविधा: ऐप में पहले से लोड हुई खबरें इस डिवाइस में सेव रहेंगी। इंटरनेट बंद होने पर वही सेव खबरें पढ़ी जा सकती हैं। नई खबरें और बाहरी तस्वीरें इंटरनेट के बिना उपलब्ध न भी हों।</p>
+<img src="./icon-192.png" alt="मानस न्यूज-24">
+<h1>मानस न्यूज-24</h1>
+<p>आपको मुख्य वेबसाइट पर भेजा जा रहा है। यदि पेज अपने आप नहीं खुलता, तो नीचे दिए बटन को छुएं।</p>
+<a href="https://manasnews.blogspot.com/">मुख्य वेबसाइट खोलें</a>
 </main>
-<footer>मानस न्यूज-24 | जनता की आवाज</footer>
-<script>
-(() => {
-'use strict';
-const FEED='https://manasnews.blogspot.com/feeds/posts/default?alt=json-in-script&max-results=25';
-const KEY='manasnews24_saved_stories_v2';
-const statusBox=document.getElementById('status');
-const storiesBox=document.getElementById('stories');
-const reader=document.getElementById('reader');
-const listView=document.getElementById('listView');
-let stories=[];
-function saved(){try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return []}}
-function setStatus(t){statusBox.textContent=t}
-function cleanHtml(html){
- const doc=new DOMParser().parseFromString(html||'','text/html');
- const blocked='script,style,iframe,object,embed,form,button,svg,math,template,meta,base,link';
- doc.querySelectorAll(blocked).forEach(n=>n.remove());
- const urlAttrs=new Set(['href','src','poster','xlink:href']);
- doc.querySelectorAll('*').forEach(n=>{
-  [...n.attributes].forEach(a=>{
-   const name=a.name.toLowerCase();
-   if(name.startsWith('on')||['srcdoc','style','formaction','action','srcset','ping','autofocus'].includes(name)){
-    n.removeAttribute(a.name);return;
-   }
-   if(urlAttrs.has(name)){
-    const value=(a.value||'').trim().replace(/[\u0000-\u0020]+/g,'');
-    const hasScheme=/^[a-z][a-z0-9+.-]*:/i.test(value);
-    const safeRelative=!hasScheme&&!value.startsWith('//')&&!value.includes('\\');
-    const allowedScheme=name==='href'?/^(https?:|mailto:|tel:)/i.test(value):/^https?:/i.test(value);
-    if(value&&!(hasScheme?allowedScheme:safeRelative))n.removeAttribute(a.name);
-   }
-  });
- });
- return doc.body.innerHTML;
-}
-function render(items,title){
- document.getElementById('listTitle').textContent=title;
- storiesBox.innerHTML='';
- if(!items.length){storiesBox.innerHTML='<div class="empty">अभी कोई खबर सेव नहीं है। इंटरनेट चालू करके खबरें अपडेट करें।</div>';return;}
- items.forEach((s,i)=>{
-  const card=document.createElement('article');card.className='story';
-  const h=document.createElement('h3');h.textContent=s.title||'बिना शीर्षक की खबर';
-  const m=document.createElement('div');m.className='meta';m.textContent=s.date||'';
-  const p=document.createElement('p');p.textContent=(s.text||'').slice(0,220);
-  const b=document.createElement('button');b.className='light';b.textContent='खबर पढ़ें';b.addEventListener('click',()=>openStory(s));
-  card.append(h,m,p,b);storiesBox.append(card);
- });
-}
-function openStory(s){
- listView.style.display='none';reader.style.display='block';
- const wrap=document.getElementById('articleBody');wrap.innerHTML='';
- const h=document.createElement('h2');h.textContent=s.title||'';wrap.append(h);
- const meta=document.createElement('div');meta.className='meta';meta.textContent=s.date||'';wrap.append(meta);
- const body=document.createElement('div');body.innerHTML=cleanHtml(s.html||'');wrap.append(body);
- window.scrollTo(0,0);
-}
-document.getElementById('back').addEventListener('click',()=>{reader.style.display='none';listView.style.display='block';});
-function entryToStory(e){
- const links=e.link||[];const link=links.find(x=>x.rel==='alternate');
- const raw=e.content?.$t||e.summary?.$t||'';
- const html=raw.slice(0,90000);
- const tmp=document.createElement('div');tmp.innerHTML=cleanHtml(html);
- return {id:e.id?.$t||link?.href||e.title?.$t,title:e.title?.$t||'',date:e.published?.$t?new Date(e.published.$t).toLocaleDateString('hi-IN'):'',url:link?.href||'',html:cleanHtml(html),text:(tmp.textContent||'').replace(/\s+/g,' ').trim()};
-}
-function loadFeed(){
- if(!navigator.onLine){const old=saved();stories=old;render(old,'पहले से सेव खबरें');setStatus(old.length?'आप ऑफलाइन हैं। सेव की गई खबरें पढ़ सकते हैं।':'आप ऑफलाइन हैं। अभी कोई खबर सेव नहीं है।');return;}
- const callback='manasFeedCallback';
- window[callback]=(data)=>{
-  try{
-   const entries=(data.feed&&data.feed.entry)||[];
-   const fresh=entries.map(entryToStory);
-   const merged=[...fresh,...saved().filter(old=>!fresh.some(n=>n.id===old.id))].slice(0,25);
-   localStorage.setItem(KEY,JSON.stringify(merged));stories=merged;render(fresh,'ताजा खबरें');
-   setStatus('खबरें अपडेट हो गई हैं। '+fresh.length+' खबरें इस डिवाइस में सेव की गई हैं।');
-  }catch(err){fallback();}
-  finally{delete window[callback];document.getElementById('feedScript')?.remove();}
- };
- const script=document.createElement('script');script.id='feedScript';
- script.src=FEED+'&callback='+callback;
- script.onerror=()=>{delete window[callback];script.remove();fallback();};
- document.head.append(script);
-}
-function fallback(){const old=saved();stories=old;render(old,'पहले से सेव खबरें');setStatus(old.length?'नई खबरें नहीं मिल सकीं। पहले से सेव खबरें उपलब्ध हैं।':'खबरें लोड नहीं हो सकीं। इंटरनेट जाँचें।');}
-
-document.getElementById('shareApp').addEventListener('click',async()=>{
- const shareData={title:'मानस न्यूज-24',text:'मानस न्यूज-24 ऐप खोलें और ताजा खबरें पढ़ें।',url:new URL('./',location.href).href};
- try{
-  if(navigator.share){await navigator.share(shareData);setStatus('ऐप साझा करने के लिए खुल गया।');}
-  else if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(shareData.url);setStatus('ऐप का लिंक कॉपी हो गया। अब WhatsApp पर भेज सकते हैं।');}
-  else{window.prompt('मानस न्यूज-24 ऐप का लिंक कॉपी करें:',shareData.url);}
- }catch(err){
-  if(err&&err.name!=='AbortError')setStatus('शेयर नहीं हो सका। कृपया दोबारा प्रयास करें।');
- }
-});
-
-document.getElementById('refresh').addEventListener('click',loadFeed);
-document.getElementById('showSaved').addEventListener('click',()=>{const old=saved();render(old,'पहले से सेव खबरें');setStatus(old.length+' खबरें डिवाइस में सेव हैं।');});
-window.addEventListener('online',loadFeed);
-window.addEventListener('offline',()=>{const old=saved();render(old,'पहले से सेव खबरें');setStatus(old.length?'इंटरनेट बंद है। सेव खबरें पढ़ें।':'इंटरनेट बंद है।');});
-let deferred=null;const installBtn=document.getElementById('install');
-window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;installBtn.hidden=false;});
-installBtn.addEventListener('click',async()=>{if(!deferred)return;deferred.prompt();await deferred.userChoice;deferred=null;installBtn.hidden=true;});
-if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}
-loadFeed();
-})();
-</script>
 </body>
 </html>
