@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#082a70">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icon-192.png">
+<title>खबरों के नोटिफिकेशन | मानस न्यूज-24</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;min-height:100svh;background:linear-gradient(180deg,#f1f5fb,#fff 48%);font-family:Arial,'Noto Sans Devanagari',sans-serif;color:#172b3c;display:grid;place-items:center;padding:22px}
+main{width:min(100%,520px);text-align:center;background:#fff;border:1px solid #e1e8f1;border-radius:20px;padding:26px 22px;box-shadow:0 12px 36px rgba(8,42,112,.09)}
+.logo{width:112px;height:112px;object-fit:contain}h1{font-size:clamp(25px,7vw,34px);line-height:1.25;color:#102b55;margin:10px 0}p{font-size:17px;line-height:1.6;color:#536477;margin:8px 0 18px}
+button{width:100%;min-height:58px;border:0;border-radius:12px;background:#082a70;color:#fff;font-size:19px;font-weight:800;padding:12px;cursor:pointer;margin:6px 0}
+button.secondary{background:#eef3fa;color:#16365d;border:1px solid #d7e1ee}
+#status{min-height:52px;margin:12px 0 0;font-size:15px;color:#245b43}
+a{color:#174a83;font-weight:700;text-decoration:none;display:inline-block;margin-top:14px}
+.note{font-size:13px;color:#718096;margin-top:16px}
+</style>
+</head>
+<body>
+<main>
+<img class="logo" src="./icon-192.png" alt="मानस न्यूज-24">
+<h1>नई खबरों का नोटिफिकेशन पाएं</h1>
+<p>मानस न्यूज-24 पर नई खबर प्रकाशित होते ही अपने मोबाइल या ब्राउजर पर सूचना पाएं। यह सुविधा वेबसाइट और ऐप—दोनों पाठकों के लिए है।</p>
+<button id="enable">🔔 नोटिफिकेशन चालू करें</button>
+<button id="disable" class="secondary" hidden>नोटिफिकेशन बंद करें</button>
+<div id="status" role="status" aria-live="polite">नोटिफिकेशन चालू करने के लिए ऊपर बटन दबाएं।</div>
+<a href="https://manasnews.blogspot.com/">← मानस न्यूज-24 वेबसाइट पर लौटें</a>
+<div class="note">आपकी अनुमति के बिना कोई नोटिफिकेशन नहीं भेजा जाएगा।</div>
+</main>
+<script>
+(function(){
+ const API='https://umgtkiwnvzahvdxafypt.supabase.co/functions/v1/manas-news-push';
+ const PUBLIC_KEY='BJxj3xMV9uCC3uVr6cN75PcK6vQ08mq4Ruz_MU7xZpUXv_wyP55fS0IFLMMAUFnEtQwaQMMJX2YE5HaV38d6xyo';
+ const enable=document.getElementById('enable'),disable=document.getElementById('disable'),status=document.getElementById('status');
+ function bytes(value){const pad='='.repeat((4-value.length%4)%4);const raw=atob((value+pad).replace(/-/g,'+').replace(/_/g,'/'));return Uint8Array.from(raw,c=>c.charCodeAt(0));}
+ async function registration(){if(!('serviceWorker'in navigator))throw new Error('इस ब्राउजर में सर्विस वर्कर उपलब्ध नहीं है।');return await navigator.serviceWorker.register('./sw.js');}
+ async function refresh(){if(!('Notification'in window)||!('PushManager'in window)){status.textContent='यह ब्राउजर वेब नोटिफिकेशन का समर्थन नहीं करता। Chrome या समर्थित ब्राउजर में खोलें।';enable.disabled=true;return;}const reg=await registration();const sub=await reg.pushManager.getSubscription();if(sub){enable.hidden=true;disable.hidden=false;status.textContent='इस डिवाइस पर मानस न्यूज-24 के नोटिफिकेशन चालू हैं।';}else{enable.hidden=false;disable.hidden=true;if(Notification.permission==='denied')status.textContent='ब्राउजर में नोटिफिकेशन अनुमति बंद है। साइट सेटिंग में जाकर इसे Allow करें।';}}
+ enable.addEventListener('click',async()=>{enable.disabled=true;status.textContent='अनुमति और कनेक्शन जांचे जा रहे हैं…';try{if(!('Notification'in window)||!('PushManager'in window))throw new Error('यह ब्राउजर नोटिफिकेशन का समर्थन नहीं करता।');const permission=await Notification.requestPermission();if(permission!=='granted')throw new Error('नोटिफिकेशन की अनुमति नहीं मिली। ब्राउजर सेटिंग में अनुमति दें।');const reg=await registration();let sub=await reg.pushManager.getSubscription();if(!sub)sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:bytes(PUBLIC_KEY)});const response=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'subscribe',subscription:sub.toJSON()})});const result=await response.json();if(!response.ok)throw new Error(result.error||'सब्सक्रिप्शन सुरक्षित नहीं हो सका।');status.textContent='सफलता! अब नई खबर प्रकाशित होते ही इस डिवाइस पर नोटिफिकेशन मिलेगा।';await refresh();}catch(e){status.textContent=e.message||'कुछ समस्या आई। कृपया दोबारा प्रयास करें।';}finally{enable.disabled=false;}});
+ disable.addEventListener('click',async()=>{disable.disabled=true;try{const reg=await registration();const sub=await reg.pushManager.getSubscription();if(sub){await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'unsubscribe',endpoint:sub.endpoint})});await sub.unsubscribe();}status.textContent='इस डिवाइस पर नोटिफिकेशन बंद कर दिए गए हैं।';await refresh();}catch(e){status.textContent='नोटिफिकेशन बंद नहीं हो सके: '+e.message;}finally{disable.disabled=false;}});
+ refresh().catch(e=>status.textContent=e.message);
+})();
+</script>
+</body></html>
