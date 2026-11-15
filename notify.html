@@ -32,7 +32,7 @@ a{color:#174a83;font-weight:700;text-decoration:none;display:inline-block;margin
 <script>
 (function(){
  const API='https://umgtkiwnvzahvdxafypt.supabase.co/functions/v1/manas-news-push';
- const PUBLIC_KEY='BJxj3xMV9uCC3uVr6cN75PcK6vQ08mq4Ruz_MU7xZpUXv_wyP55fS0IFLMMAUFnEtQwaQMMJX2YE5HaV38d6xyo';
+ const PUBLIC_KEY='BJuV8vC2g8DQ7MeMHAvMlC5gVI76d6sbNPGYNgPtsGsK0kyY2keXa40Nea0UVYwVRdkFXQSWelZbiqQSYlrkXfc';
  const enable=document.getElementById('enable'),disable=document.getElementById('disable'),status=document.getElementById('status');
  function bytes(value){const pad='='.repeat((4-value.length%4)%4);const raw=atob((value+pad).replace(/-/g,'+').replace(/_/g,'/'));return Uint8Array.from(raw,c=>c.charCodeAt(0));}
  async function registration(){if(!('serviceWorker'in navigator))throw new Error('इस ब्राउजर में सर्विस वर्कर उपलब्ध नहीं है।');return await navigator.serviceWorker.register('./sw.js');}
