@@ -11,34 +11,33 @@
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html,body{width:100%;min-height:100%;margin:0}
-body{min-height:100vh;min-height:100svh;background:#fff;color:#172b3c;font-family:Arial,'Noto Sans Devanagari',sans-serif}
-main{width:100%;min-height:100vh;min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center;padding:clamp(28px,6vh,72px) 14px 28px;padding-top:max(clamp(28px,6vh,72px),env(safe-area-inset-top));padding-bottom:max(24px,env(safe-area-inset-bottom));background:linear-gradient(180deg,#f1f5fc 0%,#fff 32%,#fff 100%)}
-.logo{width:min(70vw,270px);max-height:29svh;margin:0 auto 14px;height:auto;object-fit:contain;display:block;flex:0 1 auto}
-#notify-panel{width:100%;max-width:620px;display:flex;flex-direction:column;align-items:center;gap:14px}
-.eyebrow{display:none}
-h1{font-size:clamp(32px,8.2vw,40px);line-height:1.35;margin:0;color:#102b55;font-weight:900}
-.description{width:100%;font-size:clamp(19px,5.1vw,22px);line-height:1.8;margin:0 0 8px;color:#263e58}
-button{width:100%;min-height:88px;display:flex;align-items:center;justify-content:center;padding:18px 14px;border:0;border-radius:15px;background:linear-gradient(135deg,#0b347f,#08245f);color:#fff;font-size:clamp(25px,6.6vw,32px);line-height:1.4;font-weight:900;text-decoration:none;cursor:pointer;box-shadow:0 8px 20px rgba(8,42,112,.22);touch-action:manipulation}
+body{min-height:100vh;min-height:100svh;background:#edf2f9;color:#172b3c;font-family:Arial,'Noto Sans Devanagari',sans-serif}
+main{width:100%;min-height:100vh;min-height:100svh;display:flex;align-items:center;justify-content:center;text-align:center;padding:22px 16px;padding-top:max(22px,env(safe-area-inset-top));padding-bottom:max(24px,env(safe-area-inset-bottom));background:radial-gradient(ellipse at top,#dce8f8 0%,#f4f7fc 40%,#edf2f9 100%)}
+#notify-panel{width:100%;max-width:540px;display:flex;flex-direction:column;align-items:center;gap:13px;padding:30px 24px 26px;border:1px solid #dbe4f0;border-radius:24px;background:#fff;box-shadow:0 18px 50px rgba(16,43,85,.12)}
+.logo{width:clamp(118px,31vw,158px);height:auto;max-height:22svh;margin:0 auto 2px;object-fit:contain;display:block}
+h1{font-size:clamp(27px,7vw,35px);line-height:1.35;margin:0;color:#102b55;font-weight:900}
+.description{width:100%;font-size:clamp(16px,4.2vw,19px);line-height:1.75;margin:0 0 5px;color:#3c5068}
+button{width:100%;min-height:76px;display:flex;align-items:center;justify-content:center;padding:16px 14px;border:0;border-radius:15px;background:linear-gradient(135deg,#123f8e,#08245f);color:#fff;font-size:clamp(21px,5.5vw,27px);line-height:1.4;font-weight:900;cursor:pointer;box-shadow:0 8px 20px rgba(8,42,112,.2);touch-action:manipulation}
 button:active{transform:scale(.99)}
-button:disabled{opacity:.65;cursor:default}
-button.secondary{background:#eaf0f8;color:#102f59;border:1px solid #c6d4e5;box-shadow:none}
-#status{width:100%;min-height:46px;padding:6px 4px;font-size:17px;line-height:1.75;color:#145a3b;font-weight:800}
-a{color:#123f76;font-size:19px;line-height:1.7;font-weight:900;text-decoration:none;display:inline-block;margin-top:14px}
-.help{width:100%;padding:15px 14px;border:1px solid #cbd8e8;border-radius:13px;background:#f0f4fa;color:#263e58;font-size:16px;line-height:1.8;margin-top:12px}
-@media(max-height:700px){main{padding-top:max(16px,env(safe-area-inset-top));padding-bottom:18px}.logo{width:min(52vw,195px);max-height:20svh;margin-bottom:8px}#notify-panel{gap:8px}button{min-height:68px;font-size:clamp(22px,6vw,28px)}h1{font-size:clamp(27px,7vw,34px)}.description{font-size:17px}.help{padding:10px 12px;font-size:14px}#status{min-height:32px;font-size:15px}}
-@media(max-height:560px){main{padding-top:8px;padding-bottom:12px}.logo{width:min(38vw,135px);max-height:15svh;margin-bottom:4px}#notify-panel{gap:5px}button{min-height:54px;font-size:19px}h1{font-size:22px}.description{font-size:14px}.help{padding:6px 8px;font-size:11px}#status{min-height:22px;font-size:12px}}
-@media(min-width:700px){main{padding-left:28px;padding-right:28px}.logo{width:min(42vw,270px)}}
+button:disabled{opacity:.65;cursor:wait}
+button.secondary{background:#edf2f9;color:#16365d;border:1px solid #d2deed;box-shadow:none}
+#status{width:100%;min-height:42px;padding:6px 4px;font-size:16px;line-height:1.7;color:#145a3b;font-weight:800}
+a{color:#123f76;font-size:16px;line-height:1.6;font-weight:900;text-decoration:none;display:inline-block;margin-top:2px}
+.help{width:100%;padding:12px 14px;border:1px solid #e0e8f2;border-radius:12px;background:#f5f8fc;color:#41546a;font-size:14px;line-height:1.7;margin-top:2px}
+@media(max-height:700px){main{padding:14px 13px}#notify-panel{gap:9px;padding:20px 18px}.logo{width:clamp(100px,25vw,132px);max-height:18svh}button{min-height:66px;font-size:clamp(20px,5vw,24px)}h1{font-size:clamp(25px,6vw,31px)}.description{font-size:16px}.help{padding:9px 11px;font-size:13px}#status{min-height:32px;font-size:14px}}
+@media(max-height:560px){main{padding:8px 10px}#notify-panel{gap:6px;padding:12px 14px;border-radius:16px}.logo{width:84px;max-height:14svh}button{min-height:54px;font-size:19px}h1{font-size:22px}.description{font-size:13px}.help{padding:6px 8px;font-size:11px}#status{min-height:24px;font-size:12px}}
+@media(min-width:700px){main{padding-left:28px;padding-right:28px}#notify-panel{padding:34px 32px}.logo{width:158px}}
 </style>
 </head>
 <body>
 <main aria-label="मानस न्यूज-24 नोटिफिकेशन">
-<img class="logo" src="./icon-512.png" alt="मानस न्यूज-24">
 <section id="notify-panel">
+<img class="logo" src="./icon-512.png" alt="मानस न्यूज-24">
 <h1>नई खबरों का नोटिफिकेशन पाएं</h1>
-<p class="description">मानस न्यूज-24 पर नई खबर प्रकाशित होते ही अपने मोबाइल या ब्राउजर पर सूचना पाएं। यह सुविधा वेबसाइट और ऐप—दोनों पाठकों के लिए है।</p>
-<button id="enable" type="button">🔔 नोटिफिकेशन चालू करें</button>
+<p class="description">नई खबर प्रकाशित होते ही अपने मोबाइल पर सूचना पाएं। अनुमति केवल एक बार देनी होगी।</p>
+<button id="enable" type="button">🔔 एक टच में नोटिफिकेशन चालू करें</button>
 <button id="disable" class="secondary" type="button" hidden>नोटिफिकेशन बंद करें</button>
-<div id="status" role="status" aria-live="polite">नोटिफिकेशन चालू करने के लिए ऊपर बटन दबाएं।</div>
+<div id="status" role="status" aria-live="polite">शुरू करने के लिए नीचे दिए बटन को दबाएं और ब्राउजर में Allow चुनें।</div>
 <a href="https://manasnews.blogspot.com/">← मानस न्यूज-24 वेबसाइट पर लौटें</a>
 <div class="help">नोटिफिकेशन केवल आपकी अनुमति से चालू होंगे। यदि अनुमति पहले बंद की है, तो Chrome की साइट सेटिंग में जाकर इसे Allow करें।</div>
 </section>
