@@ -10,9 +10,9 @@
 <style>
 *{box-sizing:border-box}
 [hidden]{display:none!important}
-html,body{width:100%;min-height:100%;margin:0}
-body{min-height:100vh;min-height:100svh;background:#fff;color:#172b3c;font-family:Arial,'Noto Sans Devanagari',sans-serif}
-main{width:100%;min-height:100vh;min-height:100svh;display:flex;align-items:center;justify-content:center;text-align:center;padding:8px 5px max(8px,env(safe-area-inset-bottom));background:#fff}
+html,body{width:100%;height:100%;min-height:100%;margin:0}
+body{width:100%;height:100vh;height:100svh;min-height:100svh;background:#fff;color:#172b3c;font-family:Arial,'Noto Sans Devanagari',sans-serif}
+main{width:100%;height:100vh;height:100svh;min-height:100svh;display:grid;place-items:center;text-align:center;padding:8px 5px max(8px,env(safe-area-inset-bottom));background:#fff;overflow-y:auto}
 #notify-panel{width:100%;max-width:680px;height:auto;min-height:0;margin:0 auto;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:12px;padding:20px clamp(14px,4vw,32px) 20px;border:1px solid #d2deed;border-radius:20px;background:#fff;box-shadow:0 10px 28px rgba(16,43,85,.1)}
 .logo{width:clamp(132px,34vw,170px);height:auto;max-height:19svh;margin:0 auto;object-fit:contain;display:block;flex:0 0 auto}
 h1{font-size:clamp(28px,7.2vw,38px);line-height:1.4;margin:0;color:#102b55;font-weight:900;flex:0 0 auto}
