@@ -1,6 +1,6 @@
-const CACHE='manas-news24-launch-v14';
+const CACHE='manas-news24-launch-v15';
 const CACHE_PREFIX='manas-news24-';
-const ASSETS=['./','./index.html','./notify.html','./manifest.webmanifest','./icon-192.png','./icon-512.png'];
+const ASSETS=['./','./index.html','./notify.html','./smart-pagemaker.html','./manifest.webmanifest','./icon-192.png','./icon-512.png'];
 self.addEventListener('install',event=>{
  event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)));
  self.skipWaiting();
@@ -16,7 +16,7 @@ self.addEventListener('fetch',event=>{
  if(request.method!=='GET'||url.origin!==self.location.origin)return;
  if(request.mode==='navigate'){
   event.respondWith(fetch(request).then(response=>{
-   if(response.ok){const copy=response.clone();event.waitUntil(caches.open(CACHE).then(cache=>cache.put(new URL(request.url).pathname.endsWith('/notify.html')?'./notify.html':'./index.html',copy)));}
+   if(response.ok){const copy=response.clone();event.waitUntil(caches.open(CACHE).then(cache=>cache.put(new URL(request.url).pathname.endsWith('/notify.html')?'./notify.html':(new URL(request.url).pathname.endsWith('/smart-pagemaker.html')?'./smart-pagemaker.html':'./index.html'),copy)));}
    return response;
   }).catch(()=>caches.match(request).then(cached=>cached||caches.match('./index.html').then(home=>home||new Response('इंटरनेट कनेक्शन उपलब्ध नहीं है।',{headers:{'Content-Type':'text/plain; charset=utf-8'}})))));
   return;
