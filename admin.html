@@ -435,7 +435,7 @@ let aiDraftResult=null;
 async function runAiEditor(mode){
  const raw=$('body').value.trim();
  if(!raw){toast('पहले खबर के तथ्य या कच्ची खबर लिखें।');$('body').focus();return}
- const btn=mode==='draft'?$('aiDraftBtn'):(mode==='revise'?$('aiReviseBtn'):$('aiPolishBtn'));
+ const btn=mode==='draft'?$('aiDraftBtn'):(mode==='revise'?$('aiReviseBtn'):(mode==='translate'?$('aiTranslateBtn'):$('aiPolishBtn'));
  btn.disabled=true;btn.textContent='AI खबर तैयार कर रहा है…';$('aiResult').classList.add('hidden');$('aiApplyBtn').classList.add('hidden');$('aiStatus').textContent='तथ्यों और भाषा की जांच की जा रही है…';
  try{
   const {data:{session}}=await supabase.auth.getSession();
@@ -450,7 +450,7 @@ async function runAiEditor(mode){
   $('aiResult').textContent='शीर्षक: '+(aiDraftResult.title||'')+'\n\nसंक्षिप्त परिचय: '+(aiDraftResult.summary||'')+'\n\nतैयार खबर:\n'+(aiDraftResult.body||'')+(missing?'\n\nअधूरे/पुष्टि योग्य तथ्य:\n'+missing:'')+(cautions?'\n\nसावधानी:\n'+cautions:'');
   $('aiResult').classList.remove('hidden');$('aiApplyBtn').classList.remove('hidden');$('aiStatus').textContent='मसौदा तैयार है। मूल खबर अभी नहीं बदली गई है। कृपया तथ्यों की जांच करें।';
  }catch(err){$('aiStatus').textContent='';toast(err.message)}
- finally{btn.disabled=false;btn.textContent=mode==='draft'?'✦ मेरी खबर तैयार करें':(mode==='revise'?'निर्देशानुसार फिर से संपादित करें':'भाषा और व्याकरण सुधारें')}
+ finally{btn.disabled=false;btn.textContent=mode==='draft'?'✦ मेरी खबर तैयार करें':(mode==='revise'?'निर्देशानुसार फिर से संपादित करें':(mode==='translate'?'चुनी भाषा में अनुवाद':'भाषा और व्याकरण सुधारें'))}
 }
 $('aiDraftBtn').onclick=()=>runAiEditor('draft');
 $('aiTranslateBtn').onclick=()=>{const lang=$('translateLanguage').selectedOptions[0]?.textContent||'English';$('aiInstruction').value='Translate the complete news story into '+lang+'. Preserve all names, places, dates, numbers, allegations and attributions exactly. Do not add facts. Return the translated headline, summary and body.';runAiEditor('translate')};
