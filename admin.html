@@ -188,13 +188,13 @@
     <div class="featuregrid" id="featureGrid">
      <button class="featurecard" data-feature="editor"><b>01 · AI न्यूज राइटिंग</b><span>तथ्यों से खबर तैयार करें और भाषा सुधारें</span><small>उपलब्ध · AI सेवा कनेक्शन पर निर्भर</small></button>
      <button class="featurecard" data-feature="fact"><b>02 · फैक्ट चेक</b><span>स्रोत, दस्तावेज और पुष्टि नोट दर्ज करें</span><small>आंशिक · स्वतंत्र सत्यापन इंजन बाकी</small></button>
-     <button class="featurecard" data-feature="voice"><b>03 · वॉइस टू न्यूज</b><span>आवाज से खबर का ड्राफ्ट</span><small>सेटअप बाकी · स्पीच सेवा आवश्यक</small></button>
+     <button class="featurecard" data-feature="voice"><b>03 · वॉइस टू न्यूज</b><span>ब्राउज़र में बोलकर खबर का मसौदा लिखें</span><small>उपलब्ध · समर्थित Chrome और माइक्रोफोन अनुमति आवश्यक</small></button>
      <button class="featurecard" data-feature="translate"><b>04 · बहुभाषी अनुवाद</b><span>हिंदी और अन्य भाषाओं में रूपांतरण</span><small>सेटअप बाकी · अनुवाद इंजन आवश्यक</small></button>
      <button class="featurecard" data-feature="editor"><b>05 · स्मार्ट हेडलाइन / SEO</b><span>शीर्षक, परिचय और SEO विवरण</span><small>आंशिक · संपादक फॉर्म उपलब्ध</small></button>
      <a class="featurecard" href="./smart-pagemaker.html"><b>06 · स्मार्ट पेजमेकर</b><span>सिंगल, डबल, ट्रिपल और फोर कॉलम कटिंग</span><small>उपलब्ध · उन्नत प्रीफ्लाइट सुधार जारी</small></a>
      <button class="featurecard" data-feature="photo"><b>07 · AI फोटो एडिटर</b><span>फोटो क्रॉप, सुधार और संपादन</span><small>सेटअप बाकी · इमेज सेवा आवश्यक</small></button>
      <button class="featurecard" data-feature="video"><b>08 · वीडियो / रील मेकर</b><span>खबर से सोशल वीडियो तैयार करना</span><small>सेटअप बाकी · वीडियो रेंडर सेवा आवश्यक</small></button>
-     <button class="featurecard" data-feature="poster"><b>09 · सोशल पोस्टर</b><span>खबर के लिए साझा करने योग्य पोस्टर</span><small>सेटअप बाकी · पोस्टर डिजाइन मॉड्यूल आवश्यक</small></button>
+     <a class="featurecard" href="./social-poster.html"><b>09 · सोशल पोस्टर</b><span>शीर्षक, विवरण और फोटो से PNG पोस्टर बनाएं</span><small>उपलब्ध · मोबाइल पर डाउनलोड और शेयर</small></a>
      <button class="featurecard" data-feature="media"><b>10 · डिजिटल फोटो लाइब्रेरी</b><span>फोटो अपलोड और URL प्रबंधन</span><small>उपलब्ध · मीडिया लाइब्रेरी खोलें</small></button>
      <button class="featurecard" data-feature="feed"><b>11 · पर्सनलाइज्ड न्यूज फीड</b><span>रुचि और क्षेत्र के अनुसार खबरें</span><small>सेटअप बाकी · पाठक प्रोफाइल आवश्यक</small></button>
      <a class="featurecard" href="./notify.html"><b>12 · स्मार्ट पुश नोटिफिकेशन</b><span>पाठकों को नई खबर की सूचना</span><small>आंशिक · Android subscription परीक्षण बाकी</small></a>
@@ -267,7 +267,7 @@
    <section id="page-settings" class="page hidden">
     <div class="welcome"><div><div class="eyebrow">CONTROL & HELP</div><h2>सेटिंग व सहायता</h2><p>सिस्टम की सीमाएं, सुरक्षा और आगे के विकास की जानकारी।</p></div></div>
     <div class="panel"><h3>आपकी प्रोफाइल</h3><p id="profileInfo" class="muted small"></p><button class="btn soft" id="refreshProfile">प्रोफाइल अपडेट करें</button></div>
-    <div class="panel"><h3>सुरक्षा और संचालन</h3><ul class="small muted" style="line-height:2"><li>सभी मुख्य टेबल पर Row Level Security लागू है।</li><li>ब्राउज़र में केवल Supabase publishable key उपयोग होती है; service role key कभी नहीं रखी जाती।</li><li>रिपोर्टर केवल अपने ड्राफ्ट और अनुमत workflow actions संभाल सकते हैं।</li><li>एडिटर/एडमिन संपादकीय समीक्षा और प्रकाशन स्थिति संभालते हैं।</li><li>इस संस्करण में Blogger पर ऑटो-पब्लिश, पुश नोटिफिकेशन, एनालिटिक्स और सोशल पोस्टिंग अभी सक्रिय नहीं हैं।</li></ul></div>
+    <div class="panel"><h3>सुरक्षा और संचालन</h3><ul class="small muted" style="line-height:2"><li>सभी मुख्य टेबल पर Row Level Security लागू है।</li><li>ब्राउज़र में केवल Supabase publishable key उपयोग होती है; service role key कभी नहीं रखी जाती।</li><li>रिपोर्टर केवल अपने ड्राफ्ट और अनुमत workflow actions संभाल सकते हैं।</li><li>एडिटर/एडमिन संपादकीय समीक्षा और प्रकाशन स्थिति संभालते हैं।</li><li>Blogger पर ऑटो-पब्लिश और सोशल ऑटो-पोस्ट अभी उपलब्ध नहीं हैं। पुश सदस्यता व सर्वर डिस्पैच सेट हैं; वास्तविक Android डिवाइस पर अंतिम परीक्षण बाकी है। लाइव पाठक एनालिटिक्स और Search Console कनेक्शन अभी बाकी हैं।</li></ul></div>
     <div class="panel"><h3>आधिकारिक लिंक</h3><p class="small"><a href="https://manasnews.blogspot.com/" target="_blank" rel="noopener">मानस न्यूज-24 वेबसाइट</a> · <a href="https://github.com/ManasNews24/manas-news24-pwa" target="_blank" rel="noopener">GitHub रिपॉजिटरी</a> · <a href="https://supabase.com/dashboard/project/umgtkiwnvzahvdxafypt" target="_blank" rel="noopener">Supabase प्रोजेक्ट</a></p></div>
    </section>
   </main>
@@ -312,9 +312,9 @@ supabase.auth.onAuthStateChange((event,session)=>{if(event==='PASSWORD_RECOVERY'
 document.querySelectorAll('.navbtn').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
 document.querySelectorAll('[data-goto]').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.goto)));
 document.querySelectorAll('[data-feature]').forEach(b=>b.addEventListener('click',()=>{
- const target={editor:'editor',media:'media',team:'team',ads:'ads',fact:'editor'}[b.dataset.feature];
+ const target={editor:'editor',media:'media',team:'team',ads:'ads',fact:'editor',voice:'editor'}[b.dataset.feature];
  if(target){showPage(target);if(b.dataset.feature==='fact'){$('sourceNote').focus();toast('स्रोत और सत्यापन नोट भरें; स्वतंत्र फैक्ट-चेक अभी अलग से विकसित होना है।')}return}
- const messages={voice:'वॉइस टू न्यूज के लिए स्पीच-टू-टेक्स्ट सेवा जोड़नी बाकी है।',translate:'बहुभाषी अनुवाद इंजन जोड़ना बाकी है।',photo:'AI फोटो एडिटिंग सेवा जोड़ना बाकी है।',video:'वीडियो रेंडरिंग मॉड्यूल जोड़ना बाकी है।',poster:'सोशल पोस्टर डिजाइन मॉड्यूल जोड़ना बाकी है।',feed:'पाठक रुचि प्रोफाइल और फीड इंजन जोड़ना बाकी है।',reader:'पाठक सबमिशन फॉर्म और सुरक्षित API जोड़ना बाकी है।',map:'जियोटैग और मैप सेवा जोड़ना बाकी है।',confidential:'गोपनीय डेस्क के लिए अलग सुरक्षित स्टोरेज और अनुमति व्यवस्था जरूरी है।',analytics:'लाइव एनालिटिक्स डेटा स्रोत जोड़ना बाकी है।',seo:'Search Console कनेक्शन और SEO मॉनिटरिंग जोड़ना बाकी है.'};
+ const messages={voice:'वॉइस टू न्यूज खोल दिया गया है। माइक्रोफोन बटन दबाकर बोलें; सुविधा ब्राउज़र समर्थन पर निर्भर है।',translate:'बहुभाषी अनुवाद इंजन जोड़ना बाकी है।',photo:'AI फोटो एडिटिंग सेवा जोड़ना बाकी है।',video:'वीडियो रेंडरिंग मॉड्यूल जोड़ना बाकी है।',poster:'सोशल पोस्टर डिजाइन मॉड्यूल जोड़ना बाकी है।',feed:'पाठक रुचि प्रोफाइल और फीड इंजन जोड़ना बाकी है।',reader:'पाठक सबमिशन फॉर्म और सुरक्षित API जोड़ना बाकी है।',map:'जियोटैग और मैप सेवा जोड़ना बाकी है।',confidential:'गोपनीय डेस्क के लिए अलग सुरक्षित स्टोरेज और अनुमति व्यवस्था जरूरी है।',analytics:'लाइव एनालिटिक्स डेटा स्रोत जोड़ना बाकी है।',seo:'Search Console कनेक्शन और SEO मॉनिटरिंग जोड़ना बाकी है.'};
  toast(messages[b.dataset.feature]||'यह मॉड्यूल अगले विकास चरण में जोड़ा जाएगा।');
 }));
 $('refreshBtn').onclick=()=>showPage('overview');
