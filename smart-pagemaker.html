@@ -108,6 +108,37 @@
  #download{grid-column:auto}
 }
 
+
+/* V20: hard mobile layout override for narrow screens and Android phones */
+@media screen and (max-width: 900px), screen and (max-device-width: 900px) and (orientation: portrait){
+ html,body{width:100%!important;max-width:100%!important;overflow-x:hidden!important}
+ body{padding-bottom:78px!important}
+ .top{position:sticky!important;top:0!important;z-index:25!important;min-height:54px!important;padding:10px 12px!important;align-items:center!important}
+ .wrap{display:flex!important;flex-direction:column!important;grid-template-columns:minmax(0,1fr)!important;width:100%!important;max-width:100%!important;margin:0!important;padding:8px 9px 18px!important;gap:10px!important}
+ .controls{display:grid!important;width:100%!important;max-width:100%!important;min-width:0!important;gap:10px!important;padding:12px!important}
+ .preview-area{display:none!important;width:100%!important;max-width:100%!important;min-width:0!important}
+ body.mobile-preview-mode .controls{display:none!important}
+ body.mobile-preview-mode .preview-area{display:block!important}
+ .panel{width:100%!important;max-width:100%!important}
+ .field,.field input,.field select,.field textarea{min-width:0!important;width:100%!important}
+ .field input,.field select,.field textarea{font-size:16px!important;padding:11px!important}
+ .field textarea{min-height:155px!important}
+ .two{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ .actions{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ #download{grid-column:1/-1!important}
+ .paper-scroll{padding:5px!important;overflow-x:hidden!important}
+ .paper{width:100%!important;max-width:100%!important;min-width:0!important;min-height:calc(100vh - 155px)!important;padding:18px 13px!important;box-shadow:none!important}
+ .paper h1{font-size:clamp(21px,5.5vw,28px)!important}
+ .story{font-size:13px!important}
+ .mobile-dock{position:fixed!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;left:0!important;right:0!important;bottom:0!important;z-index:60!important;padding:7px 7px calc(7px + env(safe-area-inset-bottom))!important;background:#101c36!important}
+ .mobile-dock button{min-height:50px!important}
+}
+@media screen and (max-width:390px), screen and (max-device-width:390px) and (orientation:portrait){
+ .two{grid-template-columns:1fr!important}
+ .actions{grid-template-columns:1fr!important}
+ #download{grid-column:auto!important}
+}
+
 </style>
 </head>
 <body class="mobile-edit-mode">
