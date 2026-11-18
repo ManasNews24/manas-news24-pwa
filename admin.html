@@ -436,7 +436,7 @@ let aiDraftResult=null;
 async function runAiEditor(mode){
  const raw=$('body').value.trim();
  if(!raw){toast('पहले खबर के तथ्य या कच्ची खबर लिखें।');$('body').focus();return}
- const btn=mode==='draft'?$('aiDraftBtn'):(mode==='revise'?$('aiReviseBtn'):(mode==='translate'?$('aiTranslateBtn'):$('aiPolishBtn'));
+ const btn=mode==='draft'?$('aiDraftBtn'):(mode==='revise'?$('aiReviseBtn'):(mode==='translate'?$('aiTranslateBtn'):$('aiPolishBtn')));
  btn.disabled=true;btn.textContent='AI खबर तैयार कर रहा है…';$('aiResult').classList.add('hidden');$('aiApplyBtn').classList.add('hidden');$('aiStatus').textContent='तथ्यों और भाषा की जांच की जा रही है…';
  try{
   const {data:{session}}=await supabase.auth.getSession();
