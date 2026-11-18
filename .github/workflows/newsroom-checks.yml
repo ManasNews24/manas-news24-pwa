@@ -16,6 +16,7 @@ jobs:
         shell: bash
         run: |
           test -s admin.html
+          test -s smart-pagemaker.html
           python3 - <<'PY'
           import re
           from pathlib import Path
@@ -31,6 +32,18 @@ jobs:
           print(f"Found {len(inline)} inline script block(s) and required UI elements.")
           PY
           node --check /tmp/newsroom-check.mjs
+          python3 - <<'PY'
+          import re
+          from pathlib import Path
+          maker = Path('smart-pagemaker.html').read_text(encoding='utf-8')
+          scripts = re.findall(r'<script\\b[^>]*>([\\s\\S]*?)</script>', maker, re.I)
+          inline = [x for x in scripts if x.strip()]
+          if not inline or 'balanceStory' not in maker:
+              raise SystemExit('Smart PageMaker export engine missing')
+          Path('/tmp/pagemaker-check.mjs').write_text('\\n'.join(inline), encoding='utf-8')
+          print(f'Found {len(inline)} Smart PageMaker script block(s).')
+          PY
+          node --check /tmp/pagemaker-check.mjs
       - name: Check frontend contains no privileged secrets
         shell: bash
         run: |
