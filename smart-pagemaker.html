@@ -46,11 +46,37 @@
   .status{overflow-wrap:anywhere}
 }
 @media(max-width:360px){.two{grid-template-columns:1fr}.actions{grid-template-columns:1fr}#download{grid-column:auto}.paper{padding:14px 9px}.story{column-gap:7px}}
+.mobile-dock{display:none}
+@media(max-width:560px){
+  body{padding-bottom:74px}
+  .top{position:sticky;top:0;z-index:20;min-height:54px;align-items:center}
+  .wrap{padding:8px 8px 14px;gap:9px}
+  .controls{gap:10px}
+  .controls>.field{padding:2px 0}
+  .preview-area{display:none}
+  body.mobile-preview-mode .controls{display:none}
+  body.mobile-preview-mode .preview-area{display:block}
+  .mobile-dock{position:fixed;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;left:0;right:0;bottom:0;z-index:30;padding:7px 6px calc(7px + env(safe-area-inset-bottom));background:#101c36;box-shadow:0 -5px 18px #101c3630}
+  .mobile-dock button{border:0;border-radius:9px;background:#ffffff12;color:#fff;min-width:0;min-height:48px;padding:5px 2px;font-size:17px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+  .mobile-dock button span{font-size:9px;line-height:1.15;white-space:nowrap}
+  .mobile-dock button.dock-active{background:#e6b85c;color:#14233f;font-weight:900}
+  .preview-head{position:sticky;top:54px;z-index:5;background:#f3f5f8;padding:8px 3px;border-radius:8px}
+  .paper-scroll{padding:4px}
+  .paper{min-height:calc(100vh - 150px)}
+}
+@media(min-width:561px){.mobile-dock{display:none!important}}
+@media print{.mobile-dock{display:none!important}}
 @media print{body{background:white}.top,.controls,.preview-head{display:none!important}.wrap{display:block;padding:0}.panel{border:0;box-shadow:none;padding:0}.paper-scroll{padding:0;background:white;overflow:visible}.paper{max-width:none;width:100%;min-height:0;box-shadow:none;padding:12mm 13mm}.story{font-size:11pt}.paper h1{font-size:25pt}.photo img{max-height:75mm}}
 </style>
 </head>
-<body>
+<body class="mobile-edit-mode">
 <header class="top"><div class="brand">मानस न्यूज-24 <small>SMART PAGEMAKER • डिजिटल न्यूज कटिंग स्टूडियो</small></div><a href="./admin.html">← न्यूज़रूम</a></header>
+<nav class="mobile-dock" aria-label="मोबाइल पेजमेकर नियंत्रण">
+ <button type="button" id="dockEdit" class="dock-active">✎ <span>जानकारी भरें</span></button>
+ <button type="button" id="dockPreview">▤ <span>कटिंग देखें</span></button>
+ <button type="button" id="dockPng">↓ <span>PNG डाउनलोड</span></button>
+ <button type="button" id="dockPdf">▣ <span>PDF / प्रिंट</span></button>
+</nav>
 <main class="wrap">
 <section class="panel controls">
 <div><h1 class="heading">स्मार्ट पेजमेकर</h1><p class="sub">अखबार जैसी सिंगल, डबल, ट्रिपल और फोर कॉलम न्यूज कटिंग तैयार करें। मोबाइल पर भी उपयोग योग्य।</p></div>
@@ -92,6 +118,17 @@ function wrap(ctx,text,max){const words=text.split(/\s+/);const lines=[];let lin
 $('download').onclick=async()=>{const btn=$('download');btn.disabled=true;$('status').textContent='PNG तैयार किया जा रहा है…';try{await document.fonts.ready;const scale=2,W=1200,H=1700,canvas=document.createElement('canvas');canvas.width=W*scale;canvas.height=H*scale;const c=canvas.getContext('2d');c.scale(scale,scale);c.fillStyle='#fff';c.fillRect(0,0,W,H);let y=48;c.fillStyle='#111';c.textAlign='center';c.font='bold 24px Arial,"Noto Sans Devanagari",sans-serif';c.fillText('मानस न्यूज-24',W/2,y);y+=20;c.fillRect(48,y,W-96,4);y+=35;c.font='bold 54px Arial,"Noto Sans Devanagari",sans-serif';const titleLines=wrap(c,$('headline').value.trim()||'शीर्षक',W-110);titleLines.slice(0,2).forEach(line=>{c.fillText(line,W/2,y);y+=65});y+=8;c.font='bold 28px Arial,"Noto Sans Devanagari",sans-serif';const deck=$('deck').value.trim();if(deck){c.fillText(deck.slice(0,100),W/2,y);y+=48}c.font='20px Arial,"Noto Sans Devanagari",sans-serif';c.textAlign='left';c.fillText($('dateline').value.trim()+'  |  '+new Date().toLocaleDateString('hi-IN'),55,y);y+=38;
 if(photoUrl){const img=$('pImage');if(img.complete&&img.naturalWidth){const maxW=W-110,ratio=Math.min(maxW/img.naturalWidth,360/img.naturalHeight);const iw=img.naturalWidth*ratio,ih=img.naturalHeight*ratio;c.drawImage(img,(W-iw)/2,y,iw,ih);y+=ih+25;c.font='17px Arial,"Noto Sans Devanagari",sans-serif';c.textAlign='center';c.fillText($('caption').value.trim().slice(0,140),W/2,y);y+=30}}
 const n=Number($('columns').value),gap=24,margin=55,colW=(W-2*margin-gap*(n-1))/n;const paragraphs=$('bodyText').value.split(/\n\s*\n/).map(s=>s.trim()).filter(Boolean);const bins=Array.from({length:n},()=>[]);let counts=Array(n).fill(0);paragraphs.forEach(p=>{const len=p.length;let idx=counts.indexOf(Math.min(...counts));bins[idx].push(p);counts[idx]+=len+80});c.textAlign='left';c.textBaseline='top';c.fillStyle='#171717';c.font=Number($('fontSize').value)*1.7+'px Georgia,Arial,"Noto Sans Devanagari",sans-serif';const lineH=Number($('fontSize').value)*2.2;for(let col=0;col<n;col++){let yy=y;for(const para of bins[col]){const lines=wrap(c,para,colW-12);for(const line of lines){if(yy>H-70)break;c.fillText(line,margin+col*(colW+gap),yy,colW);yy+=lineH}yy+=lineH*.55}if(col<n-1){c.strokeStyle='#ddd';c.beginPath();c.moveTo(margin+(col+1)*colW+col*gap+gap/2,y);c.lineTo(margin+(col+1)*colW+col*gap+gap/2,H-55);c.stroke()}}const a=document.createElement('a');a.download='Manas-News24-News-Cutting.png';a.href=canvas.toDataURL('image/png');a.click();$('status').textContent='PNG कटिंग डाउनलोड के लिए तैयार है।'}catch(err){$('status').textContent='PNG नहीं बन सका: '+err.message+'। प्रिंट/PDF विकल्प इस्तेमाल करें।'}finally{btn.disabled=false}};
+function setMobileMode(mode){
+ document.body.classList.toggle('mobile-edit-mode',mode==='edit');
+ document.body.classList.toggle('mobile-preview-mode',mode==='preview');
+ $('dockEdit').classList.toggle('dock-active',mode==='edit');
+ $('dockPreview').classList.toggle('dock-active',mode==='preview');
+ if(window.matchMedia('(max-width:560px)').matches)window.scrollTo({top:0,behavior:'smooth'});
+}
+$('dockEdit').addEventListener('click',()=>setMobileMode('edit'));
+$('dockPreview').addEventListener('click',()=>setMobileMode('preview'));
+$('dockPng').addEventListener('click',()=> $('download').click());
+$('dockPdf').addEventListener('click',()=> $('print').click());
 update();
 })();
 </script>
