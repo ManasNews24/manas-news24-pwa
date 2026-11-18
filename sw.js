@@ -1,6 +1,6 @@
 const CACHE='manas-news24-launch-v38';
 const CACHE_PREFIX='manas-news24-';
-const ASSETS=['./','./index.html','./notify.html','./admin.html','./smart-pagemaker.html','./social-poster.html','./reader-submit.html','./media-lab.html','./local-news.html','./operations-center.html','./news-pipeline.html','./daily-edition.html','./manifest.webmanifest','./icon-192.png','./icon-512.png'];
+const ASSETS=['./','./index.html','./notify.html','./admin.html','./smart-pagemaker.html','./social-poster.html','./reader-submit.html','./media-lab.html','./local-news.html','./operations-center.html','./news-pipeline.html','./daily-edition.html','./news-sources.html','./manifest.webmanifest','./icon-192.png','./icon-512.png'];
 const routeKey=url=>{const p=new URL(url).pathname;const file=p.split('/').pop();return file||'index.html'};
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)));self.skipWaiting()});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith(CACHE_PREFIX)&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
