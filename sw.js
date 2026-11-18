@@ -1,6 +1,6 @@
-const CACHE='manas-news24-launch-v29';
+const CACHE='manas-news24-launch-v30';
 const CACHE_PREFIX='manas-news24-';
-const ASSETS=['./','./index.html','./notify.html','./admin.html','./smart-pagemaker.html','./manifest.webmanifest','./icon-192.png','./icon-512.png'];
+const ASSETS=['./','./index.html','./notify.html','./admin.html','./smart-pagemaker.html','./social-poster.html','./manifest.webmanifest','./icon-192.png','./icon-512.png'];
 self.addEventListener('install',event=>{
  event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)));
  self.skipWaiting();
