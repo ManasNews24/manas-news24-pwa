@@ -333,7 +333,7 @@ async function reviewArticle(id){
  const {data:a,error}=await supabase.from('news_articles').select('*,user_profiles(display_name,phone_e164,login_identifier,dateline),news_categories(name)').eq('id',id).single();
  if(error||!a){toast('खबर समीक्षा के लिए नहीं खुली: '+(error?.message||''));return}
  activeReviewId=id;$('reviewPublishedUrl').value=a.published_url||'';$('reviewTitle').textContent=a.title;$('reviewMeta').textContent=(a.dateline||'स्थान नहीं दिया')+' · रिपोर्टर: '+(a.reporter_name_snapshot||a.user_profiles?.display_name||'रिपोर्टर')+' · '+(a.news_categories?.name||'अश्रेणीकृत')+' · '+(statusHi[a.status]||a.status)+' · मोबाइल: '+(a.user_profiles?.phone_e164||'दर्ज नहीं')+' · लॉगिन: '+(a.user_profiles?.login_identifier||'—');
- $('reviewStory').textContent=(a.summary?'परिचय: '+a.summary+'\\n\\n':'')+(a.body||'');$('reviewStatus').value=a.status==='submitted'?'in_review':a.status;$('reviewNote').value='';$('reviewModal').classList.remove('hidden');
+ $('reviewStory').textContent=(a.summary?'परिचय: '+a.summary+'\\n\\n':'')+(a.body||'')+(a.source_note?'\\n\\nस्रोत/सत्यापन नोट: '+a.source_note:'')+(a.raw_facts?'\\n\\nरिपोर्टर के मूल तथ्य:\\n'+a.raw_facts:'')+(a.featured_image_url?'\\n\\nमुख्य फोटो: '+a.featured_image_url:'')+(a.featured_video_url?'\\n\\nवीडियो: '+a.featured_video_url:'');$('reviewStatus').value=a.status==='submitted'?'in_review':a.status;$('reviewNote').value='';$('reviewModal').classList.remove('hidden');
 }
 $('closeReview').onclick=()=>{$('reviewModal').classList.add('hidden');activeReviewId=null};
 $('editReviewedStory').onclick=()=>{if(!activeReviewId)return;const id=activeReviewId;$('reviewModal').classList.add('hidden');activeReviewId=null;editArticle(id)};
