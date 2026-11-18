@@ -23,5 +23,55 @@
       "type": "image/png",
       "purpose": "any"
     }
+  ],
+  "shortcuts": [
+    {
+      "name": "न्यूज़रूम",
+      "short_name": "न्यूज़रूम",
+      "description": "रिपोर्टिंग और संपादन डेस्क खोलें",
+      "url": "./admin.html",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "स्थानीय खबरें",
+      "short_name": "स्थानीय खबरें",
+      "description": "स्थानीय खबरें और मानचित्र देखें",
+      "url": "./local-news.html",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "खबर भेजें",
+      "short_name": "खबर भेजें",
+      "description": "पाठकों से खबर प्राप्त करें",
+      "url": "./reader-submit.html",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "नोटिफिकेशन",
+      "short_name": "नोटिफिकेशन",
+      "description": "पुश नोटिफिकेशन सेटिंग खोलें",
+      "url": "./notify.html",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
   ]
 }
