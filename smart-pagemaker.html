@@ -196,11 +196,11 @@
 </nav>
 <main class="wrap">
 <section class="panel controls">
-<div><h1 class="heading">स्मार्ट पेजमेकर</h1><p class="sub">अखबार जैसी सिंगल, डबल, ट्रिपल और फोर कॉलम न्यूज कटिंग तैयार करें। मोबाइल पर भी उपयोग योग्य।</p></div>
+<div><h1 class="heading">स्मार्ट पेजमेकर</h1><p class="sub">प्रकाशित खबर लोड होते ही स्मार्ट लेआउट तैयार करें। हेडिंग, फोटो, कैप्शन और कॉलम का संतुलन स्वचालित रखें। मोबाइल पर भी उपयोग योग्य।</p></div>
 <div class="field"><label for="headline">मुख्य हेडिंग (अधिकतम दो पंक्तियाँ)</label><input id="headline" maxlength="150" value="मानस न्यूज-24 की स्मार्ट न्यूज कटिंग"></div>
 <div class="field"><label for="deck">उपहेडिंग (एक पंक्ति)</label><input id="deck" maxlength="180" placeholder="खबर का संक्षिप्त सार"></div>
 <div class="two">
-<div class="field"><label for="columns">कॉलम संख्या</label><select id="columns"><option value="1">सिंगल कॉलम</option><option value="2" selected>डबल कॉलम</option><option value="3">ट्रिपल कॉलम</option><option value="4">फोर कॉलम</option></select></div>
+<div class="field"><label for="columns">कॉलम संख्या</label><select id="columns"><option value="0">ऑटो स्मार्ट कॉलम</option><option value="1">सिंगल कॉलम</option><option value="2" selected>डबल कॉलम</option><option value="3">ट्रिपल कॉलम</option><option value="4">फोर कॉलम</option></select></div>
 <div class="field"><label for="fontSize">मुख्य टेक्स्ट आकार</label><select id="fontSize"><option value="13">छोटा</option><option value="15" selected>मध्यम</option><option value="17">बड़ा</option><option value="19">अतिरिक्त बड़ा</option></select></div>
 </div>
 <div class="field"><label for="dateline">डेटलाइन / स्थान</label><input id="dateline" value="मांडा।"></div>
@@ -212,7 +212,7 @@
 <div class="field"><label for="photoWidth">फोटो का आकार</label><select id="photoWidth"><option value="45">छोटा</option><option value="65" selected>मध्यम</option><option value="85">बड़ा</option><option value="100">पूरी चौड़ाई</option></select></div>
 <div class="actions"><button class="btn primary" id="download">PNG कटिंग डाउनलोड</button><button class="btn gold" id="print">प्रिंट / PDF</button><button class="btn soft" id="reset">रीसेट</button></div>
 <div id="status" class="status" role="status" aria-live="polite"></div>
-<div class="warn">ध्यान दें: यह पहला कार्यशील संस्करण है। PNG निर्यात के लिए ब्राउज़र में हिंदी फ़ॉन्ट उपलब्ध होना चाहिए। फोटो और खबर की तथ्य-जाँच प्रकाशन से पहले स्वयं करें।</div>
+<div class="warn">ध्यान दें: यह स्मार्ट निर्यात: हिंदी टाइपोग्राफी, दो-पंक्ति शीर्षक, एक-पंक्ति उपशीर्षक, फोटो क्रॉप और संतुलित कॉलम। फोटो और खबर की तथ्य-जाँच प्रकाशन से पहले स्वयं करें।</div>
 </section>
 <section class="preview-area">
 <div class="preview-head"><strong>लाइव अखबारी पूर्वावलोकन</strong><span class="hint">बदलाव साथ-साथ दिखेंगे</span></div>
@@ -233,9 +233,49 @@ async function loadLinkedArticle(){const id=new URLSearchParams(location.search)
 $('print').onclick=()=>window.print();
 $('reset').onclick=()=>{ids.forEach(id=>{if(id==='columns')$(id).value='2';else if(id==='fontSize')$(id).value='15';else if(id==='photoWidth')$(id).value='65';else $(id).value=''});$('photoInput').value='';if(photoUrl)URL.revokeObjectURL(photoUrl);photoUrl='';update();$('status').textContent='फॉर्म रीसेट कर दिया गया।'};
 function wrap(ctx,text,max){const words=text.split(/\s+/);const lines=[];let line='';for(const word of words){const test=line?line+' '+word:word;if(ctx.measureText(test).width>max&&line){lines.push(line);line=word}else line=test}if(line)lines.push(line);return lines}
-$('download').onclick=async()=>{const btn=$('download');btn.disabled=true;$('status').textContent='PNG तैयार किया जा रहा है…';try{await document.fonts.ready;const scale=2,W=1200,H=1700,canvas=document.createElement('canvas');canvas.width=W*scale;canvas.height=H*scale;const c=canvas.getContext('2d');c.scale(scale,scale);c.fillStyle='#fff';c.fillRect(0,0,W,H);let y=48;c.fillStyle='#111';c.textAlign='center';c.font='bold 24px Arial,"Noto Sans Devanagari",sans-serif';c.fillText('मानस न्यूज-24',W/2,y);y+=20;c.fillRect(48,y,W-96,4);y+=35;c.font='bold 54px Arial,"Noto Sans Devanagari",sans-serif';const titleLines=wrap(c,$('headline').value.trim()||'शीर्षक',W-110);titleLines.slice(0,2).forEach(line=>{c.fillText(line,W/2,y);y+=65});y+=8;c.font='bold 28px Arial,"Noto Sans Devanagari",sans-serif';const deck=$('deck').value.trim();if(deck){c.fillText(deck.slice(0,100),W/2,y);y+=48}c.font='20px Arial,"Noto Sans Devanagari",sans-serif';c.textAlign='left';c.fillText($('dateline').value.trim()+'  |  '+new Date().toLocaleDateString('hi-IN'),55,y);y+=38;
-if(photoUrl){const img=$('pImage');if(img.complete&&img.naturalWidth){const maxW=W-110,ratio=Math.min(maxW/img.naturalWidth,360/img.naturalHeight);const iw=img.naturalWidth*ratio,ih=img.naturalHeight*ratio;c.drawImage(img,(W-iw)/2,y,iw,ih);y+=ih+25;c.font='17px Arial,"Noto Sans Devanagari",sans-serif';c.textAlign='center';c.fillText($('caption').value.trim().slice(0,140),W/2,y);y+=30}}
-const n=Number($('columns').value),gap=24,margin=55,colW=(W-2*margin-gap*(n-1))/n;const paragraphs=$('bodyText').value.split(/\n\s*\n/).map(s=>s.trim()).filter(Boolean);const bins=Array.from({length:n},()=>[]);let counts=Array(n).fill(0);paragraphs.forEach(p=>{const len=p.length;let idx=counts.indexOf(Math.min(...counts));bins[idx].push(p);counts[idx]+=len+80});c.textAlign='left';c.textBaseline='top';c.fillStyle='#171717';c.font=Number($('fontSize').value)*1.7+'px Georgia,Arial,"Noto Sans Devanagari",sans-serif';const lineH=Number($('fontSize').value)*2.2;for(let col=0;col<n;col++){let yy=y;for(const para of bins[col]){const lines=wrap(c,para,colW-12);for(const line of lines){if(yy>H-70)break;c.fillText(line,margin+col*(colW+gap),yy,colW);yy+=lineH}yy+=lineH*.55}if(col<n-1){c.strokeStyle='#ddd';c.beginPath();c.moveTo(margin+(col+1)*colW+col*gap+gap/2,y);c.lineTo(margin+(col+1)*colW+col*gap+gap/2,H-55);c.stroke()}}const a=document.createElement('a');a.download='Manas-News24-News-Cutting.png';a.href=canvas.toDataURL('image/png');a.click();$('status').textContent='PNG कटिंग डाउनलोड के लिए तैयार है।'}catch(err){$('status').textContent='PNG नहीं बन सका: '+err.message+'। प्रिंट/PDF विकल्प इस्तेमाल करें।'}finally{btn.disabled=false}};
+function splitLines(text,ctx,maxWidth){const words=String(text||'').trim().split(/\s+/).filter(Boolean);const lines=[];let line='';for(const word of words){const test=line?line+' '+word:word;if(ctx.measureText(test).width>maxWidth&&line){lines.push(line);line=word}else line=test}if(line)lines.push(line);return lines}
+function balanceStory(text,ctx,font,width,n){ctx.font=font;const paras=text.split(/\n\s*\n/).map(x=>x.trim()).filter(Boolean);const tokens=[];paras.forEach((p,pi)=>{splitLines(p,ctx,width).forEach((line,li)=>tokens.push({line,gap:false}));if(pi<paras.length-1)tokens.push({gap:true})});const total=tokens.length;const cols=[];let at=0;for(let i=0;i<n;i++){const take=Math.ceil((total-at)/(n-i));cols.push(tokens.slice(at,at+take));at+=take}return cols}
+$('download').onclick=async()=>{
+ const btn=$('download');btn.disabled=true;$('status').textContent='स्मार्ट अखबारी कटिंग तैयार की जा रही है…';
+ try{
+  await document.fonts.ready;
+  const W=1500,margin=86,gap=34,inner=W-2*margin;
+  const raw=$('bodyText').value.trim(),paras=raw.split(/\n\s*\n/).map(x=>x.trim()).filter(Boolean);
+  let n=Number($('columns').value);
+  if(!n)n=raw.length<900?1:(raw.length<2100?2:(raw.length<4200?3:4));
+  const colW=(inner-gap*(n-1))/n,baseSize=Number($('fontSize').value)||15,fontSize=baseSize*1.55,lineH=fontSize*1.72;
+  const c=document.createElement('canvas').getContext('2d');
+  const serif='"Noto Serif Devanagari",Georgia,serif',sans='"Noto Sans Devanagari",Arial,sans-serif';
+  const title=$('headline').value.trim()||'शीर्षक';let titleSize=58,titleLines=[];
+  while(titleSize>34){c.font='900 '+titleSize+'px '+serif;titleLines=splitLines(title,c,inner);if(titleLines.length<=2&&titleLines.every(x=>c.measureText(x).width<=inner))break;titleSize-=2}
+  titleLines=titleLines.slice(0,2);
+  c.font='700 27px '+sans;const deck=$('deck').value.trim();const deckLines=deck?splitLines(deck,c,inner).slice(0,1):[];
+  const storyFont='500 '+fontSize+'px '+serif,columns=balanceStory(raw,c,storyFont,colW-10,n);
+  const colLineCounts=columns.map(a=>a.reduce((v,x)=>v+(x.gap?0.55:1),0));
+  const maxLines=Math.max(1,...colLineCounts);
+  let image=null;
+  if(photoUrl){image=$('pImage');if(!image.complete||!image.naturalWidth)image=null}
+  const imageH=image?Math.min(430,Math.max(220,inner/(image.naturalWidth/image.naturalHeight))):0;
+  const headerH=205+titleLines.length*titleSize*1.3+(deckLines.length?62:0)+(image?imageH+55:0);
+  const H=Math.max(1000,Math.ceil(headerH+maxLines*lineH+145));
+  const scale=2,canvas=document.createElement('canvas');canvas.width=W*scale;canvas.height=H*scale;
+  const ctx=canvas.getContext('2d');ctx.scale(scale,scale);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+  let y=48;ctx.textAlign='center';ctx.textBaseline='alphabetic';ctx.fillStyle='#111';
+  ctx.font='900 31px '+sans;ctx.fillText('मानस न्यूज-24',W/2,y);y+=25;ctx.fillRect(margin,y,inner,5);y+=33;
+  ctx.font='500 17px '+sans;ctx.fillStyle='#555';ctx.fillText('उत्तर प्रदेश  |  राष्ट्रीय  |  जनसरोकार',W/2,y);y+=29;
+  ctx.font='500 18px '+sans;ctx.fillText(($('dateline').value.trim()||'मांडा।')+'   •   '+new Date().toLocaleDateString('hi-IN'),W/2,y);y+=35;
+  ctx.fillStyle='#111';ctx.fillRect(margin,y,inner,1);y+=titleSize*.95;
+  ctx.font='900 '+titleSize+'px '+serif;titleLines.forEach(line=>{ctx.fillText(line,W/2,y);y+=titleSize*1.28});y+=10;
+  if(deckLines.length){ctx.font='700 27px '+sans;ctx.fillStyle='#333';ctx.fillText(deckLines[0],W/2,y,inner);y+=39;ctx.fillRect(margin+inner*.18,y,inner*.64,1);y+=22}
+  if(image){const h=imageH;const ratio=image.naturalWidth/image.naturalHeight;let sx=0,sy=0,sw=image.naturalWidth,sh=image.naturalHeight;if(ratio>inner/h){sw=image.naturalHeight*inner/h;sx=(image.naturalWidth-sw)/2}else{sh=image.naturalWidth/(inner/h);sy=(image.naturalHeight-sh)/2}ctx.drawImage(image,sx,sy,sw,sh,margin,y,inner,h);y+=h+8;if($('caption').value.trim()){ctx.font='500 17px '+sans;ctx.fillStyle='#555';ctx.fillText($('caption').value.trim(),W/2,y,inner);y+=28}else y+=12}
+  const startY=y;ctx.textAlign='left';ctx.textBaseline='top';ctx.fillStyle='#171717';ctx.font=storyFont;
+  for(let col=0;col<n;col++){let yy=startY;for(const item of columns[col]){if(item.gap){yy+=lineH*.55;continue}ctx.fillText(item.line,margin+col*(colW+gap),yy,colW);yy+=lineH}}
+  ctx.strokeStyle='#c9c9c9';ctx.lineWidth=1.2;for(let col=1;col<n;col++){const x=margin+col*colW+(col-.5)*gap;ctx.beginPath();ctx.moveTo(x,startY-3);ctx.lineTo(x,H-72);ctx.stroke()}
+  const fy=H-38;ctx.fillStyle='#777';ctx.fillRect(margin,fy-13,inner,1);ctx.font='500 14px '+sans;ctx.textAlign='left';ctx.fillText('मानस न्यूज-24  •  स्वतंत्र एवं तथ्यपरक समाचार',margin,fy);ctx.textAlign='right';ctx.fillText('manasnews.blogspot.com',W-margin,fy);
+  const a=document.createElement('a');a.download='Manas-News24-News-Cutting.png';a.href=canvas.toDataURL('image/png');a.click();$('status').textContent='प्रोफेशनल PNG कटिंग तैयार है। '+n+' कॉलम · '+W+' × '+H+' पिक्सल।';
+ }catch(err){$('status').textContent='PNG नहीं बन सका: '+err.message+'। प्रिंट/PDF विकल्प इस्तेमाल करें।'}
+ finally{btn.disabled=false}
+};
 function setMobileMode(mode){
  document.body.classList.toggle('mobile-edit-mode',mode==='edit');
  document.body.classList.toggle('mobile-preview-mode',mode==='preview');
