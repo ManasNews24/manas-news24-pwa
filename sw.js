@@ -16,7 +16,7 @@ self.addEventListener('fetch',event=>{
  if(request.method!=='GET'||url.origin!==self.location.origin)return;
  if(request.mode==='navigate'){
   event.respondWith(fetch(request).then(response=>{
-   if(response.ok){const copy=response.clone();event.waitUntil(caches.open(CACHE).then(cache=>cache.put(new URL(request.url).pathname.endsWith('/notify.html')?'./notify.html':(new URL(request.url).pathname.endsWith('/admin.html')?'./admin.html':(new URL(request.url).pathname.endsWith('/smart-pagemaker.html')?'./smart-pagemaker.html':'./index.html')),copy)));}
+   if(response.ok){const copy=response.clone();event.waitUntil(caches.open(CACHE).then(cache=>cache.put(new URL(request.url).pathname.endsWith('/notify.html')?'./notify.html':(new URL(request.url).pathname.endsWith('/admin.html')?'./admin.html':(new URL(request.url).pathname.endsWith('/smart-pagemaker.html')?'./smart-pagemaker.html':(new URL(request.url).pathname.endsWith('/social-poster.html')?'./social-poster.html':'./index.html'))),copy)));}
    return response;
   }).catch(()=>caches.match(request).then(cached=>cached||caches.match('./index.html').then(home=>home||new Response('इंटरनेट कनेक्शन उपलब्ध नहीं है।',{headers:{'Content-Type':'text/plain; charset=utf-8'}})))));
   return;
