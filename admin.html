@@ -224,19 +224,19 @@
     <div class="panel"><div class="toolbar"><input id="articleSearch" placeholder="शीर्षक से खबर खोजें…"><select id="statusFilter"><option value="">सभी स्थिति</option><option>draft</option><option>submitted</option><option>in_review</option><option>changes_requested</option><option>approved</option><option>published</option><option>scheduled</option><option>rejected</option></select><button class="btn soft" id="filterBtn">खोजें</button></div><div id="articlesTable"></div></div>
    </section>
    <section id="page-editor" class="page hidden">
-    <div class="welcome"><div><div class="eyebrow">STORY COMPOSER</div><h2 id="editorHeading">नई खबर लिखें</h2><p>तथ्य, शीर्षक, स्थान, श्रेणी और SEO विवरण व्यवस्थित रखें।</p></div></div>
+    <div class="welcome"><div><div class="eyebrow">STORY COMPOSER</div><h2 id="editorHeading">नई खबर लिखें</h2><p>आप सिर्फ कच्ची जानकारी दें—खबर तैयार करने और संपादक तक भेजने का काम आसान बनाया गया है।</p></div></div>
     <div class="panel">
      <form id="articleForm">
       <input type="hidden" id="articleId">
       <div class="formgrid">
-       <div class="field full"><label for="title">समाचार शीर्षक *</label><input id="title" required maxlength="180" placeholder="स्पष्ट, तथ्यपरक और आकर्षक शीर्षक"></div>
+       <div class="field full"><label for="title">समाचार शीर्षक <span class="muted">(AI खुद भी बना देगा)</span></label><input id="title" maxlength="180" placeholder="खबर बनने के बाद शीर्षक अपने आप भर जाएगा"></div>
        <div class="field"><label for="dateline">डेटलाइन / स्थान</label><input id="dateline" maxlength="120" placeholder="मांडा। / प्रयागराज।"></div><div class="field"><label for="category">श्रेणी</label><select id="category"></select></div>
        <div class="field"><label for="statusInput">स्थिति</label><select id="statusInput"><option value="draft">ड्राफ्ट</option><option value="submitted">समीक्षा हेतु भेजें</option></select></div>
        <div class="field full"><label for="summary">संक्षिप्त परिचय / डेक</label><textarea id="summary" style="min-height:76px" maxlength="500" placeholder="खबर का 1-2 वाक्यों में सार"></textarea></div>
-       <div class="field full"><label for="body">पूरी खबर *</label><textarea id="body" required placeholder="स्थान/डेटलाइन के साथ खबर लिखें…"></textarea><span class="hint">न्यूज़रूम में सादा टेक्स्ट सुरक्षित रहेगा। HTML या स्क्रिप्ट न डालें।</span></div>
+       <div class="field full"><label for="body">कच्चे तथ्य / घटना की जानकारी *</label><textarea id="body" required placeholder="अपनी भाषा में घटना बताएं। अधूरी जानकारी भी चलेगी। दूसरे अखबार की स्क्रिप्ट पेस्ट कर सकते हैं—AI तथ्यों को सुरक्षित रखते हुए खबर को स्वतंत्र भाषा और नए विन्यास में तैयार करेगा।"></textarea><div class="formactions" style="margin-top:5px"><button class="btn soft" type="button" id="voiceInputBtn">🎙️ बोलकर जानकारी दें</button><button class="btn soft" type="button" id="pasteHelpBtn">कॉपी की गई खबर पेस्ट करें</button></div><span class="hint">नाम, गांव, तारीख, समय, बयान और आंकड़े जैसे उपलब्ध तथ्य लिखें। AI अधूरी जानकारी नहीं गढ़ेगा।</span></div>
        <div class="field full"><div class="notice" style="margin:0"><strong>AI समाचार संपादक • स्मार्ट कॉपी डेस्क</strong><br>पहले मूल तथ्य सुरक्षित रखें। फिर खबर तैयार कराएं, निर्देश देकर दोबारा संशोधित करें या केवल भाषा सुधारें। AI कोई तथ्य, नाम, संख्या या बयान नहीं गढ़ेगा। अंतिम निर्णय रिपोर्टर/संपादक का रहेगा।</div>
         <div class="field" style="margin-top:10px"><label for="aiInstruction">AI को संपादकीय निर्देश (वैकल्पिक)</label><textarea id="aiInstruction" style="min-height:76px" maxlength="2000" placeholder="उदाहरण: खबर को अधिक प्रभावी बनाएं, लेकिन सभी तथ्य जस के तस रखें। शीर्षक के तीन विकल्प दें।"></textarea><span class="hint">आप बार-बार निर्देश बदलकर मसौदे को बेहतर बना सकते हैं।</span></div>
-        <div class="formactions" style="margin-top:8px"><button class="btn gold" type="button" id="aiDraftBtn">✦ तथ्यों से खबर तैयार करें</button><button class="btn soft" type="button" id="aiReviseBtn">निर्देशानुसार फिर से संपादित करें</button><button class="btn soft" type="button" id="aiPolishBtn">भाषा और व्याकरण सुधारें</button></div>
+        <div class="formactions" style="margin-top:8px"><button class="btn gold" type="button" id="aiDraftBtn">✦ मेरी खबर तैयार करें</button><button class="btn soft" type="button" id="aiReviseBtn">निर्देशानुसार फिर से संपादित करें</button><button class="btn soft" type="button" id="aiPolishBtn">भाषा और व्याकरण सुधारें</button></div>
         <div id="aiStatus" class="small muted" aria-live="polite"></div><div id="aiResult" class="notice hidden" style="white-space:pre-wrap"></div>
         <button class="btn primary hidden" type="button" id="aiApplyBtn">तैयार खबर फॉर्म में लगाएं</button>
        </div>
@@ -368,7 +368,7 @@ let aiDraftResult=null;
 async function runAiEditor(mode){
  const raw=$('body').value.trim();
  if(!raw){toast('पहले खबर के तथ्य या कच्ची खबर लिखें।');$('body').focus();return}
- const btn=mode==='draft'?$('aiDraftBtn'):$('aiPolishBtn');
+ const btn=mode==='draft'?$('aiDraftBtn'):(mode==='revise'?$('aiReviseBtn'):$('aiPolishBtn'));
  btn.disabled=true;btn.textContent='AI खबर तैयार कर रहा है…';$('aiResult').classList.add('hidden');$('aiApplyBtn').classList.add('hidden');$('aiStatus').textContent='तथ्यों और भाषा की जांच की जा रही है…';
  try{
   const {data:{session}}=await supabase.auth.getSession();
@@ -382,13 +382,24 @@ async function runAiEditor(mode){
   $('aiResult').textContent='शीर्षक: '+(aiDraftResult.title||'')+'\n\nसंक्षिप्त परिचय: '+(aiDraftResult.summary||'')+'\n\nतैयार खबर:\n'+(aiDraftResult.body||'')+(missing?'\n\nअधूरे/पुष्टि योग्य तथ्य:\n'+missing:'')+(cautions?'\n\nसावधानी:\n'+cautions:'');
   $('aiResult').classList.remove('hidden');$('aiApplyBtn').classList.remove('hidden');$('aiStatus').textContent='मसौदा तैयार है। मूल खबर अभी नहीं बदली गई है। कृपया तथ्यों की जांच करें।';
  }catch(err){$('aiStatus').textContent='';toast(err.message)}
- finally{btn.disabled=false;btn.textContent=mode==='draft'?'✦ तथ्यों से खबर तैयार करें':(mode==='revise'?'निर्देशानुसार फिर से संपादित करें':'भाषा और व्याकरण सुधारें')}
+ finally{btn.disabled=false;btn.textContent=mode==='draft'?'✦ मेरी खबर तैयार करें':(mode==='revise'?'निर्देशानुसार फिर से संपादित करें':'भाषा और व्याकरण सुधारें')}
 }
 $('aiDraftBtn').onclick=()=>runAiEditor('draft');
 $('aiReviseBtn').onclick=()=>runAiEditor('revise');
 $('aiPolishBtn').onclick=()=>runAiEditor('polish');
 $('aiApplyBtn').onclick=()=>{if(!aiDraftResult)return;if(!confirm('AI का मसौदा शीर्षक, परिचय और खबर के फॉर्म में लगाया जाए? मूल खबर बदल जाएगी, लेकिन अभी सेव नहीं होगी।'))return;$('title').value=aiDraftResult.title||$('title').value;$('summary').value=aiDraftResult.summary||$('summary').value;$('body').value=aiDraftResult.body||$('body').value;$('seoTitle').value=aiDraftResult.seo_title||$('seoTitle').value;$('seoDescription').value=aiDraftResult.seo_description||$('seoDescription').value;toast('AI मसौदा फॉर्म में लगाया गया। जांचकर खबर सुरक्षित करें।')};
 
+$('voiceInputBtn').onclick=()=>{
+ const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!SR){toast('इस ब्राउज़र में बोलकर लिखने की सुविधा उपलब्ध नहीं है। Android Chrome में माइक्रोफोन अनुमति देकर प्रयास करें।');return}
+ const rec=new SR();rec.lang='hi-IN';rec.interimResults=false;rec.continuous=false;
+ $('voiceInputBtn').disabled=true;$('voiceInputBtn').textContent='सुन रहा है… बोलिए';
+ rec.onresult=e=>{const said=e.results[0][0].transcript;$('body').value=($('body').value.trim()?$('body').value.trim()+'\n':'')+said;toast('आपकी बोली गई जानकारी जोड़ दी गई।')};
+ rec.onerror=e=>toast('आवाज दर्ज नहीं हुई: '+(e.error||'दोबारा प्रयास करें'));
+ rec.onend=()=>{$('voiceInputBtn').disabled=false;$('voiceInputBtn').textContent='🎙️ बोलकर जानकारी दें'};
+ rec.start();
+};
+$('pasteHelpBtn').onclick=async()=>{try{const clip=await navigator.clipboard.readText();if(!clip){toast('क्लिपबोर्ड में कोई टेक्स्ट नहीं मिला।');return}$('body').value=($('body').value.trim()?$('body').value.trim()+'\n':'')+clip;toast('कॉपी की गई सामग्री जोड़ दी गई। अब AI से खबर बनाएं।')}catch{$('body').focus();toast('टेक्स्ट बॉक्स पर देर तक दबाकर पेस्ट विकल्प चुनें।')}};
 boot();
 </script>
 </body>
