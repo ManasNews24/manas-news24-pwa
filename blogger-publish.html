@@ -18,7 +18,7 @@
 <section id="app" class="hidden">
 <div class="panel">
 <h2 style="margin:0 0 8px;font-size:18px">Blogger कनेक्शन सेटिंग</h2>
-<p class="muted">Google Cloud Console में Blogger API v3 सक्षम करें और Web OAuth Client ID बनाएँ। नीचे Client ID दर्ज करें। यह सार्वजनिक पहचान है, पासवर्ड या Client Secret नहीं।</p>
+<p class="muted">Google Cloud Console में Blogger API v3 सक्षम करें और Web OAuth Client ID बनाएँ। Authorized JavaScript origin में https://manasnews24.github.io जोड़ें। OAuth consent screen में अपने Google खाते को test user रखें (यदि ऐप Testing mode में है)। नीचे Client ID दर्ज करें। यह सार्वजनिक पहचान है, पासवर्ड या Client Secret नहीं।</p>
 <div class="grid">
 <div class="field"><label for="clientId">Google OAuth Client ID</label><input id="clientId" placeholder="xxxxxxxx.apps.googleusercontent.com" autocomplete="off"></div>
 <div class="field"><label for="blogUrl">Blogger वेबसाइट URL</label><input id="blogUrl" type="url" value="https://manasnews.blogspot.com/"></div>
@@ -129,7 +129,8 @@ async function syncPublished(articleId){
 async function ensureBlogReady(){
  if(!saveConfig())throw new Error('Blogger सेटिंग अधूरी है।');
  await token();
- if(!blogInfo){
+ let saved={};try{saved=JSON.parse(localStorage.getItem(CONFIG_KEY)||'{}')}catch{}
+ if(!blogInfo||saved.clientId!==cfg().clientId||saved.blogUrl!==cfg().blogUrl||saved.blogId!==blogInfo.id){
   const blog=await bloggerFetch('/blogs/byurl?url='+encodeURIComponent(cfg().blogUrl),{method:'GET'});
   if(!blog.id)throw new Error('Blogger Blog ID नहीं मिली।');
   blogInfo=blog;localStorage.setItem(CONFIG_KEY,JSON.stringify({...cfg(),blogId:blog.id,blogName:blog.name||''}));
@@ -186,7 +187,7 @@ async function boot(){
  $('app').classList.remove('hidden');$('who').textContent=(p.display_name||'एडमिन')+' · ADMIN';
  await loadData();
  const v=JSON.parse(localStorage.getItem(CONFIG_KEY)||'{}');
- if(v.blogId){blogInfo={id:v.blogId,name:v.blogName||'Blogger ब्लॉग'};say('Blogger Blog ID सेट है: '+blogInfo.name+' · Google अनुमति प्रकाशन के समय ली जाएगी।','good')}
+ if(v.blogId){blogInfo={id:v.blogId,name:v.blogName||'Blogger ब्लॉग',url:v.blogUrl||''};say('Blogger Blog ID सेट है: '+blogInfo.name+' · Google अनुमति प्रकाशन के समय ली जाएगी।','good')}
 }
 $('saveConfig').onclick=()=>{if(saveConfig())toast('Blogger सेटिंग सुरक्षित हुई।')};
 $('connect').onclick=connect;
