@@ -10,11 +10,11 @@
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
-<header class="top"><div><strong>मानस न्यूज-24</strong><br><small>Blogger प्रकाशन डेस्क · केवल एडमिन</small></div><a href="./admin.html">← मुख्य न्यूज़रूम</a><span id="who">लॉगिन जाँचा जा रहा है…</span></header>
+<header class="top"><div><strong>मानस न्यूज-24</strong><br><small>Blogger प्रकाशन डेस्क · संपादक और एडमिन</small></div><a href="./admin.html">← मुख्य न्यूज़रूम</a><span id="who">लॉगिन जाँचा जा रहा है…</span></header>
 <main class="wrap">
 <div class="notice"><strong>प्रकाशन सुरक्षा:</strong> केवल संपादकीय रूप से स्वीकृत खबरें यहाँ आएँगी। पहले Blogger में ड्राफ्ट बनाया जाएगा, फिर उसी पोस्ट को स्पष्ट पुष्टि के बाद लाइव किया जाएगा। वास्तविक Blogger URL मिलने पर न्यूज़रूम में खबर की स्थिति प्रकाशित होगी।</div>
-<section id="login" class="panel hidden"><h3>न्यूज़रूम लॉगिन आवश्यक</h3><p class="muted">पहले मुख्य न्यूज़रूम में एडमिन खाते से लॉगिन करें।</p><a href="./admin.html">न्यूज़रूम खोलें</a></section>
-<section id="denied" class="panel hidden"><h3>एडमिन अनुमति आवश्यक</h3><p class="muted">Blogger पर वास्तविक प्रकाशन केवल एडमिन खाते से किया जा सकता है।</p><a href="./admin.html">मुख्य न्यूज़रूम पर लौटें</a></section>
+<section id="login" class="panel hidden"><h3>न्यूज़रूम लॉगिन आवश्यक</h3><p class="muted">पहले मुख्य न्यूज़रूम में अपने अधिकृत खाते से लॉगिन करें।</p><a href="./admin.html">न्यूज़रूम खोलें</a></section>
+<section id="denied" class="panel hidden"><h3>संपादकीय अनुमति आवश्यक</h3><p class="muted">Blogger पर वास्तविक प्रकाशन केवल संपादक या एडमिन खाते से किया जा सकता है। रिपोर्टर को प्रकाशन की अनुमति नहीं है।</p><a href="./admin.html">मुख्य न्यूज़रूम पर लौटें</a></section>
 <section id="app" class="hidden">
 <div class="panel">
 <h2 style="margin:0 0 8px;font-size:18px">Blogger कनेक्शन सेटिंग</h2>
@@ -183,8 +183,8 @@ async function boot(){
  const {data:p,error}=await sb.from('user_profiles').select('display_name,role,is_active').eq('id',user.id).maybeSingle();
  if(error||!p||p.is_active===false){$('login').classList.remove('hidden');$('who').textContent='अनुमति उपलब्ध नहीं';return}
  profile=p;
- if(p.role!=='admin'){$('denied').classList.remove('hidden');$('who').textContent='केवल एडमिन';return}
- $('app').classList.remove('hidden');$('who').textContent=(p.display_name||'एडमिन')+' · ADMIN';
+ if(!['editor','admin'].includes(p.role)){$('denied').classList.remove('hidden');$('who').textContent='प्रकाशन अनुमति नहीं';return}
+ $('app').classList.remove('hidden');$('who').textContent=(p.display_name||'संपादकीय सदस्य')+' · '+(p.role==='admin'?'ADMIN':'EDITOR');
  await loadData();
  const v=JSON.parse(localStorage.getItem(CONFIG_KEY)||'{}');
  if(v.blogId){blogInfo={id:v.blogId,name:v.blogName||'Blogger ब्लॉग',url:v.blogUrl||''};say('Blogger Blog ID सेट है: '+blogInfo.name+' · Google अनुमति प्रकाशन के समय ली जाएगी।','good')}
