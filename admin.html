@@ -317,10 +317,12 @@
  <div style="max-width:850px;margin:4vh auto;background:#fff;border-radius:16px;padding:18px;box-shadow:0 24px 70px #0005">
   <div class="panelhead"><div><div class="eyebrow">EDITORIAL REVIEW DESK</div><h3 id="reviewTitle">संपादकीय समीक्षा</h3></div><button class="btn soft" type="button" id="closeReview">बंद करें</button></div>
   <div id="reviewMeta" class="small muted" style="margin-bottom:12px"></div>
-  <div id="reviewStory" style="white-space:pre-wrap;line-height:1.8;max-height:42vh;overflow:auto;background:#f7f8fb;padding:14px;border-radius:10px;margin-bottom:14px"></div>
-  <div class="formgrid"><div class="field"><label for="reviewStatus">अगली स्थिति</label><select id="reviewStatus"><option value="in_review">समीक्षा में रखें</option><option value="changes_requested">रिपोर्टर से सुधार कराएं</option><option value="approved">स्वीकृत करें</option><option value="rejected">अस्वीकृत करें</option></select></div>
-   <div class="field"><label for="reviewNote">संपादकीय टिप्पणी / सुधार निर्देश</label><textarea id="reviewNote" style="min-height:78px" placeholder="रिपोर्टर के लिए स्पष्ट निर्देश या समीक्षा टिप्पणी"></textarea></div></div>
-  <div class="formactions"><button class="btn primary" type="button" id="saveReview">समीक्षा सुरक्षित करें</button><button class="btn soft" type="button" id="editReviewedStory">पूरी खबर संपादित करें</button></div>
+  <div class="field"><label for="reviewEditTitle">शीर्षक</label><input id="reviewEditTitle" maxlength="180"></div>
+  <div class="field" style="margin-top:10px"><label for="reviewEditSummary">संक्षिप्त परिचय</label><textarea id="reviewEditSummary" style="min-height:65px"></textarea></div>
+  <div class="field" style="margin-top:10px"><label for="reviewEditBody">पूरी खबर — यहीं सुधार करें</label><textarea id="reviewEditBody" style="min-height:280px;line-height:1.75"></textarea></div>
+  <details style="margin-top:10px"><summary style="cursor:pointer;font-weight:700">मूल कच्ची जानकारी और स्रोत देखें</summary><div id="reviewStory" style="white-space:pre-wrap;line-height:1.7;max-height:28vh;overflow:auto;background:#f7f8fb;padding:12px;border-radius:10px;margin-top:8px"></div></details>
+  <div class="field" style="margin-top:12px"><label for="reviewNote">संपादकीय टिप्पणी (वैकल्पिक)</label><textarea id="reviewNote" style="min-height:65px" placeholder="केवल जरूरत होने पर टिप्पणी लिखें"></textarea></div>
+  <div class="formactions"><button class="btn primary" type="button" id="saveReview">सुधार सुरक्षित करें और स्वीकृत करें</button><button class="btn soft" type="button" id="requestChanges">रिपोर्टर से सुधार मांगें</button></div>
  </div>
 </div>
 <div id="toast" class="toast hidden" role="status"></div>
@@ -404,22 +406,29 @@ let activeReviewId=null;
 async function reviewArticle(id){
  const {data:a,error}=await supabase.from('news_articles').select('*,user_profiles!news_articles_author_id_fkey(display_name,phone_e164,login_identifier,dateline),news_categories(name)').eq('id',id).single();
  if(error||!a){toast('खबर समीक्षा के लिए नहीं खुली: '+(error?.message||''));return}
- activeReviewId=id;$('reviewTitle').textContent=a.title;$('reviewMeta').textContent=(a.dateline||'स्थान नहीं दिया')+' · रिपोर्टर: '+(a.reporter_name_snapshot||a.user_profiles?.display_name||'रिपोर्टर')+' · '+(a.news_categories?.name||'अश्रेणीकृत')+' · '+(statusHi[a.status]||a.status)+' · मोबाइल: '+(a.user_profiles?.phone_e164||'दर्ज नहीं')+' · लॉगिन: '+(a.user_profiles?.login_identifier||'—');
- $('reviewStory').textContent=(a.summary?'परिचय: '+a.summary+'\\n\\n':'')+(a.body||'')+(a.source_note?'\\n\\nस्रोत/सत्यापन नोट: '+a.source_note:'')+(a.raw_facts?'\\n\\nरिपोर्टर के मूल तथ्य:\\n'+a.raw_facts:'')+(a.featured_image_url?'\\n\\nमुख्य फोटो: '+a.featured_image_url:'')+(a.featured_video_url?'\\n\\nवीडियो: '+a.featured_video_url:'');$('reviewStatus').value=a.status==='submitted'?'in_review':a.status;$('reviewNote').value='';$('reviewModal').classList.remove('hidden');
+ activeReviewId=id;$('reviewTitle').textContent=a.title;$('reviewMeta').textContent=(a.dateline||'स्थान नहीं दिया')+' · रिपोर्टर: '+(a.reporter_name_snapshot||a.user_profiles?.display_name||'रिपोर्टर')+' · '+(a.news_categories?.name||'अश्रेणीकृत')+' · '+(statusHi[a.status]||a.status);
+ $('reviewEditTitle').value=a.title||'';$('reviewEditSummary').value=a.summary||'';$('reviewEditBody').value=a.body||'';
+ $('reviewStory').textContent=(a.source_note?'स्रोत/सत्यापन नोट: '+a.source_note+'\\n\\n':'')+(a.raw_facts?'रिपोर्टर की मूल कच्ची खबर:\\n'+a.raw_facts:'मूल कच्ची जानकारी उपलब्ध नहीं है।')+(a.featured_image_url?'\\n\\nमुख्य फोटो: '+a.featured_image_url:'')+(a.featured_video_url?'\\n\\nवीडियो: '+a.featured_video_url:'');$('reviewNote').value='';$('reviewModal').classList.remove('hidden');
 }
 $('closeReview').onclick=()=>{$('reviewModal').classList.add('hidden');activeReviewId=null};
 $('editReviewedStory').onclick=()=>{if(!activeReviewId)return;const id=activeReviewId;$('reviewModal').classList.add('hidden');activeReviewId=null;editArticle(id)};
-$('saveReview').onclick=async()=>{
- if(!activeReviewId)return;const id=activeReviewId,choice=$('reviewStatus').value,note=$('reviewNote').value.trim();
+async function finishEditorialReview(choice){
+ if(!activeReviewId)return;const id=activeReviewId,note=$('reviewNote').value.trim();
+ const title=$('reviewEditTitle').value.trim(),summary=$('reviewEditSummary').value.trim(),body=$('reviewEditBody').value.trim();
+ if(choice==='approved'&&(!title||!body)){toast('प्रकाशन से पहले शीर्षक और खबर जरूरी हैं।');return}
  const payload={status:choice,updated_at:new Date().toISOString()};
+ if(choice==='approved'){payload.title=title;payload.slug=slugify(title);payload.summary=summary;payload.body=body}
  const {error}=await supabase.from('news_articles').update(payload).eq('id',id);
- if(error){toast('समीक्षा अपडेट नहीं हुई: '+error.message);return}
- const action=choice==='approved'?'approved':choice==='rejected'?'rejected':choice==='changes_requested'?'changes_requested':'assigned';
+ if(error){toast('खबर सुरक्षित नहीं हुई: '+error.message);return}
+ const action=choice==='approved'?'approved':'changes_requested';
  const log=await supabase.from('editorial_actions').insert({article_id:id,actor_id:currentUser.id,action,note});
- await supabase.from('audit_logs').insert({actor_id:currentUser.id,event_type:'editorial_review',entity_type:'news_article',entity_id:id,details:{status:choice,note}});
- $('reviewModal').classList.add('hidden');activeReviewId=null;toast(log.error?'स्थिति सुरक्षित हुई; टिप्पणी लॉग नहीं हुई।':'संपादकीय निर्णय सुरक्षित हो गया।');
+ await supabase.from('audit_logs').insert({actor_id:currentUser.id,event_type:'editorial_review',entity_type:'news_article',entity_id:id,details:{status:choice,note,edited:choice==='approved'}});
+ $('reviewModal').classList.add('hidden');activeReviewId=null;
+ toast(log.error?'खबर सुरक्षित हुई; गतिविधि लॉग में त्रुटि आई।':choice==='approved'?'सुधार सुरक्षित। खबर प्रकाशन के लिए स्वीकृत है।':'रिपोर्टर को सुधार के लिए भेज दिया गया।');
  await loadArticles();await loadOverview();
-};
+}
+$('saveReview').onclick=()=>finishEditorialReview('approved');
+$('requestChanges').onclick=()=>finishEditorialReview('changes_requested');
 async function loadMedia(){const {data,error}=await supabase.from('media_assets').select('*').order('created_at',{ascending:false}).limit(80);if(error){$('mediaList').innerHTML='<div class="empty">मीडिया लोड नहीं हुआ: '+esc(error.message)+'</div>';return}$('mediaList').innerHTML=data.length?'<div class="tablewrap"><table><thead><tr><th>फोटो</th><th>विवरण</th><th>तिथि</th><th>कार्य</th></tr></thead><tbody>'+data.map(m=>'<tr><td>'+(m.media_type==='video'?'<video src="'+esc(m.public_url||'')+'" controls muted style="width:90px;height:58px;object-fit:cover;border-radius:7px"></video>':'<img src="'+esc(m.public_url||'')+'" alt="" style="width:64px;height:48px;object-fit:cover;border-radius:7px">')+'</td><td><strong>'+esc(m.alt_text||'बिना विवरण')+'</strong><div class="small muted">'+esc(m.caption||'')+'</div></td><td>'+new Date(m.created_at).toLocaleDateString('hi-IN')+'</td><td><div class="actions"><button data-copy="'+esc(m.public_url||'')+'">URL कॉपी</button></div></td></tr>').join('')+'</tbody></table></div>':'<div class="empty">अभी कोई फोटो अपलोड नहीं है।</div>';$('mediaList').querySelectorAll('[data-copy]').forEach(b=>b.onclick=async()=>{await navigator.clipboard.writeText(b.dataset.copy);toast('फोटो URL कॉपी हो गया।')})}
 $('reloadMedia').onclick=loadMedia;$('uploadMedia').onclick=async()=>{const f=$('mediaFile').files[0];if(!f){toast('पहले फोटो चुनें।');return}if(!['image/jpeg','image/png','image/webp','video/mp4','video/webm'].includes(f.type)||f.size>50*1024*1024){toast('केवल JPG, PNG, WebP, MP4, WebM और अधिकतम 50 MB फाइल।');return}const path=currentUser.id+'/'+Date.now()+'-'+f.name.replace(/[^a-zA-Z0-9._-]/g,'_');const {error}=await supabase.storage.from('news-media').upload(path,f,{contentType:f.type,upsert:false});if(error){toast('अपलोड विफल: '+error.message);return}const {data}=supabase.storage.from('news-media').getPublicUrl(path);const meta=await supabase.from('media_assets').insert({uploaded_by:currentUser.id,object_path:path,public_url:data.publicUrl,media_type:f.type.startsWith('video/')?'video':'image',alt_text:$('altText').value.trim(),caption:$('caption').value.trim()});if(meta.error){toast('फोटो अपलोड हुआ, विवरण सेव नहीं हुआ: '+meta.error.message);return}$('mediaFile').value='';$('altText').value='';$('caption').value='';toast(f.type.startsWith('video/')?'वीडियो सफलतापूर्वक अपलोड हो गया।':'फोटो सफलतापूर्वक अपलोड हो गया।');loadMedia()};
 async function loadTeam(){
