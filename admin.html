@@ -247,7 +247,7 @@
          <button class="btn soft" type="button" id="voiceInputBtn">🎙️ बोलकर खबर लिखें</button>
          <button class="btn soft" type="button" id="pasteHelpBtn">📋 कॉपी की खबर पेस्ट करें</button>
         </div>
-        <button class="btn gold" type="button" id="aiDraftBtn" style="width:100%;margin-top:12px;min-height:54px;font-size:17px">✦ AI से पूरी खबर तैयार करें</button>
+        <button class="btn gold" type="button" id="aiDraftBtn" onclick="window.runAiEditor && window.runAiEditor('draft')" style="width:100%;margin-top:12px;min-height:54px;font-size:17px">✦ AI से पूरी खबर तैयार करें</button>
         <div id="aiStatus" class="small muted" role="status" aria-live="polite" style="margin-top:10px"></div>
         <div id="aiResult" class="notice hidden" role="alert" style="white-space:pre-wrap;margin-top:10px"></div>
        </div>
@@ -521,7 +521,7 @@ async function runAiEditor(mode){
   btn.disabled=false;btn.textContent=mode==='draft'?'✦ AI से पूरी खबर तैयार करें':(mode==='revise'?'निर्देशानुसार फिर से संपादित करें':(mode==='translate'?'चुनी भाषा में अनुवाद':'भाषा और व्याकरण सुधारें'));
  }
 }
-$('aiDraftBtn').onclick=()=>runAiEditor('draft');
+window.runAiEditor=runAiEditor; $('aiDraftBtn').onclick=()=>runAiEditor('draft');
 $('aiTranslateBtn').onclick=()=>{const value=$('translateLanguage').value;if(value==='none'){toast('यह खबर हिंदी में ही रहेगी। अनुवाद की जरूरत हो तो सूची से दूसरी भाषा चुनें।');return}const lang=$('translateLanguage').selectedOptions[0]?.textContent||'English';$('aiInstruction').value='Translate the complete news story into '+lang+'. Preserve all names, places, dates, numbers, allegations and attributions exactly. Do not add facts. Return the translated headline, summary and body.';runAiEditor('translate')};
 $('aiReviseBtn').onclick=()=>runAiEditor('revise');
 $('aiPolishBtn').onclick=()=>runAiEditor('polish');
