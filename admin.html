@@ -238,15 +238,22 @@
     <div class="welcome"><div><div class="eyebrow">सरल समाचार लेखन</div><h2 id="editorHeading">नई खबर लिखें</h2><p>कच्ची जानकारी लिखें और एक क्लिक में पूरी खबर तैयार कराएं।</p></div></div>
      <div class="panel">
       <form id="articleForm">
-       <input type="hidden" id="articleId"><textarea id="rawFacts" class="hidden" aria-hidden="true"></textarea>
+       <input type="hidden" id="articleId">
        <div class="field full">
-        <label for="body" style="font-size:18px">यहां कच्ची खबर लिखें</label>
-        <textarea id="body" required style="min-height:230px" placeholder="उदाहरण: मांडा। गांव में आज सुबह सड़क हादसा हुआ। बाइक की टक्कर से एक बुजुर्ग महिला घायल हो गईं। उन्हें अस्पताल पहुंचाया गया। प्रत्यक्षदर्शियों और पुलिस से मिली जानकारी यहां लिखें..."></textarea>
-        <span class="hint">जो जानकारी आपके पास है, अपनी भाषा में लिखें। नाम, स्थान, तारीख, समय, बयान और आंकड़े सही-सही दें। जो बात पता नहीं है, उसे छोड़ दें।</span>
+        <label for="rawFacts" style="font-size:18px">कच्ची खबर / मूल जानकारी</label>
+        <textarea id="rawFacts" required style="min-height:230px" placeholder="यहां खबर टाइप करें, कॉपी-पेस्ट करें या नीचे माइक दबाकर बोलें। उदाहरण: मांडा। गांव में आज सुबह सड़क हादसा हुआ..."></textarea>
+        <span class="hint">यह बॉक्स केवल आपकी मूल जानकारी के लिए है। नाम, स्थान, तारीख, समय, बयान और आंकड़े सही-सही लिखें। मोबाइल कीबोर्ड से टाइप या देर तक दबाकर पेस्ट भी कर सकते हैं।</span>
+        <div class="formactions" style="margin-top:10px">
+         <button class="btn soft" type="button" id="voiceInputBtn">🎙️ बोलकर खबर लिखें</button>
+         <button class="btn soft" type="button" id="pasteHelpBtn">📋 कॉपी की खबर पेस्ट करें</button>
+        </div>
         <button class="btn gold" type="button" id="aiDraftBtn" style="width:100%;margin-top:12px;min-height:54px;font-size:17px">✦ AI से पूरी खबर तैयार करें</button>
-        <div id="aiStatus" class="small muted" aria-live="polite" style="margin-top:10px"></div>
-        <div id="aiResult" class="notice hidden" style="white-space:pre-wrap;margin-top:10px"></div>
-        
+        <div id="aiStatus" class="small muted" role="status" aria-live="polite" style="margin-top:10px"></div>
+        <div id="aiResult" class="notice hidden" role="alert" style="white-space:pre-wrap;margin-top:10px"></div>
+       </div>
+       <div class="field full hidden" id="generatedBodyWrap">
+        <label for="body" style="font-size:18px">AI द्वारा तैयार खबर — जांचकर संपादित करें</label>
+        <textarea id="body" required style="min-height:230px" placeholder="AI द्वारा तैयार खबर यहां दिखाई देगी।"></textarea>
        </div>
        <div class="field full hidden" id="generatedTitleWrap"><label for="title">AI द्वारा तैयार शीर्षक — चाहें तो बदलें</label><input id="title" maxlength="180" placeholder="खबर का शीर्षक"></div>
        <div class="field full hidden" id="generatedSummaryWrap"><label for="summary">संक्षिप्त परिचय — वैकल्पिक</label><textarea id="summary" style="min-height:76px" maxlength="500" placeholder="खबर का छोटा परिचय"></textarea></div>
@@ -266,7 +273,7 @@
          <div class="field"><label for="seoDescription">SEO विवरण</label><input id="seoDescription" maxlength="300"></div>
          <div class="field full"><label for="aiInstruction">AI को विशेष निर्देश</label><textarea id="aiInstruction" style="min-height:76px" maxlength="2000" placeholder="उदाहरण: मानस न्यूज-24 की संपादकीय नीति के अनुसार सभी जरूरी तथ्यों और घटनाक्रम को सुरक्षित रखते हुए पूर्ण, विस्तृत, संतुलित और मौलिक खबर लिखें। खबर को अनावश्यक रूप से छोटा न करें।"></textarea></div>
          <div class="field"><label for="translateLanguage">अनुवाद की भाषा</label><select id="translateLanguage"><option value="none" selected>अनुवाद नहीं करना</option><option value="en">English</option><option value="ur">اردو</option><option value="bn">বাংলা</option><option value="ne">नेपाली</option></select></div>
-         <div class="field full"><div class="formactions"><button class="btn soft" type="button" id="voiceInputBtn">🎙️ बोलकर जानकारी दें</button><button class="btn soft" type="button" id="pasteHelpBtn">कॉपी की गई खबर पेस्ट करें</button><button class="btn soft" type="button" id="aiTranslateBtn">अनुवाद करें</button><button class="btn soft" type="button" id="aiReviseBtn">निर्देश से दोबारा सुधारें</button><button class="btn soft" type="button" id="aiPolishBtn">केवल भाषा सुधारें</button></div></div>
+         <div class="field full"><div class="formactions"><button class="btn soft" type="button" id="aiTranslateBtn">अनुवाद करें</button><button class="btn soft" type="button" id="aiReviseBtn">निर्देश से दोबारा सुधारें</button><button class="btn soft" type="button" id="aiPolishBtn">केवल भाषा सुधारें</button></div></div>
         </div>
        </details>
        <div class="notice good" style="margin:12px 0">AI की तैयार खबर पढ़ लें। सही हो तो नीचे एक बटन दबाकर संपादक को भेज दें।</div>
@@ -398,10 +405,10 @@ function statusPill(s){return '<span class="status '+esc(s)+'">'+esc(statusHi[s]
 async function loadArticles(compact=false){let q=supabase.from('news_articles').select('id,title,slug,status,created_at,updated_at,author_id,category_id,dateline,reporter_name_snapshot,editor_name_snapshot,published_url,featured_video_url,news_categories(name),user_profiles!news_articles_author_id_fkey(display_name)').order('updated_at',{ascending:false}).limit(100);if(!canEditAll())q=q.eq('author_id',currentUser.id);const {data,error}=await q;if(error){toast('खबरें लोड नहीं हुईं: '+error.message);return}articles=data||[];if(compact){$('recentArticles').innerHTML=articles.slice(0,6).map(a=>'<div style="padding:10px 0;border-bottom:1px solid var(--line)"><strong>'+esc(a.title)+'</strong><div class="small muted" style="margin-top:5px">'+esc(a.news_categories?.name||'अश्रेणीकृत')+' · '+statusPill(a.status)+'</div>'+(a.status==='published'&&a.published_url?'<div class="actions" style="margin-top:7px"><a class="btn soft" href="'+esc(a.published_url)+'" target="_blank" rel="noopener">खबर और थीम कटिंग खोलें</a></div>':'')+'</div>').join('')||'<div class="empty">अभी कोई खबर नहीं है।</div>';$('queue').innerHTML=articles.filter(a=>['submitted','in_review','changes_requested'].includes(a.status)).slice(0,7).map(a=>'<div style="padding:10px 0;border-bottom:1px solid var(--line)"><strong>'+esc(a.title)+'</strong><div class="small muted" style="margin-top:5px">'+esc(a.user_profiles?.display_name||'रिपोर्टर')+' · '+statusPill(a.status)+'</div>'+(canEditAll()?'<button class="btn soft" data-quick-review="'+a.id+'" style="margin-top:7px">खबर की समीक्षा करें</button>':'')+'</div>').join('')||'<div class="empty">समीक्षा कतार खाली है।</div>';$('queue').querySelectorAll('[data-quick-review]').forEach(b=>b.onclick=()=>reviewArticle(b.dataset.quickReview));return}renderArticlesTable()}
 function renderArticlesTable(){const term=$('articleSearch').value.toLowerCase(),st=$('statusFilter').value;const queue=['submitted','in_review','changes_requested'];const rows=articles.filter(a=>(!term||a.title.toLowerCase().includes(term))&&(!st||(st==='queue'?queue.includes(a.status):a.status===st)));$('articlesTable').innerHTML=rows.length?'<div class="tablewrap"><table><thead><tr><th>शीर्षक</th><th>श्रेणी</th><th>लेखक</th><th>स्थिति</th><th>अपडेट</th><th>कार्य</th></tr></thead><tbody>'+rows.map(a=>'<tr><td><strong>'+esc(a.title)+'</strong><div class="small muted">'+esc(a.dateline||'')+(a.reporter_name_snapshot?' · रिपोर्टर: '+esc(a.reporter_name_snapshot):'')+(a.status==='published'&&a.editor_name_snapshot?' · संपादक: '+esc(a.editor_name_snapshot):'')+'</div></td><td>'+esc(a.news_categories?.name||'—')+'</td><td>'+esc(a.user_profiles?.display_name||'—')+'</td><td>'+statusPill(a.status)+(a.status==='published'&&a.published_url?'<div class="small"><a href="'+esc(a.published_url)+'" target="_blank" rel="noopener">लाइव खबर देखें</a></div>':'')+'</td><td>'+new Date(a.updated_at).toLocaleDateString('hi-IN')+'</td><td><div class="actions"><button data-edit="'+a.id+'">खोलें</button>'+(a.status==='published'&&a.published_url?'<button data-share="'+esc(a.published_url)+'" data-title="'+esc(a.title)+'">लिंक साझा</button>':'')+(canEditAll()&&a.status!=='published'?'<button data-review="'+a.id+'">समीक्षा</button>':'')+'</div></td></tr>').join('')+'</tbody></table></div>':'<div class="empty">इस खोज में कोई खबर नहीं मिली।</div>'; $('articlesTable').querySelectorAll('[data-share]').forEach(b=>b.onclick=async()=>{const url=b.dataset.share,title=b.dataset.title;const shareText=title+'\n'+url;if(navigator.share){try{await navigator.share({title,text:shareText,url})}catch(e){}}else{await navigator.clipboard.writeText(shareText);toast('प्रकाशित खबर का लिंक कॉपी हो गया।')}});$('articlesTable').querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>editArticle(b.dataset.edit));$('articlesTable').querySelectorAll('[data-review]').forEach(b=>b.onclick=()=>reviewArticle(b.dataset.review))}
 $('filterBtn').onclick=renderArticlesTable;$('articleSearch').oninput=renderArticlesTable;$('statusFilter').onchange=renderArticlesTable;
-function resetArticle(){ $('articleForm').reset();$('statusInput').value='submitted';$('generatedTitleWrap').classList.add('hidden');$('generatedSummaryWrap').classList.add('hidden');$('aiStatus').textContent='';$('aiResult').classList.add('hidden');$('editorialHistoryPanel').classList.add('hidden');$('editorialHistory').textContent='';$('articleId').value='';$('rawFacts').value='';aiDraftResult=null;$('editorHeading').textContent='नई खबर लिखें';$('statusInput').innerHTML='<option value="submitted">समीक्षा हेतु भेजें</option>'; }
+function resetArticle(){ $('articleForm').reset();$('statusInput').value='submitted';$('generatedTitleWrap').classList.add('hidden');$('generatedSummaryWrap').classList.add('hidden');$('generatedBodyWrap').classList.add('hidden');$('aiStatus').textContent='';$('aiResult').classList.add('hidden');$('editorialHistoryPanel').classList.add('hidden');$('editorialHistory').textContent='';$('articleId').value='';$('rawFacts').value='';aiDraftResult=null;$('editorHeading').textContent='नई खबर लिखें';$('statusInput').innerHTML='<option value="submitted">समीक्षा हेतु भेजें</option>'; }
 $('resetArticleBtn').onclick=resetArticle;
 $('sendToEditorBtn').onclick=()=>{const existing=!!$('articleId').value;if((!existing&&!aiDraftResult?.body)||!$('title').value.trim()||!$('body').value.trim()){toast('पहले कच्ची खबर लिखकर AI से पूरी खबर तैयार कराएं।');$('body').focus();return}$('statusInput').value='submitted';$('articleForm').requestSubmit()};
-async function editArticle(id){const {data:a,error}=await supabase.from('news_articles').select('*').eq('id',id).single();if(error){toast(error.message);return}if(!canEditAll()&&a.author_id!==currentUser.id){toast('यह खबर आपके खाते की नहीं है।');return}$('articleId').value=a.id;$('rawFacts').value=a.raw_facts||'';aiDraftResult={title:a.title||'',summary:a.summary||'',body:a.body||''};$('generatedTitleWrap').classList.remove('hidden');$('generatedSummaryWrap').classList.remove('hidden');$('title').value=a.title;$('category').value=a.category_id||'';$('summary').value=a.summary||'';$('body').value=a.body||'';$('dateline').value=a.dateline||'';$('latitude').value=a.latitude??'';$('longitude').value=a.longitude??'';$('sourceNote').value=a.source_note||'';const fc=a.fact_check_items||{};['Names','Place','Date','Numbers','Source','Response'].forEach(k=>{const el=$('check'+k);if(el)el.checked=!!fc[k.toLowerCase()]});$('imageUrl').value=a.featured_image_url||'';$('videoUrl').value=a.featured_video_url||'';$('seoTitle').value=a.seo_title||'';$('seoDescription').value=a.seo_description||'';$('statusInput').value=a.status; $('editorHeading').textContent='खबर संपादित करें';showPage('editor')}
+async function editArticle(id){const {data:a,error}=await supabase.from('news_articles').select('*').eq('id',id).single();if(error){toast(error.message);return}if(!canEditAll()&&a.author_id!==currentUser.id){toast('यह खबर आपके खाते की नहीं है।');return}$('articleId').value=a.id;$('rawFacts').value=a.raw_facts||a.body||'';$('generatedBodyWrap').classList.remove('hidden');aiDraftResult={title:a.title||'',summary:a.summary||'',body:a.body||''};$('generatedTitleWrap').classList.remove('hidden');$('generatedSummaryWrap').classList.remove('hidden');$('title').value=a.title;$('category').value=a.category_id||'';$('summary').value=a.summary||'';$('body').value=a.body||'';$('dateline').value=a.dateline||'';$('latitude').value=a.latitude??'';$('longitude').value=a.longitude??'';$('sourceNote').value=a.source_note||'';const fc=a.fact_check_items||{};['Names','Place','Date','Numbers','Source','Response'].forEach(k=>{const el=$('check'+k);if(el)el.checked=!!fc[k.toLowerCase()]});$('imageUrl').value=a.featured_image_url||'';$('videoUrl').value=a.featured_video_url||'';$('seoTitle').value=a.seo_title||'';$('seoDescription').value=a.seo_description||'';$('statusInput').value=a.status; $('editorHeading').textContent='खबर संपादित करें';showPage('editor')}
 $('articleForm').onsubmit=async e=>{e.preventDefault();const id=$('articleId').value;let title=$('title').value.trim();const body=$('body').value.trim(),status=$('statusInput').value;if(!title&&aiDraftResult?.title){title=aiDraftResult.title;$('title').value=title}if(!title||!body){toast('शीर्षक और तैयार खबर अनिवार्य हैं। पहले AI से खबर बनाएं या शीर्षक लिखें।');return}if(!canEditAll()&&!['draft','submitted','changes_requested'].includes(status)){toast('रिपोर्टर यह स्थिति नहीं चुन सकता।');return}const payload={title,slug:slugify(title),raw_facts:$('rawFacts').value.trim()||body,dateline:$('dateline').value.trim(),latitude:$('latitude').value.trim()===''?null:Number($('latitude').value),longitude:$('longitude').value.trim()===''?null:Number($('longitude').value),category_id:$('category').value||null,summary:$('summary').value.trim(),body,source_note:$('sourceNote').value.trim(),fact_check_items:{names:$('checkNames').checked,place:$('checkPlace').checked,date:$('checkDate').checked,numbers:$('checkNumbers').checked,source:$('checkSource').checked,response:$('checkResponse').checked},featured_image_url:$('imageUrl').value.trim()||null,featured_video_url:$('videoUrl').value.trim()||null,seo_title:$('seoTitle').value.trim(),seo_description:$('seoDescription').value.trim(),status,updated_at:new Date().toISOString()};if(!id)payload.reporter_name_snapshot=profile.display_name||currentUser.email;let result;if(id)result=await supabase.from('news_articles').update(payload).eq('id',id).select('id').single();else result=await supabase.from('news_articles').insert({...payload,author_id:currentUser.id}).select('id').single();if(result.error){toast('खबर सुरक्षित नहीं हुई: '+result.error.message);return}const articleId=result.data.id;await supabase.from('editorial_actions').insert({article_id:articleId,actor_id:currentUser.id,action:status==='submitted'?'submitted':(id?'commented':'submitted'),note:'न्यूज़रूम फॉर्म से अपडेट: '+(statusHi[status]||status)});await supabase.from('audit_logs').insert({actor_id:currentUser.id,event_type:id?'article_updated':'article_created',entity_type:'news_article',entity_id:articleId,details:{title,status}});toast('खबर सुरक्षित हो गई।');resetArticle();await loadArticles();showPage('articles')};
 let activeReviewId=null,activeReviewArticle=null;
 async function reviewArticle(id){
@@ -483,32 +490,36 @@ $('refreshProfile').onclick=()=>enterApp(currentUser);
 
 let aiDraftResult=null;
 async function runAiEditor(mode){
- const raw=$('rawFacts').value.trim()||$('body').value.trim();
- if(!raw){toast('पहले खबर के तथ्य या कच्ची खबर लिखें।');$('body').focus();return}
+ const raw=$('rawFacts').value.trim();
+ if(!raw){$('aiStatus').textContent='पहले कच्ची खबर के बॉक्स में जानकारी लिखें या पेस्ट करें।';$('rawFacts').focus();return}
  const btn=mode==='draft'?$('aiDraftBtn'):(mode==='revise'?$('aiReviseBtn'):(mode==='translate'?$('aiTranslateBtn'):$('aiPolishBtn')));
- btn.disabled=true;btn.textContent='AI खबर तैयार कर रहा है…';$('aiResult').classList.add('hidden');$('aiApplyBtn')?.classList.add('hidden');$('aiStatus').textContent='तथ्यों और भाषा की जांच की जा रही है…';
+ btn.disabled=true;btn.textContent='AI खबर तैयार कर रहा है…';
+ $('aiResult').classList.add('hidden');$('aiStatus').textContent='AI से संपर्क हो रहा है… कृपया इस पेज को बंद न करें।';
  try{
   const {data:{session}}=await supabase.auth.getSession();
   if(!session)throw new Error('लॉगिन सत्र समाप्त है। दोबारा लॉगिन करें।');
-  if(!$('rawFacts').value.trim())$('rawFacts').value=raw;
-  const response=await fetch(SUPABASE_URL+'/functions/v1/ai-news-editor',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token,'apikey':SUPABASE_PUBLISHABLE_KEY},body:JSON.stringify({mode,headline:$('title').value.trim(),summary:$('summary').value.trim(),facts:raw,category:$('category').selectedOptions[0]?.textContent||'',source_note:$('sourceNote').value.trim(),instruction:$('aiInstruction')?.value.trim()||''})});
-  const payload=await response.json().catch(()=>({error:'सर्वर से सही उत्तर नहीं मिला।'}));
-  if(!response.ok)throw new Error(payload.error||'AI सेवा अभी उपलब्ध नहीं है।');
+  const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),90000);
+  let response;
+  try{response=await fetch(SUPABASE_URL+'/functions/v1/ai-news-editor',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token,'apikey':SUPABASE_PUBLISHABLE_KEY},body:JSON.stringify({mode,headline:$('title').value.trim(),summary:$('summary').value.trim(),facts:raw,category:$('category').selectedOptions[0]?.textContent||'',source_note:$('sourceNote').value.trim(),instruction:$('aiInstruction')?.value.trim()||''}),signal:controller.signal})}
+  finally{clearTimeout(timeout)}
+  const payload=await response.json().catch(()=>({error:'सर्वर से पढ़ने योग्य उत्तर नहीं मिला।'}));
+  if(!response.ok)throw new Error(payload.error||('AI सर्वर त्रुटि ('+response.status+')'));
+  if(!payload.result||!payload.result.body)throw new Error('AI से अधूरी खबर मिली। कृपया दोबारा प्रयास करें।');
   aiDraftResult=payload.result;
   const missing=(aiDraftResult.missing_facts||[]).map(x=>'• '+x).join('\n');
   const cautions=(aiDraftResult.cautions||[]).map(x=>'• '+x).join('\n');
   $('aiResult').textContent=(missing?'पुष्टि करें:\n'+missing+'\n\n':'')+(cautions?'सावधानी:\n'+cautions:'');
   $('aiResult').classList.toggle('hidden',!missing&&!cautions);
-  $('title').value=aiDraftResult.title||$('title').value||'';
-  $('summary').value=aiDraftResult.summary||'';
-  $('body').value=aiDraftResult.body||raw;
-  $('rawFacts').value=raw;
-  $('generatedTitleWrap').classList.remove('hidden');
-  $('generatedSummaryWrap').classList.remove('hidden');
-  $('aiApplyBtn').classList.add('hidden');
-  $('aiStatus').textContent='पूरी खबर तैयार है। शीर्षक और खबर नीचे भर दी गई है—कृपया जांचकर संपादक को भेजें।';
- }catch(err){$('aiStatus').textContent='';toast(err.message)}
- finally{btn.disabled=false;btn.textContent=mode==='draft'?'✦ AI से पूरी खबर तैयार करें':(mode==='revise'?'निर्देशानुसार फिर से संपादित करें':(mode==='translate'?'चुनी भाषा में अनुवाद':'भाषा और व्याकरण सुधारें'))}
+  $('title').value=aiDraftResult.title||$('title').value||'';$('summary').value=aiDraftResult.summary||'';$('body').value=aiDraftResult.body;
+  $('generatedTitleWrap').classList.remove('hidden');$('generatedSummaryWrap').classList.remove('hidden');$('generatedBodyWrap').classList.remove('hidden');
+  $('aiStatus').textContent='✓ खबर तैयार है। शीर्षक, सार और पूरी खबर नीचे दिखाई दे रही है। जांचकर संपादक को भेजें।';
+  $('generatedBodyWrap').scrollIntoView({behavior:'smooth',block:'start'});
+ }catch(err){
+  const message=err.name==='AbortError'?'AI को उत्तर देने में 90 सेकंड से अधिक लगे। इंटरनेट जांचकर दोबारा प्रयास करें।':(err.message||'AI खबर तैयार नहीं हो सकी।');
+  $('aiStatus').textContent='खबर तैयार नहीं हुई: '+message;$('aiResult').textContent='समस्या: '+message+'\nकच्ची खबर सुरक्षित है। आप दोबारा प्रयास कर सकते हैं।';$('aiResult').classList.remove('hidden');
+ }finally{
+  btn.disabled=false;btn.textContent=mode==='draft'?'✦ AI से पूरी खबर तैयार करें':(mode==='revise'?'निर्देशानुसार फिर से संपादित करें':(mode==='translate'?'चुनी भाषा में अनुवाद':'भाषा और व्याकरण सुधारें'));
+ }
 }
 $('aiDraftBtn').onclick=()=>runAiEditor('draft');
 $('aiTranslateBtn').onclick=()=>{const value=$('translateLanguage').value;if(value==='none'){toast('यह खबर हिंदी में ही रहेगी। अनुवाद की जरूरत हो तो सूची से दूसरी भाषा चुनें।');return}const lang=$('translateLanguage').selectedOptions[0]?.textContent||'English';$('aiInstruction').value='Translate the complete news story into '+lang+'. Preserve all names, places, dates, numbers, allegations and attributions exactly. Do not add facts. Return the translated headline, summary and body.';runAiEditor('translate')};
@@ -518,15 +529,22 @@ $('aiPolishBtn').onclick=()=>runAiEditor('polish');
 
 $('voiceInputBtn').onclick=()=>{
  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
- if(!SR){toast('इस ब्राउज़र में बोलकर लिखने की सुविधा उपलब्ध नहीं है। Android Chrome में माइक्रोफोन अनुमति देकर प्रयास करें।');return}
+ if(!SR){$('aiStatus').textContent='इस Chrome में बोलकर लिखने की सुविधा उपलब्ध नहीं है। Chrome को माइक्रोफोन अनुमति दें या कीबोर्ड से लिखें।';return}
  const rec=new SR();rec.lang='hi-IN';rec.interimResults=false;rec.continuous=false;
- $('voiceInputBtn').disabled=true;$('voiceInputBtn').textContent='सुन रहा है… बोलिए';
- rec.onresult=e=>{const said=e.results[0][0].transcript;$('body').value=($('body').value.trim()?$('body').value.trim()+'\n':'')+said;toast('आपकी बोली गई जानकारी जोड़ दी गई।')};
- rec.onerror=e=>toast('आवाज दर्ज नहीं हुई: '+(e.error||'दोबारा प्रयास करें'));
- rec.onend=()=>{$('voiceInputBtn').disabled=false;$('voiceInputBtn').textContent='🎙️ बोलकर जानकारी दें'};
- rec.start();
+ const b=$('voiceInputBtn');b.disabled=true;b.textContent='🎙️ सुन रहा है… बोलिए';$('aiStatus').textContent='माइक्रोफोन चालू है। स्पष्ट बोलें और बोलना पूरा होने पर रुकें।';
+ rec.onresult=e=>{const said=e.results?.[0]?.[0]?.transcript||'';if(said){$('rawFacts').value=($('rawFacts').value.trim()?$('rawFacts').value.trim()+'\n':'')+said;$('rawFacts').focus();$('aiStatus').textContent='आपकी बोली गई जानकारी कच्ची खबर में जोड़ दी गई है।'}};
+ rec.onerror=e=>{$('aiStatus').textContent='आवाज दर्ज नहीं हुई: '+(e.error||'माइक्रोफोन अनुमति जांचें।')};
+ rec.onend=()=>{b.disabled=false;b.textContent='🎙️ बोलकर खबर लिखें'};
+ try{rec.start()}catch(e){b.disabled=false;b.textContent='🎙️ बोलकर खबर लिखें';$('aiStatus').textContent='माइक्रोफोन शुरू नहीं हुआ। Chrome में साइट की माइक्रोफोन अनुमति जांचें।'}
 };
-$('pasteHelpBtn').onclick=async()=>{try{const clip=await navigator.clipboard.readText();if(!clip){toast('क्लिपबोर्ड में कोई टेक्स्ट नहीं मिला।');return}$('body').value=($('body').value.trim()?$('body').value.trim()+'\n':'')+clip;toast('कॉपी की गई सामग्री जोड़ दी गई। अब AI से खबर बनाएं।')}catch{$('body').focus();toast('टेक्स्ट बॉक्स पर देर तक दबाकर पेस्ट विकल्प चुनें।')}};
+$('pasteHelpBtn').onclick=async()=>{
+ try{
+  if(!navigator.clipboard?.readText)throw new Error('clipboard-unavailable');
+  const clip=await navigator.clipboard.readText();
+  if(!clip.trim()){$('aiStatus').textContent='क्लिपबोर्ड खाली है। खबर कॉपी करें, फिर पेस्ट दबाएं।';return}
+  $('rawFacts').value=($('rawFacts').value.trim()?$('rawFacts').value.trim()+'\n':'')+clip;$('rawFacts').focus();$('aiStatus').textContent='कॉपी की गई खबर कच्ची खबर के बॉक्स में जोड़ दी गई है।';
+ }catch{$('rawFacts').focus();$('aiStatus').textContent='कच्ची खबर के बॉक्स पर देर तक दबाएं और मोबाइल कीबोर्ड में Paste चुनें।'}
+};
 boot();
 </script>
 </body>
