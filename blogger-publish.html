@@ -126,15 +126,28 @@ async function syncPublished(articleId){
  const log=latestLog(articleId);if(!log||log.status!=='sent'||!log.target_url){toast('सफल Blogger प्रकाशन रिकॉर्ड नहीं मिला।');return}
  try{await syncArticle(articleId,log.target_url);toast('Blogger प्रकाशित लिंक न्यूज़रूम में सुरक्षित हो गया।');await loadData()}catch(e){toast(e.message)}
 }
+async function ensureBlogReady(){
+ if(!saveConfig())throw new Error('Blogger सेटिंग अधूरी है।');
+ await token();
+ if(!blogInfo){
+  const blog=await bloggerFetch('/blogs/byurl?url='+encodeURIComponent(cfg().blogUrl),{method:'GET'});
+  if(!blog.id)throw new Error('Blogger Blog ID नहीं मिली।');
+  blogInfo=blog;localStorage.setItem(CONFIG_KEY,JSON.stringify({...cfg(),blogId:blog.id,blogName:blog.name||''}));
+  say('जुड़ गया: '+(blog.name||'Blogger ब्लॉग')+' · Blog ID '+blog.id,'good');
+ }
+ return blogInfo;
+}
 async function publish(articleId,retryExisting){
  const article=articles.find(x=>x.id===articleId);if(!article)return;
  const log=latestLog(articleId);
  if(log?.status==='sent'){await syncPublished(articleId);return}
  if(log?.external_message_id==='blogger:pending'){toast('पिछला प्रयास बीच में रुका था। Blogger Drafts जाँचें; नया पोस्ट न बनाएँ।');return}
- if(!retryExisting&&!confirm('क्या इस स्वीकृत खबर को Blogger पर प्रकाशित करना है? पहले Blogger ड्राफ्ट बनेगा, फिर उसे लाइव किया जाएगा।'))return;
+ const prompt=retryExisting?'क्या उसी मौजूदा Blogger ड्राफ्ट को लाइव करना है? नया पोस्ट नहीं बनेगा।':'क्या इस स्वीकृत खबर को Blogger पर प्रकाशित करना है? पहले Blogger ड्राफ्ट बनेगा, फिर उसे लाइव किया जाएगा।';
+ if(!confirm(prompt))return;
  const button=document.querySelector('[data-publish="'+articleId+'"],[data-retry="'+articleId+'"]');if(button){button.disabled=true;button.textContent='प्रकाशन प्रक्रिया…'}
  let logId=log?.id||null,postId=null;
  try{
+  await ensureBlogReady();
   if(retryExisting&&log?.external_message_id?.startsWith('blogger:'))postId=log.external_message_id.slice(8);
   if(!postId){
    const ins=await sb.from('distribution_logs').insert({article_id:articleId,content_type:'article',status:'queued',external_message_id:'blogger:pending',created_by:user.id}).select('id').single();
