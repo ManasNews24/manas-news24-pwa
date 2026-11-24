@@ -82,11 +82,11 @@ async function loadData(){
  const [ar,lg,pub]=await Promise.all([
   sb.from('news_articles').select('id,title,summary,body,dateline,featured_image_url,seo_title,seo_description,status,published_url,updated_at,news_categories(name)').eq('status','approved').order('updated_at',{ascending:false}).limit(100),
   sb.from('distribution_logs').select('id,article_id,status,target_url,external_message_id,error_message,sent_at,created_at').eq('content_type','article').like('external_message_id','blogger:%').order('created_at',{ascending:false}).limit(300),
-  sb.from('news_articles').select('id,title,published_url,published_at,dateline').eq('status','published').order('published_at',{ascending:false}).limit(20)
+  sb.from('news_articles').select('id,title,summary,body,dateline,featured_image_url,published_url,published_at,updated_at').eq('status','published').order('published_at',{ascending:false}).limit(20)
  ]);
  if(ar.error){$('queue').innerHTML='<div class="muted">खबरें लोड नहीं हुईं: '+esc(ar.error.message)+'</div>';return}
  if(lg.error){$('queue').innerHTML='<div class="muted">प्रकाशन रिकॉर्ड नहीं पढ़े जा सके: '+esc(lg.error.message)+'</div>';return}
- articles=ar.data||[];logs=lg.data||[];renderQueue(pub.data||[]);
+ articles=ar.data||[];logs=lg.data||[];publishedRowsCache=pub.data||[];renderQueue(publishedRowsCache);
 }
 function latestLog(articleId){return logs.find(x=>x.article_id===articleId)||null}
 function renderQueue(publishedRows){
@@ -103,8 +103,27 @@ function renderQueue(publishedRows){
  $('queue').querySelectorAll('[data-publish]').forEach(b=>b.onclick=()=>publish(b.dataset.publish,false));
  $('queue').querySelectorAll('[data-retry]').forEach(b=>b.onclick=()=>publish(b.dataset.retry,true));
  $('queue').querySelectorAll('[data-sync]').forEach(b=>b.onclick=()=>syncPublished(b.dataset.sync));
- $('published').innerHTML=publishedRows.length?publishedRows.map(a=>'<div class="item"><h3>'+esc(a.title)+'</h3><div class="muted">'+esc(a.dateline||'')+' · '+(a.published_at?new Date(a.published_at).toLocaleString('hi-IN'):'')+'</div>'+(a.published_url?'<a href="'+esc(a.published_url)+'" target="_blank" rel="noopener">प्रकाशित खबर खोलें</a>':'')+'</div>').join(''):'<div class="muted">अभी प्रकाशित खबरों का रिकॉर्ड नहीं है।</div>';
+ $('published').innerHTML=publishedRows.length?publishedRows.map(a=>{const log=latestLog(a.id);const canUpdate=log?.status==='sent'&&log.external_message_id?.startsWith('blogger:')&&!['blogger:pending','blogger:failed'].includes(log.external_message_id);return '<div class="item"><h3>'+esc(a.title)+'</h3><div class="muted">'+esc(a.dateline||'')+' · '+(a.published_at?new Date(a.published_at).toLocaleString('hi-IN'):'')+'</div>'+(a.published_url?'<a href="'+esc(a.published_url)+'" target="_blank" rel="noopener">प्रकाशित खबर खोलें</a>':'')+(canUpdate?'<div class="actions"><button class="btn primary" data-update-published="'+a.id+'">वेबसाइट पर खबर अपडेट करें</button></div>':'<p class="muted">अपडेट के लिए सफल Blogger पोस्ट रिकॉर्ड उपलब्ध नहीं है।</p>')+'</div>'}).join(''):'<div class="muted">अभी प्रकाशित खबरों का रिकॉर्ड नहीं है।</div>';
+ $('published').querySelectorAll('[data-update-published]').forEach(b=>b.onclick=()=>updatePublished(b.dataset.updatePublished));
 }
+async function updatePublished(articleId){
+ const article=publishedRowsCache.find(x=>x.id===articleId);
+ const log=latestLog(articleId);
+ if(!article||!log||log.status!=='sent'||!log.external_message_id?.startsWith('blogger:')){toast('इस खबर का सफल Blogger पोस्ट रिकॉर्ड नहीं मिला।');return}
+ const postId=log.external_message_id.slice(8);
+ if(!confirm('क्या मौजूदा Blogger पोस्ट को इस खबर के नवीनतम संपादित संस्करण से अपडेट करना है? नया पोस्ट नहीं बनेगा।'))return;
+ try{
+  await ensureBlogReady();
+  const updated=await bloggerFetch('/blogs/'+encodeURIComponent(blogInfo.id)+'/posts/'+encodeURIComponent(postId),{method:'PUT',body:JSON.stringify({kind:'blogger#post',id:postId,blog:{id:blogInfo.id},title:article.title,content:postContent(article),labels:article.news_categories?.name?[article.news_categories.name]:[]})});
+  const url=updated.url||log.target_url;
+  const {error}=await sb.from('news_articles').update({published_url:url,updated_at:new Date().toISOString(),editor_id:user.id,editor_name_snapshot:profile.display_name||user.email||'संपादकीय सदस्य'}).eq('id',articleId).eq('status','published');
+  if(error)throw new Error('Blogger पोस्ट अपडेट हुई, लेकिन न्यूज़रूम रिकॉर्ड अपडेट नहीं हुआ: '+error.message);
+  await sb.from('editorial_actions').insert({article_id:articleId,actor_id:user.id,action:'published_updated',note:'मौजूदा Blogger पोस्ट अपडेट की गई: '+url});
+  await sb.from('audit_logs').insert({actor_id:user.id,event_type:'blogger_post_update',entity_type:'news_article',entity_id:articleId,details:{published_url:url,blogger_post_id:postId}});
+  toast('मौजूदा Blogger पोस्ट अपडेट हो गई।');await loadData();
+ }catch(e){toast(e.message||'Blogger पोस्ट अपडेट नहीं हो सकी।')}
+}
+let publishedRowsCache=[];
 function postContent(a){
  const safeBody=String(a.body||'').split(/\n{2,}/).map(p=>'<p>'+esc(p).replace(/\n/g,'<br>')+'</p>').join('');
  const pieces=[];
