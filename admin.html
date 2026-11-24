@@ -403,16 +403,16 @@ $('resetArticleBtn').onclick=resetArticle;
 $('sendToEditorBtn').onclick=()=>{const existing=!!$('articleId').value;if((!existing&&!aiDraftResult?.body)||!$('title').value.trim()||!$('body').value.trim()){toast('पहले कच्ची खबर लिखकर AI से पूरी खबर तैयार कराएं।');$('body').focus();return}$('statusInput').value='submitted';$('articleForm').requestSubmit()};
 async function editArticle(id){const {data:a,error}=await supabase.from('news_articles').select('*').eq('id',id).single();if(error){toast(error.message);return}if(!canEditAll()&&a.author_id!==currentUser.id){toast('यह खबर आपके खाते की नहीं है।');return}$('articleId').value=a.id;$('rawFacts').value=a.raw_facts||'';aiDraftResult={title:a.title||'',summary:a.summary||'',body:a.body||''};$('generatedTitleWrap').classList.remove('hidden');$('generatedSummaryWrap').classList.remove('hidden');$('title').value=a.title;$('category').value=a.category_id||'';$('summary').value=a.summary||'';$('body').value=a.body||'';$('dateline').value=a.dateline||'';$('latitude').value=a.latitude??'';$('longitude').value=a.longitude??'';$('sourceNote').value=a.source_note||'';const fc=a.fact_check_items||{};['Names','Place','Date','Numbers','Source','Response'].forEach(k=>{const el=$('check'+k);if(el)el.checked=!!fc[k.toLowerCase()]});$('imageUrl').value=a.featured_image_url||'';$('videoUrl').value=a.featured_video_url||'';$('seoTitle').value=a.seo_title||'';$('seoDescription').value=a.seo_description||'';$('statusInput').value=a.status; $('editorHeading').textContent='खबर संपादित करें';showPage('editor')}
 $('articleForm').onsubmit=async e=>{e.preventDefault();const id=$('articleId').value;let title=$('title').value.trim();const body=$('body').value.trim(),status=$('statusInput').value;if(!title&&aiDraftResult?.title){title=aiDraftResult.title;$('title').value=title}if(!title||!body){toast('शीर्षक और तैयार खबर अनिवार्य हैं। पहले AI से खबर बनाएं या शीर्षक लिखें।');return}if(!canEditAll()&&!['draft','submitted','changes_requested'].includes(status)){toast('रिपोर्टर यह स्थिति नहीं चुन सकता।');return}const payload={title,slug:slugify(title),raw_facts:$('rawFacts').value.trim()||body,dateline:$('dateline').value.trim(),latitude:$('latitude').value.trim()===''?null:Number($('latitude').value),longitude:$('longitude').value.trim()===''?null:Number($('longitude').value),category_id:$('category').value||null,summary:$('summary').value.trim(),body,source_note:$('sourceNote').value.trim(),fact_check_items:{names:$('checkNames').checked,place:$('checkPlace').checked,date:$('checkDate').checked,numbers:$('checkNumbers').checked,source:$('checkSource').checked,response:$('checkResponse').checked},featured_image_url:$('imageUrl').value.trim()||null,featured_video_url:$('videoUrl').value.trim()||null,seo_title:$('seoTitle').value.trim(),seo_description:$('seoDescription').value.trim(),status,updated_at:new Date().toISOString()};if(!id)payload.reporter_name_snapshot=profile.display_name||currentUser.email;let result;if(id)result=await supabase.from('news_articles').update(payload).eq('id',id).select('id').single();else result=await supabase.from('news_articles').insert({...payload,author_id:currentUser.id}).select('id').single();if(result.error){toast('खबर सुरक्षित नहीं हुई: '+result.error.message);return}const articleId=result.data.id;await supabase.from('editorial_actions').insert({article_id:articleId,actor_id:currentUser.id,action:status==='submitted'?'submitted':(id?'commented':'submitted'),note:'न्यूज़रूम फॉर्म से अपडेट: '+(statusHi[status]||status)});await supabase.from('audit_logs').insert({actor_id:currentUser.id,event_type:id?'article_updated':'article_created',entity_type:'news_article',entity_id:articleId,details:{title,status}});toast('खबर सुरक्षित हो गई।');resetArticle();await loadArticles();showPage('articles')};
-let activeReviewId=null;
+let activeReviewId=null,activeReviewArticle=null;
 async function reviewArticle(id){
  const {data:a,error}=await supabase.from('news_articles').select('*,user_profiles!news_articles_author_id_fkey(display_name,phone_e164,login_identifier,dateline),news_categories(name)').eq('id',id).single();
  if(error||!a){toast('खबर समीक्षा के लिए नहीं खुली: '+(error?.message||''));return}
- activeReviewId=id;$('reviewTitle').textContent=a.title;$('reviewMeta').textContent=(a.dateline||'स्थान नहीं दिया')+' · रिपोर्टर: '+(a.reporter_name_snapshot||a.user_profiles?.display_name||'रिपोर्टर')+' · '+(a.news_categories?.name||'अश्रेणीकृत')+' · '+(statusHi[a.status]||a.status);
+ activeReviewId=id;activeReviewArticle=a;$('reviewTitle').textContent=a.title;$('reviewMeta').textContent=(a.dateline||'स्थान नहीं दिया')+' · रिपोर्टर: '+(a.reporter_name_snapshot||a.user_profiles?.display_name||'रिपोर्टर')+' · '+(a.news_categories?.name||'अश्रेणीकृत')+' · '+(statusHi[a.status]||a.status);
  $('reviewEditTitle').value=a.title||'';$('reviewEditSummary').value=a.summary||'';$('reviewEditBody').value=a.body||'';
  $('reviewStory').textContent=(a.source_note?'स्रोत/सत्यापन नोट: '+a.source_note+'\\n\\n':'')+(a.raw_facts?'रिपोर्टर की मूल कच्ची खबर:\\n'+a.raw_facts:'मूल कच्ची जानकारी उपलब्ध नहीं है।')+(a.featured_image_url?'\\n\\nमुख्य फोटो: '+a.featured_image_url:'')+(a.featured_video_url?'\\n\\nवीडियो: '+a.featured_video_url:'');$('reviewNote').value='';$('reviewModal').classList.remove('hidden');
 }
-$('closeReview').onclick=()=>{$('reviewModal').classList.add('hidden');activeReviewId=null};
-$('editReviewedStory').onclick=()=>{if(!activeReviewId)return;const id=activeReviewId;$('reviewModal').classList.add('hidden');activeReviewId=null;editArticle(id)};
+$('closeReview').onclick=()=>{$('reviewModal').classList.add('hidden');activeReviewId=null;activeReviewArticle=null};
+$('editReviewedStory').onclick=()=>{if(!activeReviewId)return;const id=activeReviewId;$('reviewModal').classList.add('hidden');activeReviewId=null;activeReviewArticle=null;editArticle(id)};
 async function finishEditorialReview(choice){
  if(!activeReviewId)return;const id=activeReviewId,note=$('reviewNote').value.trim();
  const title=$('reviewEditTitle').value.trim(),summary=$('reviewEditSummary').value.trim(),body=$('reviewEditBody').value.trim();
@@ -424,7 +424,7 @@ async function finishEditorialReview(choice){
  const action=choice==='approved'?'approved':'changes_requested';
  const log=await supabase.from('editorial_actions').insert({article_id:id,actor_id:currentUser.id,action,note});
  await supabase.from('audit_logs').insert({actor_id:currentUser.id,event_type:'editorial_review',entity_type:'news_article',entity_id:id,details:{status:choice,note,edited:choice==='approved'}});
- $('reviewModal').classList.add('hidden');activeReviewId=null;
+ $('reviewModal').classList.add('hidden');activeReviewId=null;activeReviewArticle=null;
  toast(log.error?'खबर सुरक्षित हुई; गतिविधि लॉग में त्रुटि आई।':choice==='approved'?'सुधार सुरक्षित। खबर प्रकाशन के लिए स्वीकृत है।':'रिपोर्टर को सुधार के लिए भेज दिया गया।');
  await loadArticles();await loadOverview();
 }
@@ -435,7 +435,7 @@ $('reviewAiRevise').onclick=async()=>{
  try{
   const {data:{session}}=await supabase.auth.getSession();
   if(!session)throw new Error('लॉगिन सत्र समाप्त है।');
-  const article=articles.find(x=>x.id===activeReviewId);
+  const article=activeReviewArticle;
   const raw=article?.raw_facts||'';
   const current='वर्तमान शीर्षक: '+$('reviewEditTitle').value.trim()+'\nवर्तमान परिचय: '+$('reviewEditSummary').value.trim()+'\nवर्तमान खबर: '+$('reviewEditBody').value.trim();
   const facts=(raw?'मूल रिपोर्टर तथ्य:\n'+raw+'\n\n':'')+current;
