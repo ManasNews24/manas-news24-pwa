@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101c36"><meta name="description" content="Manas News-24 Blogger publication desk">
+<title>मानस न्यूज-24 | Blogger प्रकाशन</title>
+<style>
+:root{font-family:system-ui,"Noto Sans Devanagari",sans-serif;color:#182238;background:#f4f6fa}*{box-sizing:border-box}body{margin:0}.top{background:linear-gradient(115deg,#101c36,#243b68);color:#fff;padding:14px max(14px,calc((100vw - 1120px)/2));display:flex;justify-content:space-between;align-items:center;gap:12px}.top a{color:#fff;text-decoration:none;border:1px solid #ffffff55;border-radius:8px;padding:8px 11px;font-size:12px}.wrap{max-width:1120px;margin:auto;padding:16px}.panel{background:#fff;border:1px solid #e1e6ee;border-radius:14px;padding:16px;margin-bottom:14px;box-shadow:0 5px 18px #101c3608}.notice{padding:12px;border-radius:10px;background:#eef3ff;color:#2b477f;font-size:12px;line-height:1.6;margin-bottom:12px}.notice.warn{background:#fff6e8;color:#8b5a09}.notice.good{background:#eaf7f0;color:#17633f}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{display:flex;flex-direction:column;gap:6px;margin:8px 0}.field label{font-size:12px;font-weight:700}.field input{width:100%;padding:11px;border:1px solid #d9dfeb;border-radius:9px;font:inherit}.btn{border:0;border-radius:9px;padding:10px 14px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;background:#edf1f8;color:#182238}.btn.primary{background:#18294b;color:#fff}.btn.gold{background:#e6b85c;color:#101c36}.btn:disabled{opacity:.55;cursor:not-allowed}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.muted{color:#69758b;font-size:12px;line-height:1.55}.status{padding:10px;border-radius:9px;background:#f2f5f8;font-size:12px;line-height:1.5;margin-top:10px}.item{border:1px solid #e3e8ef;border-radius:12px;padding:14px;margin:10px 0}.item h3{font-size:16px;line-height:1.5;margin:0 0 6px}.tag{display:inline-block;padding:4px 8px;border-radius:20px;background:#edf1f8;font-size:10px;font-weight:700;margin-right:5px}.tag.good{background:#e8f6ef;color:#17633f}.tag.warn{background:#fff4df;color:#93600b}.item a{overflow-wrap:anywhere}.hidden{display:none!important}@media(max-width:700px){.grid{grid-template-columns:1fr}.top{align-items:flex-start;flex-direction:column}.wrap{padding:10px}.panel{padding:12px}}
+</style>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+<header class="top"><div><strong>मानस न्यूज-24</strong><br><small>Blogger प्रकाशन डेस्क · केवल एडमिन</small></div><a href="./admin.html">← मुख्य न्यूज़रूम</a><span id="who">लॉगिन जाँचा जा रहा है…</span></header>
+<main class="wrap">
+<div class="notice"><strong>प्रकाशन सुरक्षा:</strong> केवल संपादकीय रूप से स्वीकृत खबरें यहाँ आएँगी। पहले Blogger में ड्राफ्ट बनाया जाएगा, फिर उसी पोस्ट को स्पष्ट पुष्टि के बाद लाइव किया जाएगा। वास्तविक Blogger URL मिलने पर न्यूज़रूम में खबर की स्थिति प्रकाशित होगी।</div>
+<section id="login" class="panel hidden"><h3>न्यूज़रूम लॉगिन आवश्यक</h3><p class="muted">पहले मुख्य न्यूज़रूम में एडमिन खाते से लॉगिन करें।</p><a href="./admin.html">न्यूज़रूम खोलें</a></section>
+<section id="denied" class="panel hidden"><h3>एडमिन अनुमति आवश्यक</h3><p class="muted">Blogger पर वास्तविक प्रकाशन केवल एडमिन खाते से किया जा सकता है।</p><a href="./admin.html">मुख्य न्यूज़रूम पर लौटें</a></section>
+<section id="app" class="hidden">
+<div class="panel">
+<h2 style="margin:0 0 8px;font-size:18px">Blogger कनेक्शन सेटिंग</h2>
+<p class="muted">Google Cloud Console में Blogger API v3 सक्षम करें और Web OAuth Client ID बनाएँ। Authorized JavaScript origin में https://manasnews24.github.io जोड़ें। OAuth consent screen में अपने Google खाते को test user रखें (यदि ऐप Testing mode में है)। नीचे Client ID दर्ज करें। यह सार्वजनिक पहचान है, पासवर्ड या Client Secret नहीं। <a href="./BLOGGER-SETUP-HI.md" target="_blank" rel="noopener">हिंदी सेटअप निर्देश देखें</a>।</p>
+<div class="grid">
+<div class="field"><label for="clientId">Google OAuth Client ID</label><input id="clientId" value="505300502112-omqesqsosv8q1g8d4gcro61c7mvklpqc.apps.googleusercontent.com" placeholder="xxxxxxxx.apps.googleusercontent.com" autocomplete="off"></div>
+<div class="field"><label for="blogUrl">Blogger वेबसाइट URL</label><input id="blogUrl" type="url" value="https://manasnews.blogspot.com/"></div>
+</div>
+<div class="actions"><button class="btn" id="saveConfig" type="button">सेटिंग सुरक्षित करें</button><button class="btn primary" id="connect" type="button">Google खाते से जोड़ें</button><button class="btn" id="disconnect" type="button">Google कनेक्शन हटाएँ</button></div>
+<div id="connection" class="status" aria-live="polite">Google OAuth अभी कनेक्ट नहीं है।</div>
+<p class="muted">अनुमति केवल Blogger प्रबंधन के लिए माँगी जाएगी। Access token अस्थायी रूप से मेमोरी में रहेगा; ब्राउज़र स्टोरेज में नहीं। अधिकृत JavaScript origin वही होना चाहिए जहाँ यह न्यूज़रूम पेज चलेगा।</p>
+</div>
+<div class="panel">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><div><h2 style="margin:0;font-size:18px">प्रकाशन कतार</h2><p class="muted" style="margin:4px 0">स्वीकृत खबरें · Blogger पर भेजने के लिए तैयार</p></div><button class="btn" id="refresh" type="button">सूची रीफ्रेश करें</button></div>
+<div id="queue"><div class="muted">खबरें लोड हो रही हैं…</div></div>
+</div>
+<div class="panel"><h2 style="margin:0 0 8px;font-size:18px">हाल में प्रकाशित</h2><div id="published"><div class="muted">लोड हो रहा है…</div></div></div>
+</section>
+</main>
+<div id="toast" class="status hidden" style="position:fixed;bottom:14px;left:50%;transform:translateX(-50%);max-width:min(600px,94vw);background:#101c36;color:#fff;z-index:20"></div>
+<script type="module">
+import {createClient} from 'https://esm.sh/@supabase/supabase-js@2.119.0';
+const SUPABASE_URL='https://umgtkiwnvzahvdxafypt.supabase.co';
+const SUPABASE_KEY='sb_publishable_VsLBwd7OWwnbpCiBXnWyQA_FtRaDTh_';
+const BLOGGER_SCOPE='https://www.googleapis.com/auth/blogger';
+const CONFIG_KEY='manasnews24_blogger_config_v1';
+const sb=createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+const $=id=>document.getElementById(id);
+let user=null,profile=null,articles=[],logs=[],blogInfo=null,accessToken=null,tokenExpiry=0,tokenClient=null;
+function toast(message){$('toast').textContent=message;$('toast').classList.remove('hidden');clearTimeout(toast.timer);toast.timer=setTimeout(()=>$('toast').classList.add('hidden'),5200)}
+function say(message,kind){$('connection').textContent=message;$('connection').className='status'+(kind?' '+kind:'')}
+function esc(value){return String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function cfg(){return {clientId:$('clientId').value.trim(),blogUrl:$('blogUrl').value.trim()}}
+function saveConfig(){const v=cfg();if(!/^[^\\s]+\\.apps\\.googleusercontent\\.com$/.test(v.clientId)){toast('सही Google OAuth Client ID दर्ज करें।');return false}let u;try{u=new URL(v.blogUrl)}catch{toast('Blogger वेबसाइट URL सही नहीं है।');return false}if(u.protocol!=='https:'||!u.hostname){toast('Blogger का सुरक्षित HTTPS URL दर्ज करें।');return false}let prior={};try{prior=JSON.parse(localStorage.getItem(CONFIG_KEY)||'{}')}catch{}const keep=prior.clientId===v.clientId&&prior.blogUrl===v.blogUrl?{blogId:prior.blogId,blogName:prior.blogName}:{};localStorage.setItem(CONFIG_KEY,JSON.stringify({...v,...keep}));say('सेटिंग इसी डिवाइस में सुरक्षित है। Google से कनेक्ट करें।');return true}
+function loadConfig(){try{const v=JSON.parse(localStorage.getItem(CONFIG_KEY)||'{}');$('clientId').value=v.clientId||'';$('blogUrl').value=v.blogUrl||'https://manasnews.blogspot.com/'}catch{}}
+function requestGoogleToken(){
+ const v=cfg();if(!v.clientId){toast('पहले Google OAuth Client ID दर्ज करके सेटिंग सुरक्षित करें।');return Promise.reject(new Error('OAuth Client ID नहीं मिला।'))}
+ if(!window.google?.accounts?.oauth2){toast('Google Identity सेवा अभी लोड हो रही है। कुछ क्षण बाद प्रयास करें।');return Promise.reject(new Error('Google Identity सेवा उपलब्ध नहीं है।'))}
+ return new Promise((resolve,reject)=>{
+  tokenClient=window.google.accounts.oauth2.initTokenClient({client_id:v.clientId,scope:BLOGGER_SCOPE,callback:response=>{if(response.error){reject(new Error(response.error_description||response.error));return}accessToken=response.access_token;tokenExpiry=Date.now()+(Number(response.expires_in||3600)-60)*1000;resolve(accessToken)}});
+  tokenClient.requestAccessToken({prompt:''});
+ });
+}
+async function token(){if(accessToken&&Date.now()<tokenExpiry)return accessToken;return await requestGoogleToken()}
+async function bloggerFetch(path,options){
+ const t=await token();const response=await fetch('https://www.googleapis.com/blogger/v3'+path,{...options,headers:{'Authorization':'Bearer '+t,'Content-Type':'application/json',...(options?.headers||{})}});
+ const data=await response.json().catch(()=>({}));
+ if(!response.ok){const message=data?.error?.message||'Blogger API अनुरोध विफल ('+response.status+')';throw new Error(message)}
+ return data;
+}
+async function connect(){
+ if(!saveConfig())return;
+ const button=$('connect');button.disabled=true;button.textContent='Google अनुमति की प्रतीक्षा…';
+ try{
+  const blog=await bloggerFetch('/blogs/byurl?url='+encodeURIComponent(cfg().blogUrl),{method:'GET'});
+  if(!blog.id)throw new Error('इस URL से Blogger Blog ID नहीं मिली।');
+  blogInfo=blog;localStorage.setItem(CONFIG_KEY,JSON.stringify({...cfg(),blogId:blog.id,blogName:blog.name||''}));
+  say('जुड़ गया: '+(blog.name||'Blogger ब्लॉग')+' · Blog ID '+blog.id,'good');toast('Blogger खाता सफलतापूर्वक जुड़ गया।');
+ }catch(error){say('कनेक्शन पूरा नहीं हुआ: '+error.message,'warn');toast(error.message)}
+ finally{button.disabled=false;button.textContent='Google खाते से जोड़ें'}
+}
+function disconnect(){accessToken=null;tokenExpiry=0;blogInfo=null;say('Google access token मेमोरी से हटाया गया। अगली बार फिर अनुमति लें।');}
+async function loadData(){
+ $('queue').innerHTML='<div class="muted">स्वीकृत खबरें लोड हो रही हैं…</div>';
+ const [ar,lg,pub]=await Promise.all([
+  sb.from('news_articles').select('id,title,summary,body,dateline,featured_image_url,seo_title,seo_description,status,published_url,updated_at,news_categories(name)').eq('status','approved').order('updated_at',{ascending:false}).limit(100),
+  sb.from('distribution_logs').select('id,article_id,status,target_url,external_message_id,error_message,sent_at,created_at').eq('content_type','article').like('external_message_id','blogger:%').order('created_at',{ascending:false}).limit(300),
+  sb.from('news_articles').select('id,title,published_url,published_at,dateline').eq('status','published').order('published_at',{ascending:false}).limit(20)
+ ]);
+ if(ar.error){$('queue').innerHTML='<div class="muted">खबरें लोड नहीं हुईं: '+esc(ar.error.message)+'</div>';return}
+ if(lg.error){$('queue').innerHTML='<div class="muted">प्रकाशन रिकॉर्ड नहीं पढ़े जा सके: '+esc(lg.error.message)+'</div>';return}
+ articles=ar.data||[];logs=lg.data||[];renderQueue(pub.data||[]);
+}
+function latestLog(articleId){return logs.find(x=>x.article_id===articleId)||null}
+function renderQueue(publishedRows){
+ $('queue').innerHTML=articles.length?articles.map(a=>{
+  const log=latestLog(a.id);let action='';
+  if(!log)action='<button class="btn gold" data-publish="'+a.id+'">Blogger पर प्रकाशित करें</button>';
+  else if(log.status==='sent')action='<button class="btn" data-sync="'+a.id+'">न्यूज़रूम स्थिति सिंक करें</button><a class="btn" href="'+esc(log.target_url||'#')+'" target="_blank" rel="noopener">लाइव खबर खोलें</a>';
+  else if(log.external_message_id&&log.external_message_id.startsWith('blogger:')&&!['blogger:pending','blogger:failed'].includes(log.external_message_id))action='<button class="btn primary" data-retry="'+a.id+'">उसी Blogger ड्राफ्ट को प्रकाशित करें</button>';
+  else if(log.external_message_id==='blogger:pending')action='<span class="tag warn">पिछला प्रयास अधूरा · Blogger ड्राफ्ट जाँचें</span>';
+  else action='<button class="btn gold" data-publish="'+a.id+'">दोबारा प्रयास करें</button>';
+  const status=log?'<span class="tag '+(log.status==='sent'?'good':'warn')+'">'+esc(log.status==='sent'?'Blogger पर प्रकाशित':log.status==='failed'?'प्रकाशन विफल':'प्रक्रिया जारी')+'</span>':'<span class="tag">प्रकाशन लंबित</span>';
+  return '<article class="item"><h3>'+esc(a.title)+'</h3><div class="muted">'+esc(a.dateline||'डेटलाइन नहीं')+' · '+esc(a.news_categories?.name||'अश्रेणीकृत')+'</div><p class="muted">'+esc((a.summary||a.body||'').slice(0,220))+'</p>'+status+(log?.error_message?'<p class="muted">त्रुटि: '+esc(log.error_message)+'</p>':'')+'<div class="actions">'+action+'</div></article>';
+ }).join(''):'<div class="muted">अभी कोई स्वीकृत खबर प्रकाशन के लिए उपलब्ध नहीं है। पहले संपादकीय डेस्क में खबर स्वीकृत करें।</div>';
+ $('queue').querySelectorAll('[data-publish]').forEach(b=>b.onclick=()=>publish(b.dataset.publish,false));
+ $('queue').querySelectorAll('[data-retry]').forEach(b=>b.onclick=()=>publish(b.dataset.retry,true));
+ $('queue').querySelectorAll('[data-sync]').forEach(b=>b.onclick=()=>syncPublished(b.dataset.sync));
+ $('published').innerHTML=publishedRows.length?publishedRows.map(a=>'<div class="item"><h3>'+esc(a.title)+'</h3><div class="muted">'+esc(a.dateline||'')+' · '+(a.published_at?new Date(a.published_at).toLocaleString('hi-IN'):'')+'</div>'+(a.published_url?'<a href="'+esc(a.published_url)+'" target="_blank" rel="noopener">प्रकाशित खबर खोलें</a>':'')+'</div>').join(''):'<div class="muted">अभी प्रकाशित खबरों का रिकॉर्ड नहीं है।</div>';
+}
+function postContent(a){
+ const safeBody=String(a.body||'').split(/\n{2,}/).map(p=>'<p>'+esc(p).replace(/\n/g,'<br>')+'</p>').join('');
+ const pieces=[];
+ if(a.dateline)pieces.push('<p><strong>'+esc(a.dateline)+'</strong></p>');
+ if(a.summary)pieces.push('<p><strong>'+esc(a.summary)+'</strong></p>');
+ if(a.featured_image_url){try{const u=new URL(a.featured_image_url);if(u.protocol==='https:')pieces.push('<p><img src="'+esc(u.href)+'" alt="'+esc(a.title)+'" style="max-width:100%;height:auto"></p>')}catch{}}
+ pieces.push(safeBody);
+ pieces.push('<p><strong>मानस न्यूज-24</strong></p>');
+ return pieces.join('\n');
+}
+async function syncArticle(articleId,url){
+ const payload={status:'published',published_url:url,published_at:new Date().toISOString(),editor_id:user.id,editor_name_snapshot:profile.display_name||user.email||'एडमिन',updated_at:new Date().toISOString()};
+ const {error}=await sb.from('news_articles').update(payload).eq('id',articleId).eq('status','approved');
+ if(error)throw new Error('Blogger पर खबर लाइव है, लेकिन न्यूज़रूम स्थिति अपडेट नहीं हुई: '+error.message);
+ await sb.from('editorial_actions').insert({article_id:articleId,actor_id:user.id,action:'published',note:'Blogger API से प्रकाशित: '+url});
+ await sb.from('audit_logs').insert({actor_id:user.id,event_type:'blogger_publish',entity_type:'news_article',entity_id:articleId,details:{published_url:url}});
+}
+async function syncPublished(articleId){
+ const log=latestLog(articleId);if(!log||log.status!=='sent'||!log.target_url){toast('सफल Blogger प्रकाशन रिकॉर्ड नहीं मिला।');return}
+ try{await syncArticle(articleId,log.target_url);toast('Blogger प्रकाशित लिंक न्यूज़रूम में सुरक्षित हो गया।');await loadData()}catch(e){toast(e.message)}
+}
+async function ensureBlogReady(){
+ if(!saveConfig())throw new Error('Blogger सेटिंग अधूरी है।');
+ await token();
+ let saved={};try{saved=JSON.parse(localStorage.getItem(CONFIG_KEY)||'{}')}catch{}
+ if(!blogInfo||saved.clientId!==cfg().clientId||saved.blogUrl!==cfg().blogUrl||saved.blogId!==blogInfo.id){
+  const blog=await bloggerFetch('/blogs/byurl?url='+encodeURIComponent(cfg().blogUrl),{method:'GET'});
+  if(!blog.id)throw new Error('Blogger Blog ID नहीं मिली।');
+  blogInfo=blog;localStorage.setItem(CONFIG_KEY,JSON.stringify({...cfg(),blogId:blog.id,blogName:blog.name||''}));
+  say('जुड़ गया: '+(blog.name||'Blogger ब्लॉग')+' · Blog ID '+blog.id,'good');
+ }
+ return blogInfo;
+}
+async function publish(articleId,retryExisting){
+ const article=articles.find(x=>x.id===articleId);if(!article)return;
+ const log=latestLog(articleId);
+ if(log?.status==='sent'){await syncPublished(articleId);return}
+ if(log?.external_message_id==='blogger:pending'){toast('पिछला प्रयास बीच में रुका था। Blogger Drafts जाँचें; नया पोस्ट न बनाएँ।');return}
+ const prompt=retryExisting?'क्या उसी मौजूदा Blogger ड्राफ्ट को लाइव करना है? नया पोस्ट नहीं बनेगा।':'क्या इस स्वीकृत खबर को Blogger पर प्रकाशित करना है? पहले Blogger ड्राफ्ट बनेगा, फिर उसे लाइव किया जाएगा।';
+ if(!confirm(prompt))return;
+ const button=document.querySelector('[data-publish="'+articleId+'"],[data-retry="'+articleId+'"]');if(button){button.disabled=true;button.textContent='प्रकाशन प्रक्रिया…'}
+ let logId=log?.id||null,postId=null;
+ try{
+  await ensureBlogReady();
+  if(retryExisting&&log?.external_message_id?.startsWith('blogger:'))postId=log.external_message_id.slice(8);
+  if(!postId){
+   const ins=await sb.from('distribution_logs').insert({article_id:articleId,content_type:'article',status:'queued',external_message_id:'blogger:pending',created_by:user.id}).select('id').single();
+   if(ins.error)throw new Error('प्रकाशन प्रयास का सुरक्षित रिकॉर्ड नहीं बना: '+ins.error.message);
+   logId=ins.data.id;
+   const created=await bloggerFetch('/blogs/'+encodeURIComponent(blogInfo.id)+'/posts?isDraft=true',{method:'POST',body:JSON.stringify({kind:'blogger#post',blog:{id:blogInfo.id},title:article.title,content:postContent(article),labels:article.news_categories?.name?[article.news_categories.name]:[]})});
+   if(!created.id)throw new Error('Blogger ने पोस्ट ID नहीं लौटाई।');
+   postId=String(created.id);
+   const stored=await sb.from('distribution_logs').update({external_message_id:'blogger:'+postId,target_url:created.url||null,error_message:null}).eq('id',logId);
+   if(stored.error)throw new Error('Blogger ड्राफ्ट बन गया, लेकिन उसका ID सुरक्षित नहीं हुआ। Blogger Drafts जाँचें; दोबारा पोस्ट न बनाएँ।');
+  }
+  let post=await bloggerFetch('/blogs/'+encodeURIComponent(blogInfo.id)+'/posts/'+encodeURIComponent(postId),{method:'GET'});
+  if(!(post.status==='LIVE'||post.published)){
+   post=await bloggerFetch('/blogs/'+encodeURIComponent(blogInfo.id)+'/posts/'+encodeURIComponent(postId)+'/publish',{method:'POST'});
+  }
+  const liveUrl=post.url||('https://www.blogger.com/blog/post/edit/'+encodeURIComponent(blogInfo.id)+'/'+encodeURIComponent(postId));
+  const logUpdate=await sb.from('distribution_logs').update({status:'sent',target_url:liveUrl,external_message_id:'blogger:'+postId,error_message:null,sent_at:new Date().toISOString()}).eq('id',logId);
+  if(logUpdate.error)throw new Error('Blogger पोस्ट लाइव हो गई, लेकिन वितरण लॉग अपडेट नहीं हुआ। उसी पोस्ट ID से पुनः सिंक करें: '+postId);
+  await syncArticle(articleId,liveUrl);
+  toast('खबर Blogger पर प्रकाशित और न्यूज़रूम में दर्ज हो गई।');await loadData();
+ }catch(error){
+  if(logId){await sb.from('distribution_logs').update({status:'failed',error_message:String(error.message||error).slice(0,900),external_message_id:postId?'blogger:'+postId:'blogger:failed'}).eq('id',logId)}
+  toast(error.message||'Blogger प्रकाशन विफल।');
+  await loadData();
+ }finally{if(button)button.disabled=false}
+}
+async function boot(){
+ loadConfig();
+ const {data:{session},error:sessionError}=await sb.auth.getSession();
+ if(sessionError||!session){$('login').classList.remove('hidden');$('who').textContent='लॉगिन आवश्यक';return}
+ user=session.user;
+ const {data:p,error}=await sb.from('user_profiles').select('display_name,role,is_active').eq('id',user.id).maybeSingle();
+ if(error||!p||p.is_active===false){$('login').classList.remove('hidden');$('who').textContent='अनुमति उपलब्ध नहीं';return}
+ profile=p;
+ if(p.role!=='admin'){$('denied').classList.remove('hidden');$('who').textContent='केवल एडमिन';return}
+ $('app').classList.remove('hidden');$('who').textContent=(p.display_name||'एडमिन')+' · ADMIN';
+ await loadData();
+ const v=JSON.parse(localStorage.getItem(CONFIG_KEY)||'{}');
+ if(v.blogId){blogInfo={id:v.blogId,name:v.blogName||'Blogger ब्लॉग',url:v.blogUrl||''};say('Blogger Blog ID सेट है: '+blogInfo.name+' · Google अनुमति प्रकाशन के समय ली जाएगी।','good')}
+}
+$('saveConfig').onclick=()=>{if(saveConfig())toast('Blogger सेटिंग सुरक्षित हुई।')};
+$('connect').onclick=connect;
+$('disconnect').onclick=disconnect;
+$('refresh').onclick=loadData;
+boot().catch(e=>toast('न्यूज़रूम शुरू नहीं हो सका: '+e.message));
+</script>
+</body>
+</html>
