@@ -39,10 +39,15 @@ Deno.serve(async (req: Request) => {
   let input: any;
   try { input = await req.json(); } catch { return reply(400, { error: "अनुरोध पढ़ा नहीं जा सका।" }); }
   const facts = String(input.facts || "").trim();
-  const mode = input.mode === "polish" ? "polish" : "draft";
+  const mode = ["draft", "polish", "revise"].includes(input.mode) ? input.mode : "draft";
   if (!facts || facts.length > 12000) return reply(400, { error: "खबर के तथ्य खाली हैं या 12,000 अक्षरों से अधिक हैं।" });
 
-  const prompt = `आप मानस न्यूज-24 के वरिष्ठ हिंदी समाचार संपादक हैं। केवल दिए गए इनपुट के आधार पर काम करें। कोई नाम, पद, तारीख, समय, संख्या, स्थान, आरोप, बयान, कारण या परिणाम न गढ़ें। जो जानकारी नहीं है उसे missing_facts में लिखें। आरोप को आरोप की तरह और अपुष्ट बात को अपुष्ट की तरह लिखें। मानहानिकारक निष्कर्ष न जोड़ें। भाषा शुद्ध, सरल, स्वाभाविक और समाचार-पत्र शैली की हो। शीर्षक तथ्यपरक हो, सनसनीखेज नहीं। इनपुट का अर्थ न बदलें। मोड: ${mode === "polish" ? "केवल भाषा/व्याकरण सुधारें; उपलब्ध शीर्षक और सामग्री का आशय बनाए रखें।" : "दिए तथ्यों से खबर का प्रारूप बनाएं; अधूरे तथ्य स्पष्ट करें।"}\nश्रेणी: ${String(input.category || "")}\nदिया शीर्षक: ${String(input.headline || "")}\nदिया सार: ${String(input.summary || "")}\nस्रोत/सत्यापन नोट: ${String(input.source_note || "")}\nकच्चे तथ्य/खबर:\n${facts}\nकेवल वैध JSON लौटाएं: { "title": string, "summary": string, "body": string, "seo_title": string, "seo_description": string, "missing_facts": string[], "cautions": string[] }`;
+  const modeInstruction = mode === "polish"
+    ? "केवल भाषा/व्याकरण सुधारें; उपलब्ध शीर्षक और सामग्री का आशय बनाए रखें।"
+    : mode === "revise"
+    ? "यह पहले से लिखी और संपादक द्वारा संशोधित खबर है। इसे अंतिम संपादकीय रूप दें। वर्तमान शीर्षक, सार और खबर में संपादक के संशोधनों को प्राथमिकता दें; मूल रिपोर्टर तथ्य से मिलान करें। कोई नया तथ्य न जोड़ें। विरोधाभास या अपुष्ट जानकारी को missing_facts/cautions में रखें।"
+    : "दिए तथ्यों से खबर का प्रारूप बनाएं; अधूरे तथ्य स्पष्ट करें।";
+  const prompt = `आप मानस न्यूज-24 के वरिष्ठ हिंदी समाचार संपादक हैं। केवल दिए गए इनपुट के आधार पर काम करें। कोई नाम, पद, तारीख, समय, संख्या, स्थान, आरोप, बयान, कारण या परिणाम न गढ़ें। जो जानकारी नहीं है उसे missing_facts में लिखें। आरोप को आरोप की तरह और अपुष्ट बात को अपुष्ट की तरह लिखें। मानहानिकारक निष्कर्ष न जोड़ें। भाषा शुद्ध, सरल, स्वाभाविक और समाचार-पत्र शैली की हो। शीर्षक तथ्यपरक हो, सनसनीखेज नहीं। इनपुट का अर्थ न बदलें। मोड: ${modeInstruction}\nसंपादकीय निर्देश: ${String(input.instruction || "")}\nश्रेणी: ${String(input.category || "")}\nदिया शीर्षक: ${String(input.headline || "")}\nदिया सार: ${String(input.summary || "")}\nस्रोत/सत्यापन नोट: ${String(input.source_note || "")}\nकच्चे तथ्य/खबर:\n${facts}\nकेवल वैध JSON लौटाएं: { "title": string, "summary": string, "body": string, "seo_title": string, "seo_description": string, "missing_facts": string[], "cautions": string[] }`
 
   const model = "gemini-2.5-flash";
   const aiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`, {
