@@ -67,7 +67,7 @@ function draw(){
  if(dateline){y+=7;ctx.fillStyle='#8b1822';ctx.font='bold 20px "Noto Sans Devanagari",sans-serif';ctx.fillText(dateline,pad,y);y+=34}
  if(photoImage){const maxH=300,scale=Math.min(fullW/photoImage.width,maxH/photoImage.height);const iw=photoImage.width*scale,ih=photoImage.height*scale;ctx.drawImage(photoImage,pad,y,iw,ih);y+=ih+30}
  y+=12;
- const body=cleanText(selected?.body||selected?.content||selected?.summary||'');
+ const body=cleanText(selected?.body||selected?.summary||'');
  if(!body){say('इस खबर में मुख्य पाठ उपलब्ध नहीं है।');return false}
  const font='25px "Noto Sans Devanagari",sans-serif',lineH=40;
  const allLines=wrapText(body,colW-12,font);
@@ -106,7 +106,7 @@ async function init(){
   const {data:profile,error:profileError}=await db.from('user_profiles').select('display_name,role,is_active').eq('id',session.user.id).maybeSingle();
   if(profileError||!profile||profile.is_active===false||!['admin','editor'].includes(profile.role)){$('login').classList.remove('hidden');$('who').textContent='अनुमति उपलब्ध नहीं';say('सक्रिय एडमिन/संपादक खाता आवश्यक है।');return}
   $('who').textContent=(profile.display_name||'संपादक')+' · '+profile.role;$('app').classList.remove('hidden');
-  const {data,error}=await db.from('news_articles').select('id,title,summary,body,content,dateline,featured_image_url,status,updated_at').eq('status','approved').order('updated_at',{ascending:false}).limit(100);
+  const {data,error}=await db.from('news_articles').select('id,title,summary,body,dateline,featured_image_url,status,updated_at').eq('status','approved').order('updated_at',{ascending:false}).limit(100);
   if(error){say('स्वीकृत खबरें लोड नहीं हुईं: '+error.message);return}
   articles=data||[];$('article').innerHTML=articles.length?articles.map((a,i)=>'<option value="'+i+'">'+escapeHtml(a.title||'शीर्षक रहित खबर')+'</option>').join(''):'<option value="">अभी कोई स्वीकृत खबर उपलब्ध नहीं</option>';
   if(articles.length)selectArticle(0);else say('अभी कोई स्वीकृत खबर उपलब्ध नहीं है।')
