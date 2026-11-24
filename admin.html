@@ -342,7 +342,7 @@ const NEWSROOM_REDIRECT_URL='https://manasnews24.github.io/manas-news24-pwa/admi
 const supabase=createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 const $=id=>document.getElementById(id);
 // Declare shared AI draft state before any editor/reset callbacks can access it.
-let aiDraftResult=null;
+var aiDraftResult=null; // var is hoisted, preventing temporal-dead-zone failures in editor callbacks.
 // Early global bridge: make the AI action available as soon as the module initializes.
 window.runAiEditor=(mode='draft')=>runAiEditor(mode);
 let currentUser=null,profile=null,role='reporter',categories=[],articles=[],overview=null;
