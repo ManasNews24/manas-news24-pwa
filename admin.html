@@ -411,6 +411,41 @@ function statusPill(s){return '<span class="status '+esc(s)+'">'+esc(statusHi[s]
 async function loadArticles(compact=false){let q=supabase.from('news_articles').select('id,title,slug,status,created_at,updated_at,author_id,category_id,dateline,reporter_name_snapshot,editor_name_snapshot,published_url,featured_video_url,news_categories(name),user_profiles!news_articles_author_id_fkey(display_name)').order('updated_at',{ascending:false}).limit(100);if(!canEditAll())q=q.eq('author_id',currentUser.id);const {data,error}=await q;if(error){toast('खबरें लोड नहीं हुईं: '+error.message);return}articles=data||[];if(compact){$('recentArticles').innerHTML=articles.slice(0,6).map(a=>'<div style="padding:10px 0;border-bottom:1px solid var(--line)"><strong>'+esc(a.title)+'</strong><div class="small muted" style="margin-top:5px">'+esc(a.news_categories?.name||'अश्रेणीकृत')+' · '+statusPill(a.status)+'</div>'+(a.status==='published'&&a.published_url?'<div class="actions" style="margin-top:7px"><a class="btn soft" href="'+esc(a.published_url)+'" target="_blank" rel="noopener">खबर और थीम कटिंग खोलें</a></div>':'')+'</div>').join('')||'<div class="empty">अभी कोई खबर नहीं है।</div>';$('queue').innerHTML=articles.filter(a=>['submitted','in_review','changes_requested'].includes(a.status)).slice(0,7).map(a=>'<div style="padding:10px 0;border-bottom:1px solid var(--line)"><strong>'+esc(a.title)+'</strong><div class="small muted" style="margin-top:5px">'+esc(a.user_profiles?.display_name||'रिपोर्टर')+' · '+statusPill(a.status)+'</div>'+(canEditAll()?'<button class="btn soft" data-quick-review="'+a.id+'" style="margin-top:7px">खबर की समीक्षा करें</button>':'')+'</div>').join('')||'<div class="empty">समीक्षा कतार खाली है।</div>';$('queue').querySelectorAll('[data-quick-review]').forEach(b=>b.onclick=()=>reviewArticle(b.dataset.quickReview));return}renderArticlesTable()}
 function renderArticlesTable(){const term=$('articleSearch').value.toLowerCase(),st=$('statusFilter').value;const queue=['submitted','in_review','changes_requested'];const rows=articles.filter(a=>(!term||a.title.toLowerCase().includes(term))&&(!st||(st==='queue'?queue.includes(a.status):a.status===st)));$('articlesTable').innerHTML=rows.length?'<div class="tablewrap"><table><thead><tr><th>शीर्षक</th><th>श्रेणी</th><th>लेखक</th><th>स्थिति</th><th>अपडेट</th><th>कार्य</th></tr></thead><tbody>'+rows.map(a=>'<tr><td><strong>'+esc(a.title)+'</strong><div class="small muted">'+esc(a.dateline||'')+(a.reporter_name_snapshot?' · रिपोर्टर: '+esc(a.reporter_name_snapshot):'')+(a.status==='published'&&a.editor_name_snapshot?' · संपादक: '+esc(a.editor_name_snapshot):'')+'</div></td><td>'+esc(a.news_categories?.name||'—')+'</td><td>'+esc(a.user_profiles?.display_name||'—')+'</td><td>'+statusPill(a.status)+(a.status==='published'&&a.published_url?'<div class="small"><a href="'+esc(a.published_url)+'" target="_blank" rel="noopener">लाइव खबर देखें</a></div>':'')+'</td><td>'+new Date(a.updated_at).toLocaleDateString('hi-IN')+'</td><td><div class="actions"><button data-edit="'+a.id+'">खोलें</button>'+(a.status==='published'&&a.published_url?'<button data-share="'+esc(a.published_url)+'" data-title="'+esc(a.title)+'">लिंक साझा</button>':'')+(canEditAll()&&a.status!=='published'?'<button data-review="'+a.id+'">समीक्षा</button>':'')+'</div></td></tr>').join('')+'</tbody></table></div>':'<div class="empty">इस खोज में कोई खबर नहीं मिली।</div>'; $('articlesTable').querySelectorAll('[data-share]').forEach(b=>b.onclick=async()=>{const url=b.dataset.share,title=b.dataset.title;const shareText=title+'\n'+url;if(navigator.share){try{await navigator.share({title,text:shareText,url})}catch(e){}}else{await navigator.clipboard.writeText(shareText);toast('प्रकाशित खबर का लिंक कॉपी हो गया।')}});$('articlesTable').querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>editArticle(b.dataset.edit));$('articlesTable').querySelectorAll('[data-review]').forEach(b=>b.onclick=()=>reviewArticle(b.dataset.review))}
 $('filterBtn').onclick=renderArticlesTable;$('articleSearch').oninput=renderArticlesTable;$('statusFilter').onchange=renderArticlesTable;
+async function editArticle(id){
+ try{
+  const {data:a,error}=await supabase.from('news_articles').select('*').eq('id',id).single();
+  if(error||!a)throw new Error(error?.message||'खबर नहीं मिली।');
+  if(!canEditAll()&&a.author_id!==currentUser.id)throw new Error('आप केवल अपनी खबर संपादित कर सकते हैं।');
+  $('articleForm').reset();
+  $('articleId').value=a.id;
+  $('rawFacts').value=a.raw_facts||'';
+  $('title').value=a.title||'';
+  $('summary').value=a.summary||'';
+  $('body').value=a.body||'';
+  $('dateline').value=a.dateline||'';
+  $('category').value=a.category_id||'';
+  $('sourceNote').value=a.source_note||'';
+  $('latitude').value=a.latitude??'';
+  $('longitude').value=a.longitude??'';
+  $('imageUrl').value=a.featured_image_url||'';
+  $('videoUrl').value=a.featured_video_url||'';
+  $('seoTitle').value=a.seo_title||'';
+  $('seoDescription').value=a.seo_description||'';
+  $('statusInput').innerHTML=canEditAll()?'<option value="submitted">समीक्षा हेतु</option><option value="approved">स्वीकृत</option><option value="draft">ड्राफ्ट</option>':'<option value="submitted">समीक्षा हेतु भेजें</option>';
+  $('statusInput').value=a.status==='draft'?'draft':'submitted';
+  const checks=a.fact_check_items||{};
+  $('checkNames').checked=!!checks.names;$('checkPlace').checked=!!checks.place;$('checkDate').checked=!!checks.date;
+  $('checkNumbers').checked=!!checks.numbers;$('checkSource').checked=!!checks.source;$('checkResponse').checked=!!checks.response;
+  ['generatedTitleWrap','generatedSummaryWrap','generatedBodyWrap'].forEach(id=>$(id).classList.remove('hidden'));
+  $('aiStatus').textContent='मौजूदा खबर संपादन के लिए खुली है। बदलाव सुरक्षित करने से पहले सभी तथ्य जाँचें।';
+  $('aiResult').classList.add('hidden');$('editorialHistoryPanel').classList.remove('hidden');
+  $('editorHeading').textContent='खबर संपादित करें';
+  const {data:history,error:historyError}=await supabase.from('editorial_actions').select('action,note,created_at,actor_id').eq('article_id',id).order('created_at',{ascending:false}).limit(20);
+  $('editorialHistory').textContent=historyError?'गतिविधि इतिहास उपलब्ध नहीं: '+historyError.message:(history||[]).map(x=>(statusHi[x.action]||x.action)+' · '+new Date(x.created_at).toLocaleString('hi-IN')+(x.note?'\n'+x.note:'')).join('\n\n')||'अभी कोई संपादकीय गतिविधि दर्ज नहीं है।';
+  showPage('editor');
+  $('rawFacts').focus({preventScroll:true});
+ }catch(error){toast('खबर संपादन के लिए नहीं खुली: '+error.message)}
+}
 function resetArticle(){ $('articleForm').reset();$('statusInput').value='submitted';$('generatedTitleWrap').classList.add('hidden');$('generatedSummaryWrap').classList.add('hidden');$('generatedBodyWrap').classList.add('hidden');$('aiStatus').textContent='';$('aiResult').classList.add('hidden');$('editorialHistoryPanel').classList.add('hidden');$('editorialHistory').textContent='';$('articleId').value='';$('rawFacts').value='';aiDraftResult=null;$('editorHeading').textContent='नई खबर लिखें';$('statusInput').innerHTML='<option value="submitted">समीक्षा हेतु भेजें</option>'; }
 $('resetArticleBtn').onclick=resetArticle;
 async function saveArticle(statusOverride){
