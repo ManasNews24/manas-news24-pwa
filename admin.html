@@ -416,6 +416,7 @@ async function editArticle(id){
   const {data:a,error}=await supabase.from('news_articles').select('*').eq('id',id).single();
   if(error||!a)throw new Error(error?.message||'खबर नहीं मिली।');
   if(!canEditAll()&&a.author_id!==currentUser.id)throw new Error('आप केवल अपनी खबर संपादित कर सकते हैं।');
+  if(!canEditAll()&&!['draft','changes_requested'].includes(a.status))throw new Error('यह खबर संपादक के पास समीक्षा में है। बदलाव के लिए संपादक की टिप्पणी/अनुमति की प्रतीक्षा करें।');
   $('articleForm').reset();
   $('articleId').value=a.id;
   $('rawFacts').value=a.raw_facts||'';
