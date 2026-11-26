@@ -432,8 +432,16 @@ async function editArticle(id){
   $('videoUrl').value=a.featured_video_url||'';
   $('seoTitle').value=a.seo_title||'';
   $('seoDescription').value=a.seo_description||'';
-  $('statusInput').innerHTML=canEditAll()?'<option value="submitted">समीक्षा हेतु</option><option value="approved">स्वीकृत</option><option value="draft">ड्राफ्ट</option>':'<option value="submitted">समीक्षा हेतु भेजें</option>';
-  $('statusInput').value=a.status==='draft'?'draft':'submitted';
+  if(canEditAll()){
+   const editableStatuses=[['submitted','समीक्षा हेतु'],['approved','स्वीकृत'],['draft','ड्राफ्ट']];
+   const currentLabel=statusHi[a.status]||a.status||'वर्तमान स्थिति';
+   if(!editableStatuses.some(([value])=>value===a.status))editableStatuses.push([a.status,currentLabel+' (वर्तमान स्थिति सुरक्षित)']);
+   $('statusInput').innerHTML=editableStatuses.map(([value,label])=>'<option value="'+esc(value)+'">'+esc(label)+'</option>').join('');
+   $('statusInput').value=a.status||'submitted';
+  }else{
+   $('statusInput').innerHTML='<option value="submitted">समीक्षा हेतु भेजें</option>';
+   $('statusInput').value='submitted';
+  }
   const checks=a.fact_check_items||{};
   $('checkNames').checked=!!checks.names;$('checkPlace').checked=!!checks.place;$('checkDate').checked=!!checks.date;
   $('checkNumbers').checked=!!checks.numbers;$('checkSource').checked=!!checks.source;$('checkResponse').checked=!!checks.response;
