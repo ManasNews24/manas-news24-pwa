@@ -458,6 +458,13 @@ async function editArticle(id){
 }
 function resetArticle(){ $('articleForm').reset();$('statusInput').value='submitted';$('generatedTitleWrap').classList.add('hidden');$('generatedSummaryWrap').classList.add('hidden');$('generatedBodyWrap').classList.add('hidden');$('aiStatus').textContent='';$('aiResult').classList.add('hidden');$('editorialHistoryPanel').classList.add('hidden');$('editorialHistory').textContent='';$('articleId').value='';$('rawFacts').value='';aiDraftResult=null;$('editorHeading').textContent='नई खबर लिखें';$('statusInput').innerHTML='<option value="submitted">समीक्षा हेतु भेजें</option>'; }
 $('resetArticleBtn').onclick=resetArticle;
+async function resolveArticleSlug(title,id){
+ const base=slugify(title);
+ const {data,error}=await supabase.from('news_articles').select('id').eq('slug',base).limit(1);
+ if(error)throw new Error('URL पहचान जाँच नहीं हो सकी: '+error.message);
+ const conflict=(data||[]).some(row=>row.id!==id);
+ return conflict?base+'-'+Date.now().toString(36):base;
+}
 async function saveArticle(statusOverride){
  const id=$('articleId').value;
  const title=$('title').value.trim();
@@ -465,7 +472,11 @@ async function saveArticle(statusOverride){
  const status=statusOverride||$('statusInput').value||'submitted';
  if(!title||!body){toast('शीर्षक और पूरी खबर अनिवार्य हैं। पहले AI से खबर तैयार करें या दोनों स्वयं भरें।');$('title').focus();return}
  if(!canEditAll()&&!['draft','submitted','changes_requested'].includes(status)){toast('रिपोर्टर केवल ड्राफ्ट या समीक्षा हेतु खबर भेज सकता है।');return}
- const payload={title,slug:slugify(title),raw_facts:$('rawFacts').value.trim()||body,dateline:$('dateline').value.trim(),latitude:$('latitude').value.trim()===''?null:Number($('latitude').value),longitude:$('longitude').value.trim()===''?null:Number($('longitude').value),category_id:$('category').value||null,summary:$('summary').value.trim(),body,source_note:$('sourceNote').value.trim(),fact_check_items:{names:$('checkNames').checked,place:$('checkPlace').checked,date:$('checkDate').checked,numbers:$('checkNumbers').checked,source:$('checkSource').checked,response:$('checkResponse').checked},featured_image_url:$('imageUrl').value.trim()||null,featured_video_url:$('videoUrl').value.trim()||null,seo_title:$('seoTitle').value.trim(),seo_description:$('seoDescription').value.trim(),status,updated_at:new Date().toISOString()};
+ const latText=$('latitude').value.trim(),lonText=$('longitude').value.trim();
+ const latitude=latText===''?null:Number(latText),longitude=lonText===''?null:Number(lonText);
+ if((latitude===null)!==(longitude===null)){toast('न्यूज मैप के लिए अक्षांश और देशांतर दोनों भरें।');return}
+ if(latitude!==null&&(!Number.isFinite(latitude)||latitude < -90||latitude > 90||!Number.isFinite(longitude)||longitude < -180||longitude > 180)){toast('अक्षांश -90 से 90 और देशांतर -180 से 180 के बीच होना चाहिए।');return}
+ const payload={title,slug:await resolveArticleSlug(title,id),raw_facts:$('rawFacts').value.trim()||body,dateline:$('dateline').value.trim(),latitude,longitude,category_id:$('category').value||null,summary:$('summary').value.trim(),body,source_note:$('sourceNote').value.trim(),fact_check_items:{names:$('checkNames').checked,place:$('checkPlace').checked,date:$('checkDate').checked,numbers:$('checkNumbers').checked,source:$('checkSource').checked,response:$('checkResponse').checked},featured_image_url:$('imageUrl').value.trim()||null,featured_video_url:$('videoUrl').value.trim()||null,seo_title:$('seoTitle').value.trim(),seo_description:$('seoDescription').value.trim(),status,updated_at:new Date().toISOString()};
  if(!id)payload.reporter_name_snapshot=profile.display_name||currentUser.email||'रिपोर्टर';
  if(canEditAll()){payload.editor_id=currentUser.id;payload.editor_name_snapshot=profile.display_name||currentUser.email||'संपादकीय डेस्क'}
  const saveButtons=[$('sendToEditorBtn'),$('saveEditorDraftBtn'),$('approveAndQueueBtn')].filter(Boolean);
@@ -571,7 +582,7 @@ $('copyCredentialsBtn').onclick=()=>{const t='लॉगिन आईडी: '+$(
 $('closeCredentialsBtn').onclick=()=>$('credentialResult').classList.add('hidden');
 async function loadAds(){if(role!=='admin')return;const {data,error}=await supabase.from('ad_campaigns').select('*').order('created_at',{ascending:false});if(error){$('adsList').innerHTML='<div class="empty">'+esc(error.message)+'</div>';return}$('adsList').innerHTML=data.length?'<div class="tablewrap"><table><thead><tr><th>अभियान</th><th>विज्ञापनदाता</th><th>स्थान</th><th>अवधि</th><th>स्थिति</th><th>कार्य</th></tr></thead><tbody>'+data.map(a=>'<tr><td><strong>'+esc(a.title)+'</strong></td><td>'+esc(a.advertiser_name||'—')+'</td><td>'+esc(a.placement)+'</td><td>'+(a.starts_at?new Date(a.starts_at).toLocaleDateString('hi-IN'):'—')+' से '+(a.ends_at?new Date(a.ends_at).toLocaleDateString('hi-IN'):'—')+'</td><td>'+statusPill(a.is_active?'published':'draft')+'</td><td><div class="actions"><button data-ad-edit="'+a.id+'">संपादित</button><button data-ad-toggle="'+a.id+'" data-active="'+a.is_active+'">'+(a.is_active?'बंद करें':'चालू करें')+'</button></div></td></tr>').join('')+'</tbody></table></div>':'<div class="empty">अभी कोई विज्ञापन अभियान नहीं है।</div>';$('adsList').querySelectorAll('[data-ad-edit]').forEach(b=>b.onclick=()=>{const a=data.find(x=>x.id===b.dataset.adEdit);$('adId').value=a.id;$('adTitle').value=a.title;$('advertiser').value=a.advertiser_name||'';$('placement').value=a.placement;$('adImage').value=a.image_url||'';$('adTarget').value=a.target_url||'';$('adStart').value=a.starts_at?new Date(a.starts_at).toISOString().slice(0,16):'';$('adEnd').value=a.ends_at?new Date(a.ends_at).toISOString().slice(0,16):'';$('adActive').checked=a.is_active;window.scrollTo(0,0)});$('adsList').querySelectorAll('[data-ad-toggle]').forEach(b=>b.onclick=async()=>{const {error}=await supabase.from('ad_campaigns').update({is_active:b.dataset.active!=='true'}).eq('id',b.dataset.adToggle);if(error){toast(error.message);return}toast('विज्ञापन स्थिति बदल गई।');loadAds()})}
 $('adForm').onsubmit=async e=>{e.preventDefault();const id=$('adId').value;const p={title:$('adTitle').value.trim(),advertiser_name:$('advertiser').value.trim(),placement:$('placement').value,image_url:$('adImage').value.trim()||null,target_url:$('adTarget').value.trim()||null,starts_at:$('adStart').value?new Date($('adStart').value).toISOString():null,ends_at:$('adEnd').value?new Date($('adEnd').value).toISOString():null,is_active:$('adActive').checked};const r=id?await supabase.from('ad_campaigns').update(p).eq('id',id):await supabase.from('ad_campaigns').insert(p);if(r.error){toast('विज्ञापन सेव नहीं हुआ: '+r.error.message);return}$('adForm').reset();$('adId').value='';toast('विज्ञापन अभियान सेव हो गया।');loadAds()};
-$('resetAd').onclick=()=>$('adForm').reset();$('reloadAds').onclick=loadAds;
+$('resetAd').onclick=()=>{$('adForm').reset();$('adId').value='';$('adActive').checked=false};$('reloadAds').onclick=loadAds;
 $('refreshProfile').onclick=()=>enterApp(currentUser);
 
 async function runAiEditor(mode){
