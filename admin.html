@@ -476,13 +476,14 @@ async function saveArticle(statusOverride){
  const latitude=latText===''?null:Number(latText),longitude=lonText===''?null:Number(lonText);
  if((latitude===null)!==(longitude===null)){toast('न्यूज मैप के लिए अक्षांश और देशांतर दोनों भरें।');return}
  if(latitude!==null&&(!Number.isFinite(latitude)||latitude < -90||latitude > 90||!Number.isFinite(longitude)||longitude < -180||longitude > 180)){toast('अक्षांश -90 से 90 और देशांतर -180 से 180 के बीच होना चाहिए।');return}
- const payload={title,slug:await resolveArticleSlug(title,id),raw_facts:$('rawFacts').value.trim()||body,dateline:$('dateline').value.trim(),latitude,longitude,category_id:$('category').value||null,summary:$('summary').value.trim(),body,source_note:$('sourceNote').value.trim(),fact_check_items:{names:$('checkNames').checked,place:$('checkPlace').checked,date:$('checkDate').checked,numbers:$('checkNumbers').checked,source:$('checkSource').checked,response:$('checkResponse').checked},featured_image_url:$('imageUrl').value.trim()||null,featured_video_url:$('videoUrl').value.trim()||null,seo_title:$('seoTitle').value.trim(),seo_description:$('seoDescription').value.trim(),status,updated_at:new Date().toISOString()};
+ const payload={title,slug:slugify(title),raw_facts:$('rawFacts').value.trim()||body,dateline:$('dateline').value.trim(),latitude,longitude,category_id:$('category').value||null,summary:$('summary').value.trim(),body,source_note:$('sourceNote').value.trim(),fact_check_items:{names:$('checkNames').checked,place:$('checkPlace').checked,date:$('checkDate').checked,numbers:$('checkNumbers').checked,source:$('checkSource').checked,response:$('checkResponse').checked},featured_image_url:$('imageUrl').value.trim()||null,featured_video_url:$('videoUrl').value.trim()||null,seo_title:$('seoTitle').value.trim(),seo_description:$('seoDescription').value.trim(),status,updated_at:new Date().toISOString()};
  if(!id)payload.reporter_name_snapshot=profile.display_name||currentUser.email||'रिपोर्टर';
  if(canEditAll()){payload.editor_id=currentUser.id;payload.editor_name_snapshot=profile.display_name||currentUser.email||'संपादकीय डेस्क'}
  const saveButtons=[$('sendToEditorBtn'),$('saveEditorDraftBtn'),$('approveAndQueueBtn')].filter(Boolean);
  saveButtons.forEach(b=>b.disabled=true);
  $('editorSaveStatus').textContent='खबर सुरक्षित की जा रही है…';
  try{
+  payload.slug=await resolveArticleSlug(title,id);
   let result;
   if(id)result=await supabase.from('news_articles').update(payload).eq('id',id).select('id').single();
   else result=await supabase.from('news_articles').insert({...payload,author_id:currentUser.id}).select('id').single();
