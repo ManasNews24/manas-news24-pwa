@@ -604,14 +604,15 @@ async function runAiEditor(mode){
   $('aiResult').textContent=(missing?'पुष्टि करें:\n'+missing+'\n\n':'')+(cautions?'सावधानी:\n'+cautions:'');
   $('aiResult').classList.toggle('hidden',!missing&&!cautions);
   $('title').value=aiDraftResult.title||$('title').value||'';$('summary').value=aiDraftResult.summary||'';$('body').value=aiDraftResult.body;
-  $('generatedTitleWrap').classList.remove('hidden');$('generatedSummaryWrap').classList.remove('hidden');$('generatedBodyWrap').classList.remove('hidden');
-  $('aiStatus').textContent='✓ खबर तैयार है। शीर्षक, सार और पूरी खबर नीचे दिखाई दे रही है। जांचकर संपादक को भेजें।';
+  $('generatedTitleWrap').classList.remove('hidden');$('generatedSummaryWrap').classList.add('hidden');$('generatedBodyWrap').classList.remove('hidden');
+  $('rawInputPanel').classList.add('hidden');$('changeRawActions').classList.remove('hidden');
+  $('aiStatus').textContent='';
   $('generatedTitleWrap').scrollIntoView({behavior:'smooth',block:'start'});
  }catch(err){
   const message=err.name==='AbortError'?'AI को उत्तर देने में 90 सेकंड से अधिक लगे। इंटरनेट जांचकर दोबारा प्रयास करें।':(err.message||'AI खबर तैयार नहीं हो सकी।');
   $('aiStatus').textContent='खबर तैयार नहीं हुई: '+message;$('aiResult').textContent='समस्या: '+message+'\nकच्ची खबर सुरक्षित है। आप दोबारा प्रयास कर सकते हैं।';$('aiResult').classList.remove('hidden');
  }finally{
-  btn.disabled=false;btn.textContent=mode==='draft'?'✦ AI से पूरी खबर तैयार करें':(mode==='revise'?'निर्देशानुसार फिर से संपादित करें':(mode==='translate'?'चुनी भाषा में अनुवाद':'भाषा और व्याकरण सुधारें'));
+  btn.disabled=false;btn.textContent=mode==='draft'?'AI से खबर तैयार करें':(mode==='revise'?'निर्देशानुसार फिर से संपादित करें':(mode==='translate'?'चुनी भाषा में अनुवाद':'भाषा और व्याकरण सुधारें'));
  }
 }
 window.runAiEditor=runAiEditor; $('aiDraftBtn').onclick=()=>runAiEditor('draft');
