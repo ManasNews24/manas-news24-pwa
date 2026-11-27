@@ -235,28 +235,24 @@
     <div class="panel"><div class="toolbar"><input id="articleSearch" placeholder="शीर्षक से खबर खोजें…"><select id="statusFilter"><option value="">सभी स्थिति</option><option value="queue">समीक्षा कतार</option><option value="draft">ड्राफ्ट</option><option value="submitted">समीक्षा हेतु भेजी गई</option><option value="in_review">समीक्षा जारी</option><option value="changes_requested">सुधार मांगा गया</option><option value="approved">स्वीकृत</option><option value="published">प्रकाशित</option><option value="scheduled">निर्धारित</option><option value="rejected">अस्वीकृत</option></select><button class="btn soft" id="filterBtn">खोजें</button></div><div id="articlesTable"></div></div>
    </section>
    <section id="page-editor" class="page hidden">
-    <div class="welcome"><div><div class="eyebrow">सरल समाचार लेखन</div><h2 id="editorHeading">नई खबर लिखें</h2><p>कच्ची जानकारी लिखें और एक क्लिक में पूरी खबर तैयार कराएं।</p></div></div>
+    <div class="welcome"><div><h2 id="editorHeading">नई खबर</h2></div></div>
      <div class="panel">
       <form id="articleForm">
        <input type="hidden" id="articleId">
-       <div class="field full">
-        <label for="rawFacts" style="font-size:18px">कच्ची खबर / मूल जानकारी</label>
-        <textarea id="rawFacts" required style="min-height:230px" placeholder="यहां खबर टाइप करें, कॉपी-पेस्ट करें या नीचे माइक दबाकर बोलें। उदाहरण: मांडा। गांव में आज सुबह सड़क हादसा हुआ..."></textarea>
-        <span class="hint">यह बॉक्स केवल आपकी मूल जानकारी के लिए है। नाम, स्थान, तारीख, समय, बयान और आंकड़े सही-सही लिखें। मोबाइल कीबोर्ड से टाइप या देर तक दबाकर पेस्ट भी कर सकते हैं।</span>
-        <div class="formactions" style="margin-top:10px">
-         <button class="btn soft" type="button" id="voiceInputBtn">🎙️ बोलकर खबर लिखें</button>
-         <button class="btn soft" type="button" id="pasteHelpBtn">📋 कॉपी की खबर पेस्ट करें</button>
+       <div class="field full" id="rawInputPanel">
+        <div class="formactions" style="margin:0 0 8px;gap:8px">
+         <button class="btn soft" type="button" id="voiceInputBtn" aria-label="बोलकर लिखें" title="बोलकर लिखें" style="min-width:48px;font-size:20px">🎙</button>
+         <button class="btn soft" type="button" id="pasteHelpBtn" aria-label="कॉपी की जानकारी पेस्ट करें" title="कॉपी की जानकारी पेस्ट करें" style="min-width:48px;font-size:20px">📋</button>
         </div>
-        <button class="btn gold" type="button" id="aiDraftBtn" onclick="document.getElementById('aiStatus').textContent='बटन सक्रिय हुआ है। AI से संपर्क किया जा रहा है…'; if(window.runAiEditor){window.runAiEditor('draft')}else{document.getElementById('aiStatus').textContent='AI स्क्रिप्ट लोड नहीं हुई। पेज रीफ्रेश करें।'}" style="width:100%;margin-top:12px;min-height:54px;font-size:17px">✦ AI से पूरी खबर तैयार करें</button>
-        <div id="aiStatus" class="small muted" role="status" aria-live="polite" style="margin-top:10px"></div>
-        <div id="aiResult" class="notice hidden" role="alert" style="white-space:pre-wrap;margin-top:10px"></div>
+        <textarea id="rawFacts" required autocomplete="off" style="min-height:260px;font-size:16px" placeholder=""></textarea>
+        <button class="btn gold" type="button" id="aiDraftBtn" style="width:100%;margin-top:10px;min-height:48px;font-size:16px">AI से खबर तैयार करें</button>
+        <div id="aiStatus" class="small muted" role="status" aria-live="polite" style="margin-top:8px"></div>
+        <div id="aiResult" class="notice hidden" role="alert" style="white-space:pre-wrap;margin-top:8px"></div>
        </div>
-       <div class="field full hidden" id="generatedBodyWrap">
-        <label for="body" style="font-size:18px">AI द्वारा तैयार खबर — जांचकर संपादित करें</label>
-        <textarea id="body" required style="min-height:230px" placeholder="AI द्वारा तैयार खबर यहां दिखाई देगी।"></textarea>
-       </div>
-       <div class="field full hidden" id="generatedTitleWrap"><label for="title">AI द्वारा तैयार शीर्षक — चाहें तो बदलें</label><input id="title" maxlength="180" placeholder="खबर का शीर्षक"></div>
-       <div class="field full hidden" id="generatedSummaryWrap"><label for="summary">संक्षिप्त परिचय — वैकल्पिक</label><textarea id="summary" style="min-height:76px" maxlength="500" placeholder="खबर का छोटा परिचय"></textarea></div>
+       <div class="formactions hidden" id="changeRawActions"><button class="btn soft" type="button" id="changeRawBtn">कच्ची जानकारी बदलें</button></div>
+       <div class="field full hidden" id="generatedTitleWrap"><label for="title">शीर्षक</label><input id="title" maxlength="180" placeholder="खबर का शीर्षक"></div>
+       <div class="field full hidden" id="generatedBodyWrap"><label for="body">खबर</label><textarea id="body" required style="min-height:260px" placeholder="तैयार खबर"></textarea></div>
+       <div class="field full hidden" id="generatedSummaryWrap"><label for="summary">संक्षिप्त परिचय</label><textarea id="summary" style="min-height:76px" maxlength="500" placeholder="खबर का छोटा परिचय"></textarea></div>
        <input type="hidden" id="statusInput" value="submitted">
        <details style="margin:14px 0;padding:12px;border:1px solid var(--line);border-radius:12px">
         <summary style="font-weight:700;cursor:pointer">वैकल्पिक जानकारी और अन्य सुविधाएं</summary>
@@ -456,7 +452,7 @@ async function editArticle(id){
   $('rawFacts').focus({preventScroll:true});
  }catch(error){toast('खबर संपादन के लिए नहीं खुली: '+error.message)}
 }
-function resetArticle(){ $('articleForm').reset();$('statusInput').value='submitted';$('generatedTitleWrap').classList.add('hidden');$('generatedSummaryWrap').classList.add('hidden');$('generatedBodyWrap').classList.add('hidden');$('aiStatus').textContent='';$('aiResult').classList.add('hidden');$('editorialHistoryPanel').classList.add('hidden');$('editorialHistory').textContent='';$('articleId').value='';$('rawFacts').value='';aiDraftResult=null;$('editorHeading').textContent='नई खबर लिखें';$('statusInput').innerHTML='<option value="submitted">समीक्षा हेतु भेजें</option>'; }
+function resetArticle(){ $('articleForm').reset();$('statusInput').value='submitted';$('generatedTitleWrap').classList.add('hidden');$('generatedSummaryWrap').classList.add('hidden');$('generatedBodyWrap').classList.add('hidden');$('rawInputPanel').classList.remove('hidden');$('changeRawActions').classList.add('hidden');$('aiStatus').textContent='';$('aiResult').classList.add('hidden');$('editorialHistoryPanel').classList.add('hidden');$('editorialHistory').textContent='';$('articleId').value='';$('rawFacts').value='';aiDraftResult=null;$('editorHeading').textContent='नई खबर लिखें';$('statusInput').innerHTML='<option value="submitted">समीक्षा हेतु भेजें</option>'; }
 $('resetArticleBtn').onclick=resetArticle;
 async function resolveArticleSlug(title,id){
  const base=slugify(title);
@@ -597,7 +593,7 @@ async function runAiEditor(mode){
   if(!session)throw new Error('लॉगिन सत्र समाप्त है। दोबारा लॉगिन करें।');
   const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),90000);
   let response;
-  try{response=await fetch(SUPABASE_URL+'/functions/v1/ai-news-editor',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token,'apikey':SUPABASE_PUBLISHABLE_KEY},body:JSON.stringify({mode,headline:$('title').value.trim(),summary:$('summary').value.trim(),facts:raw,category:$('category').selectedOptions[0]?.textContent||'',source_note:$('sourceNote').value.trim(),instruction:$('aiInstruction')?.value.trim()||''}),signal:controller.signal})}
+  try{response=await fetch(SUPABASE_URL+'/functions/v1/ai-news-editor',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token,'apikey':SUPABASE_PUBLISHABLE_KEY},body:JSON.stringify({mode,headline:$('title').value.trim(),summary:$('summary').value.trim(),facts:raw,category:$('category').selectedOptions[0]?.textContent||'',source_note:$('sourceNote').value.trim(),instruction:mode==='draft'?('Write a clear, direct, fact-based Hindi news report in simple newspaper language. Keep every supplied fact, name, date, place, number and attribution accurate. Do not invent missing details, add slogans, promotional language, filler, or a fabricated quote. If information is limited, write the best complete concise report possible and list only essential missing facts separately.'):($('aiInstruction')?.value.trim()||'')}),signal:controller.signal})}
   finally{clearTimeout(timeout)}
   const payload=await response.json().catch(()=>({error:'सर्वर से पढ़ने योग्य उत्तर नहीं मिला।'}));
   if(!response.ok)throw new Error(payload.error||('AI सर्वर त्रुटि ('+response.status+')'));
@@ -610,7 +606,7 @@ async function runAiEditor(mode){
   $('title').value=aiDraftResult.title||$('title').value||'';$('summary').value=aiDraftResult.summary||'';$('body').value=aiDraftResult.body;
   $('generatedTitleWrap').classList.remove('hidden');$('generatedSummaryWrap').classList.remove('hidden');$('generatedBodyWrap').classList.remove('hidden');
   $('aiStatus').textContent='✓ खबर तैयार है। शीर्षक, सार और पूरी खबर नीचे दिखाई दे रही है। जांचकर संपादक को भेजें।';
-  $('generatedBodyWrap').scrollIntoView({behavior:'smooth',block:'start'});
+  $('generatedTitleWrap').scrollIntoView({behavior:'smooth',block:'start'});
  }catch(err){
   const message=err.name==='AbortError'?'AI को उत्तर देने में 90 सेकंड से अधिक लगे। इंटरनेट जांचकर दोबारा प्रयास करें।':(err.message||'AI खबर तैयार नहीं हो सकी।');
   $('aiStatus').textContent='खबर तैयार नहीं हुई: '+message;$('aiResult').textContent='समस्या: '+message+'\nकच्ची खबर सुरक्षित है। आप दोबारा प्रयास कर सकते हैं।';$('aiResult').classList.remove('hidden');
@@ -619,6 +615,7 @@ async function runAiEditor(mode){
  }
 }
 window.runAiEditor=runAiEditor; $('aiDraftBtn').onclick=()=>runAiEditor('draft');
+$('changeRawBtn').onclick=()=>{$('rawInputPanel').classList.remove('hidden');$('changeRawActions').classList.add('hidden');$('rawFacts').focus()};
 $('aiTranslateBtn').onclick=()=>{const value=$('translateLanguage').value;if(value==='none'){toast('यह खबर हिंदी में ही रहेगी। अनुवाद की जरूरत हो तो सूची से दूसरी भाषा चुनें।');return}const lang=$('translateLanguage').selectedOptions[0]?.textContent||'English';$('aiInstruction').value='Translate the complete news story into '+lang+'. Preserve all names, places, dates, numbers, allegations and attributions exactly. Do not add facts. Return the translated headline, summary and body.';runAiEditor('translate')};
 $('aiReviseBtn').onclick=()=>runAiEditor('revise');
 $('aiPolishBtn').onclick=()=>runAiEditor('polish');
