@@ -140,6 +140,33 @@
  .featuregrid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 
+
+/* Focused, accessible mobile news editor */
+body.editor-focus .topbar,body.editor-focus .sidebar{display:none!important}
+body.editor-focus .shell{display:block!important;max-width:820px;width:100%;margin:0 auto;padding:10px!important}
+body.editor-focus .content{width:100%;min-width:0}
+body.editor-focus #page-editor{display:block!important}
+body.editor-focus #page-editor .welcome{margin:4px 2px 12px}
+body.editor-focus #page-editor .welcome h2{font-size:25px;font-weight:850;line-height:1.35}
+body.editor-focus #page-editor .panel{padding:16px;border-radius:16px}
+body.editor-focus #page-editor .field label{font-size:17px;font-weight:800;color:#17233b}
+body.editor-focus #page-editor textarea,
+body.editor-focus #page-editor input,
+body.editor-focus #page-editor select{font-size:18px!important;font-weight:600;line-height:1.75;padding:13px 14px;border:1.5px solid #cbd3e1;border-radius:12px}
+body.editor-focus #page-editor textarea{min-height:280px}
+body.editor-focus #page-editor .btn{font-size:16px;font-weight:800;min-height:48px;padding:12px 16px}
+body.editor-focus #page-editor #aiDraftBtn{font-size:18px;font-weight:900;min-height:58px}
+body.editor-focus #page-editor #voiceInputBtn,body.editor-focus #page-editor #pasteHelpBtn{min-width:58px;min-height:54px;font-size:23px!important}
+body.editor-focus #page-editor .small,body.editor-focus #page-editor .notice{font-size:14px;line-height:1.65}
+body.editor-focus #page-editor .formactions{gap:10px}
+@media(max-width:560px){
+ body.editor-focus .shell{padding:8px!important}
+ body.editor-focus #page-editor .panel{padding:12px}
+ body.editor-focus #page-editor .welcome h2{font-size:24px}
+ body.editor-focus #page-editor textarea{min-height:300px}
+ body.editor-focus #page-editor textarea,body.editor-focus #page-editor input,body.editor-focus #page-editor select{font-size:18px!important}
+}
+
 </style>
 </head>
 <body>
@@ -349,7 +376,7 @@ function toast(msg){$('toast').textContent=msg;$('toast').classList.remove('hidd
 function esc(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function slugify(s){return s.toLowerCase().trim().replace(/[^\p{L}\p{N}]+/gu,'-').replace(/^-|-$/g,'').slice(0,90)||'news'}
 function canEditAll(){return role==='admin'||role==='editor'}
-function showPage(page){document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));$('page-'+page).classList.remove('hidden');document.querySelectorAll('.navbtn').forEach(x=>x.classList.toggle('active',x.dataset.page===page));if(page==='articles'){if(role==='editor')$('statusFilter').value='queue';loadArticles();}if(page==='media')loadMedia();if(page==='readerReports')loadReaderReports();if(page==='confidential')loadConfidentialTips();if(page==='analytics')loadNewsroomAnalytics();if(page==='team')loadTeam();if(page==='ads')loadAds();if(page==='overview')loadOverview()}
+function showPage(page){document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));$('page-'+page).classList.remove('hidden');document.body.classList.toggle('editor-focus',page==='editor');document.querySelectorAll('.navbtn').forEach(x=>x.classList.toggle('active',x.dataset.page===page));if(page==='articles'){if(role==='editor')$('statusFilter').value='queue';loadArticles();}if(page==='media')loadMedia();if(page==='readerReports')loadReaderReports();if(page==='confidential')loadConfidentialTips();if(page==='analytics')loadNewsroomAnalytics();if(page==='team')loadTeam();if(page==='ads')loadAds();if(page==='overview')loadOverview();if(page==='editor'){window.scrollTo({top:0,behavior:'instant'});setTimeout(()=>$('rawFacts')?.focus({preventScroll:true}),80)}else{window.scrollTo({top:0,behavior:'instant'})}}
 function setRoleUI(){$('reporterSubmitActions').classList.toggle('hidden',canEditAll());$('editorSaveActions').classList.toggle('hidden',!canEditAll());const adminOnly=['team','ads','features','confidential','analytics'];adminOnly.forEach(p=>{const el=document.querySelector('[data-page="'+p+'"]');if(el)el.classList.toggle('hidden',role!=='admin')});document.querySelectorAll('[data-admin-only]').forEach(x=>x.classList.toggle('hidden',role!=='admin'));document.querySelectorAll('.admin-editor-only,.editor-admin-only').forEach(x=>x.classList.toggle('hidden',!canEditAll()));const settings=document.querySelector('[data-page="settings"]');if(settings)settings.classList.add('hidden');$('dashboardHeading').textContent=role==='reporter'?'रिपोर्टर डेस्क':role==='editor'?'संपादकीय डेस्क':'एडमिन डैशबोर्ड';$('dashboardSubheading').textContent=role==='reporter'?'एक जगह से खबर लिखें, भेजें और उसका परिणाम देखें।':role==='editor'?'रिपोर्टरों की खबरें जांचें, सुधारें और प्रकाशन पूरा करें।':'टीम, खबरें, मीडिया और न्यूज़रूम की सभी व्यवस्थाएं नियंत्रित करें।';$('rolePrimaryAction').textContent=role==='editor'?'समीक्षा कतार खोलें':role==='admin'?'सभी खबरें देखें':'＋ नई खबर लिखें';$('roleSecondaryAction').textContent=role==='reporter'?'मेरी खबरें':role==='editor'?'नई खबर लिखें':'टीम प्रबंधन';$('rolePrimaryAction').onclick=()=>{if(role==='reporter')showPage('editor');else{showPage('articles');if(role==='editor'){$('statusFilter').value='queue';renderArticlesTable()}}};$('roleSecondaryAction').onclick=()=>showPage(role==='admin'?'team':role==='editor'?'editor':'articles');const filter=$('statusFilter');if(role==='editor'){filter.value='queue';filter.options[0].textContent='सभी खबरें';}else{filter.value='';filter.options[0].textContent='सभी स्थिति';}}
 function showLogin(){ $('recoveryView').classList.add('hidden');$('loginForm').classList.remove('hidden');$('loginView').classList.remove('hidden');$('pendingAccessView').classList.add('hidden');$('appView').classList.add('hidden') }
 function showPasswordRecovery(){ $('loginForm').classList.add('hidden');$('recoveryView').classList.remove('hidden');$('loginView').classList.remove('hidden');$('appView').classList.add('hidden') }
