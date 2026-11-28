@@ -802,6 +802,7 @@ async function resolveArticleSlug(title,id){
 }
 async function saveArticle(statusOverride){
  const id=$('articleId').value;
+ const raw=$('rawFacts').value.trim();
  const title=$('title').value.trim();
  const body=(reporterAiReady?(reporterShowingRaw?reporterGeneratedText:raw):raw).trim();$('body').value=body;
  const status=statusOverride||$('statusInput').value||'submitted';
@@ -965,7 +966,7 @@ async function runAiEditor(mode){
 }
 window.runAiEditor=runAiEditor; $('aiDraftBtn').onclick=()=>runAiEditor('draft');
 $('rawToggleBtn').onclick=()=>{if(!reporterAiReady)return;if(reporterShowingRaw){$('rawFacts').value=reporterGeneratedText;$('rawToggleBtn').textContent='कच्ची जानकारी देखें';reporterShowingRaw=false;}else{reporterGeneratedText=$('rawFacts').value;$('rawFacts').value=reporterRawBackup;$('rawToggleBtn').textContent='तैयार खबर पर लौटें';reporterShowingRaw=true;}};
-function wordCount(v){return String(v||'').trim()?String(v).trim().split(/\\s+/u).length:0}
+function wordCount(v){return String(v||'').trim()?String(v).trim().split(/\s+/u).length:0}
 function updateWordCounts(){$('slugCount').textContent=wordCount($('articleSlug').value)+' / 10';$('titleCount').textContent=wordCount($('title').value)+' / 30';}
 $('articleSlug').addEventListener('input',updateWordCounts);$('title').addEventListener('input',updateWordCounts);updateWordCounts();
 $('rawFacts').addEventListener('input',()=>{if(reporterShowingRaw)reporterRawBackup=$('rawFacts').value;else if(reporterAiReady)reporterGeneratedText=$('rawFacts').value;});
