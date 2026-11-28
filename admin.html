@@ -631,6 +631,36 @@ button:focus-visible,.btn:focus-visible,.featurecard:focus-visible,.navbtn:focus
 #appView .dashboard-mark{overflow:hidden;position:relative}
 #appView .dashboard-mark img{display:block;width:100%;height:100%;object-fit:cover;border-radius:inherit}
 
+
+/* Reporter: full-width compact horizontal navigation row */
+#appView.reporter-role .shell{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;padding:12px}
+#appView.reporter-role .sidebar{position:static;top:auto;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:stretch;gap:6px;padding:8px;margin:0;border-radius:15px}
+#appView.reporter-role .sidebar .side-label{display:none!important}
+#appView.reporter-role .sidebar .navbtn{display:flex!important;align-items:center;justify-content:center;gap:6px;min-width:0;min-height:38px;margin:0;padding:7px 5px;border:1px solid #ffffff16;border-radius:10px;background:#ffffff09;text-align:center;font-size:12px;font-weight:800;line-height:1.15;white-space:nowrap}
+#appView.reporter-role .sidebar .navbtn.hidden{display:none!important}
+#appView.reporter-role .sidebar .navbtn.active{background:linear-gradient(135deg,#30466d,#1d2e50);border-color:#e9c66a;box-shadow:inset 3px 0 #f1c65a,0 3px 8px #07172d55}
+#appView.reporter-role .sidebar .navicon{width:auto;font-size:14px;flex:0 0 auto}
+#appView.reporter-role .content{min-width:0}
+#page-overview.reporter-dashboard-role .dashboard-hero{gap:9px;padding:14px 16px}
+#page-overview.reporter-dashboard-role .dashboard-hero-actions{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+#page-overview.reporter-dashboard-role .dashboard-hero-actions .btn{min-height:42px;height:42px;padding:6px 9px;font-size:12px;border-radius:11px}
+#page-overview.reporter-dashboard-role #profilePhotoBtn{min-height:36px;height:36px;grid-column:1/-1;justify-self:center;width:min(100%,220px);font-size:11px}
+#page-overview.reporter-dashboard-role .dashboard-date{margin-top:0}
+@media(max-width:560px){
+ #appView.reporter-role .shell{padding:8px;gap:8px}
+ #appView.reporter-role .sidebar{gap:5px;padding:7px;border-radius:13px}
+ #appView.reporter-role .sidebar .navbtn{min-height:36px;padding:6px 3px;font-size:11px;gap:4px}
+ #appView.reporter-role .sidebar .navicon{font-size:12px}
+ #page-overview.reporter-dashboard-role .dashboard-hero{padding:12px;gap:8px;margin-bottom:10px}
+ #page-overview.reporter-dashboard-role .dashboard-hero-actions{gap:7px}
+ #page-overview.reporter-dashboard-role .dashboard-hero-actions .btn{height:40px;min-height:40px;font-size:11px;padding:5px 6px}
+ #page-overview.reporter-dashboard-role #profilePhotoBtn{height:34px;min-height:34px;width:190px}
+}
+@media(max-width:350px){
+ #appView.reporter-role .sidebar .navbtn{font-size:10px}
+ #appView.reporter-role .sidebar .navicon{display:none}
+}
+
 </style>
 </head>
 <body>
@@ -913,7 +943,7 @@ async function saveProfilePhoto(file){
 $('profilePhotoBtn').onclick=()=>$('profilePhotoInput').click();
 $('profilePhotoInput').onchange=()=>saveProfilePhoto($('profilePhotoInput').files?.[0]);
 
-function setRoleUI(){$('page-overview').classList.toggle('reporter-dashboard-role',role==='reporter');$('reporterSubmitActions').classList.toggle('hidden',canEditAll());$('editorSaveActions').classList.toggle('hidden',!canEditAll());const adminOnly=['team','ads','features','confidential','analytics'];adminOnly.forEach(p=>{const el=document.querySelector('[data-page="'+p+'"]');if(el)el.classList.toggle('hidden',role!=='admin')});document.querySelectorAll('[data-admin-only]').forEach(x=>x.classList.toggle('hidden',role!=='admin'));document.querySelectorAll('.reporter-hide').forEach(x=>x.classList.toggle('hidden',role==='reporter'));document.querySelectorAll('.admin-editor-only,.editor-admin-only').forEach(x=>x.classList.toggle('hidden',!canEditAll()));const settings=document.querySelector('[data-page="settings"]');if(settings)settings.classList.add('hidden');$('dashboardHeading').textContent=role==='reporter'?(profile?.display_name||'रिपोर्टर'):role==='editor'?'संपादकीय डेस्क':'एडमिन डैशबोर्ड';$('dashboardSubheading').textContent=role==='reporter'?(profile?.dateline||'स्थान निर्धारित नहीं'):role==='editor'?'रिपोर्टरों की खबरें जांचें, सुधारें और प्रकाशन पूरा करें।':'टीम, खबरें, मीडिया और न्यूज़रूम की सभी व्यवस्थाएं नियंत्रित करें।';updateReporterDashboardProfile(currentUser);$('rolePrimaryAction').textContent=role==='editor'?'समीक्षा कतार खोलें':role==='admin'?'सभी खबरें देखें':'＋ नई खबर लिखें';$('roleSecondaryAction').textContent=role==='reporter'?'मेरी खबरें':role==='editor'?'नई खबर लिखें':'टीम प्रबंधन';$('rolePrimaryAction').onclick=()=>{if(role==='reporter')showPage('editor');else{showPage('articles');if(role==='editor'){$('statusFilter').value='queue';renderArticlesTable()}}};$('roleSecondaryAction').onclick=()=>showPage(role==='admin'?'team':role==='editor'?'editor':'articles');const filter=$('statusFilter');if(role==='editor'){filter.value='queue';filter.options[0].textContent='सभी खबरें';}else{filter.value='';filter.options[0].textContent='सभी स्थिति';}}
+function setRoleUI(){$('appView').classList.toggle('reporter-role',role==='reporter');$('page-overview').classList.toggle('reporter-dashboard-role',role==='reporter');$('reporterSubmitActions').classList.toggle('hidden',canEditAll());$('editorSaveActions').classList.toggle('hidden',!canEditAll());const adminOnly=['team','ads','features','confidential','analytics'];adminOnly.forEach(p=>{const el=document.querySelector('[data-page="'+p+'"]');if(el)el.classList.toggle('hidden',role!=='admin')});document.querySelectorAll('[data-admin-only]').forEach(x=>x.classList.toggle('hidden',role!=='admin'));document.querySelectorAll('.reporter-hide').forEach(x=>x.classList.toggle('hidden',role==='reporter'));document.querySelectorAll('.admin-editor-only,.editor-admin-only').forEach(x=>x.classList.toggle('hidden',!canEditAll()));const settings=document.querySelector('[data-page="settings"]');if(settings)settings.classList.add('hidden');$('dashboardHeading').textContent=role==='reporter'?(profile?.display_name||'रिपोर्टर'):role==='editor'?'संपादकीय डेस्क':'एडमिन डैशबोर्ड';$('dashboardSubheading').textContent=role==='reporter'?(profile?.dateline||'स्थान निर्धारित नहीं'):role==='editor'?'रिपोर्टरों की खबरें जांचें, सुधारें और प्रकाशन पूरा करें।':'टीम, खबरें, मीडिया और न्यूज़रूम की सभी व्यवस्थाएं नियंत्रित करें।';updateReporterDashboardProfile(currentUser);$('rolePrimaryAction').textContent=role==='editor'?'समीक्षा कतार खोलें':role==='admin'?'सभी खबरें देखें':'＋ नई खबर लिखें';$('roleSecondaryAction').textContent=role==='reporter'?'मेरी खबरें':role==='editor'?'नई खबर लिखें':'टीम प्रबंधन';$('rolePrimaryAction').onclick=()=>{if(role==='reporter')showPage('editor');else{showPage('articles');if(role==='editor'){$('statusFilter').value='queue';renderArticlesTable()}}};$('roleSecondaryAction').onclick=()=>showPage(role==='admin'?'team':role==='editor'?'editor':'articles');const filter=$('statusFilter');if(role==='editor'){filter.value='queue';filter.options[0].textContent='सभी खबरें';}else{filter.value='';filter.options[0].textContent='सभी स्थिति';}}
 function showLogin(){ $('recoveryView').classList.add('hidden');$('loginForm').classList.remove('hidden');$('loginView').classList.remove('hidden');$('pendingAccessView').classList.add('hidden');$('appView').classList.add('hidden') }
 function showPasswordRecovery(){ $('loginForm').classList.add('hidden');$('recoveryView').classList.remove('hidden');$('loginView').classList.remove('hidden');$('appView').classList.add('hidden') }
 async function boot(){const {data:{session}}=await supabase.auth.getSession();if(new URLSearchParams(location.search).has('reset')){showPasswordRecovery();return}if(session)await enterApp(session.user);else showLogin()}
