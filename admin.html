@@ -365,6 +365,25 @@ button:focus-visible,.btn:focus-visible,.featurecard:focus-visible,.navbtn:focus
  .quick-icon{width:32px;height:32px;flex-basis:32px}
 }
 
+
+/* Reporter-first compact story form inspired by the supplied newsroom reference */
+#page-editor>.welcome{margin:0 0 8px}
+#page-editor>.welcome h2{font-size:23px}
+#page-editor>.panel{padding:16px}
+#page-editor #articleForm>.field{margin-bottom:12px}
+#page-editor #articleForm label{font-size:15px;color:#333}
+#page-editor #articleForm input:not([type=file]),#page-editor #articleForm select,#page-editor #articleForm textarea{font-size:17px;padding:14px;border:1px solid #e2e2e2;border-radius:8px;box-shadow:none}
+#page-editor #articleForm textarea{line-height:1.55}
+#page-editor #articleMediaPanel{border:0!important;box-shadow:none!important;padding:8px 0!important;margin:12px 0!important}
+#page-editor #articleMediaPanel .formgrid{grid-template-columns:1fr;gap:12px}
+#page-editor #articleMediaPanel .field{padding:12px;border:1px solid #e5e5e5;border-radius:9px}
+#page-editor #articleMediaPanel input[type=file]{font-size:14px}
+#page-editor #articleForm details{border:0!important}
+#page-editor #articleForm details summary{font-size:14px}
+#page-editor #reporterSubmitActions{position:sticky;bottom:0;background:#fff;padding:10px 0 calc(10px + env(safe-area-inset-bottom));z-index:4}
+#page-editor #sendToEditorBtn{background:#ef9b16;color:#fff;border-radius:9px;font-size:17px}
+@media(max-width:560px){#page-editor>.panel{padding:12px}#page-editor #articleForm input:not([type=file]),#page-editor #articleForm select,#page-editor #articleForm textarea{font-size:16px;padding:13px}#page-editor #generatedBodyWrap textarea{min-height:300px!important}}
+
 </style>
 </head>
 <body>
@@ -477,22 +496,28 @@ button:focus-visible,.btn:focus-visible,.featurecard:focus-visible,.navbtn:focus
      <div class="panel">
       <form id="articleForm">
        <input type="hidden" id="articleId">
-       <div class="field full" id="rawInputPanel">
-        <div class="formactions" style="margin:0 0 8px;gap:8px">
-         <button class="btn soft" type="button" id="voiceInputBtn" aria-label="बोलकर लिखें" title="बोलकर लिखें" style="min-width:48px;font-size:20px">🎙</button>
-         <button class="btn soft" type="button" id="pasteHelpBtn" aria-label="कॉपी की जानकारी पेस्ट करें" title="कॉपी की जानकारी पेस्ट करें" style="min-width:48px;font-size:20px">📋</button>
-        </div>
-        <textarea id="rawFacts" required autocomplete="off" style="min-height:260px;font-size:16px" placeholder=""></textarea>
-        <button class="btn gold" type="button" id="aiDraftBtn" style="width:100%;margin-top:10px;min-height:48px;font-size:16px">AI से खबर तैयार करें</button>
-        <div id="aiStatus" class="small muted" role="status" aria-live="polite" style="margin-top:8px"></div>
-        <div id="aiResult" class="notice hidden" role="alert" style="white-space:pre-wrap;margin-top:8px"></div>
-       </div>
-       <div class="formactions hidden" id="changeRawActions"><button class="btn soft" type="button" id="changeRawBtn">कच्ची जानकारी बदलें</button></div>
-       <div class="field full hidden" id="generatedTitleWrap"><label for="title">शीर्षक</label><input id="title" maxlength="180" placeholder="खबर का शीर्षक"></div>
-       <div class="field full hidden" id="generatedBodyWrap"><label for="body">खबर</label><textarea id="body" required style="min-height:260px" placeholder="तैयार खबर"></textarea></div>
+       <div class="field full" style="margin-bottom:12px"><label for="category">विषय चुनें</label><select id="category"></select></div>
+       <div class="field full" style="margin-bottom:12px"><label for="dateline">स्थान चुनें / लिखें</label><input id="dateline" maxlength="120" placeholder="महेवा कला (मेजा), प्रयागराज"></div>
+       <div class="field full" style="margin-bottom:12px"><label for="articleSlug">स्लग</label><input id="articleSlug" maxlength="180" placeholder="खबर की URL पहचान (वैकल्पिक)"></div>
+       <div class="field full" id="generatedTitleWrap"><label for="title">हेडलाइन</label><textarea id="title" maxlength="180" rows="2" placeholder="हेडलाइन लिखें.." style="min-height:76px"></textarea></div>
+       <div class="field full" id="generatedBodyWrap"><label for="body">विवरण</label><textarea id="body" required style="min-height:260px" placeholder="खबर का पूरा विवरण लिखें.."></textarea></div>
        <div class="field full hidden" id="generatedSummaryWrap"><label for="summary">संक्षिप्त परिचय</label><textarea id="summary" style="min-height:76px" maxlength="500" placeholder="खबर का छोटा परिचय"></textarea></div>
+       <details id="aiAssistDetails" style="margin:12px 0;padding:10px 0;border-top:1px solid var(--line)">
+        <summary style="font-weight:700;cursor:pointer;color:var(--muted)">AI से खबर तैयार करें (वैकल्पिक)</summary>
+        <div class="field full" id="rawInputPanel" style="margin-top:10px">
+         <div class="formactions" style="margin:0 0 8px;gap:8px">
+          <button class="btn soft" type="button" id="voiceInputBtn" aria-label="बोलकर लिखें" title="बोलकर लिखें">🎙 बोलकर लिखें</button>
+          <button class="btn soft" type="button" id="pasteHelpBtn" aria-label="कॉपी की जानकारी पेस्ट करें" title="कॉपी की जानकारी पेस्ट करें">📋 पेस्ट करें</button>
+         </div>
+         <textarea id="rawFacts" autocomplete="off" style="min-height:120px;font-size:16px" placeholder="मिली हुई मूल जानकारी यहां लिखें.."></textarea>
+         <button class="btn gold" type="button" id="aiDraftBtn" style="width:100%;margin-top:8px;min-height:44px">AI से खबर तैयार करें</button>
+         <div id="aiStatus" class="small muted" role="status" aria-live="polite" style="margin-top:8px"></div>
+         <div id="aiResult" class="notice hidden" role="alert" style="white-space:pre-wrap;margin-top:8px"></div>
+        </div>
+       </details>
+       <div class="formactions hidden" id="changeRawActions"><button class="btn soft" type="button" id="changeRawBtn">मूल जानकारी बदलें</button></div>
         <div class="panel" id="articleMediaPanel" style="margin:12px 0;border:1px solid var(--line);border-radius:14px;padding:14px">
-         <div class="panelhead"><h3 style="margin:0">📷 खबर के फोटो और वीडियो</h3><span class="small muted">सीधे अटैच करें</span></div>
+         <div style="text-align:center;margin:4px 0 12px"><div style="font-size:38px;color:#e99b17">⇧</div><strong style="color:#d99518">फोटो/वीडियो अपलोड करें</strong></div>
          <div id="existingArticleMedia" class="formgrid" style="margin:10px 0"></div>
          <div class="formgrid">
           <div class="field"><label for="articleImageFile">फोटो चुनें / पुरानी फोटो बदलें</label><input id="articleImageFile" type="file" accept="image/jpeg,image/png,image/webp"><div class="small muted">JPG, PNG, WebP · अधिकतम 50 MB</div><div id="articleImagePreview" class="small muted" aria-live="polite"></div></div>
@@ -502,17 +527,16 @@ button:focus-visible,.btn:focus-visible,.featurecard:focus-visible,.navbtn:focus
           <div class="field"><label for="imageUrl">या फोटो URL</label><input id="imageUrl" type="url" placeholder="मीडिया लाइब्रेरी URL"></div>
           <div class="field"><label for="videoUrl">या वीडियो URL</label><input id="videoUrl" type="url" placeholder="वीडियो URL"></div>
          </div>
-         <div class="small muted" style="margin-top:8px">रिपोर्टर द्वारा भेजे गए मीडिया को संपादक/एडमिन यहां देख सकते हैं। नई फाइल चुनकर पुरानी फोटो या वीडियो बदलें और सुधार सुरक्षित करें।</div>
+         <div class="small muted" style="margin-top:8px">वीडियो के साथ कम से कम एक कवर फोटो भी जोड़ें।</div>
         </div>
        <input type="hidden" id="statusInput" value="submitted">
        <details style="margin:14px 0;padding:12px;border:1px solid var(--line);border-radius:12px">
         <summary style="font-weight:700;cursor:pointer">वैकल्पिक जानकारी और अन्य सुविधाएं</summary>
         <div class="formgrid" style="margin-top:14px">
-         <div class="field"><label for="dateline">खबर का स्थान</label><input id="dateline" maxlength="120" placeholder="मांडा, प्रयागराज"></div>
-         <div class="field"><label for="category">खबर की श्रेणी</label><select id="category"></select></div>
+         <div class="field"><label for="sourceNote">डेस्क एडिटर के लिए सूचना (वैकल्पिक)</label><input id="sourceNote" placeholder="कोई अतिरिक्त सूचना हो तो लिखें"></div>
          <div class="field hidden"><label for="latitude">अक्षांश</label><input id="latitude" type="number" step="any" min="-90" max="90" placeholder="25.30"></div>
          <div class="field hidden"><label for="longitude">देशांतर</label><input id="longitude" type="number" step="any" min="-180" max="180" placeholder="82.00"></div>
-         <div class="field full"><label for="sourceNote">जानकारी का स्रोत / पुष्टि नोट</label><input id="sourceNote" placeholder="जैसे: पुलिस सूचना, अधिकारी का बयान, आदेश की प्रति"></div>
+         <div class="field full"><label for="sourceNote">जानकारी का स्रोत / पुष्टि नोट</label><input id="sourceNote" placeholder="पुलिस सूचना, अधिकारी का बयान आदि"></div>
          <div class="field full"><label>तथ्य जांच — पुष्टि होने पर ही निशान लगाएं</label><div class="notice" style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><label><input type="checkbox" id="checkNames"> नाम और पद</label><label><input type="checkbox" id="checkPlace"> स्थान</label><label><input type="checkbox" id="checkDate"> तारीख और समय</label><label><input type="checkbox" id="checkNumbers"> संख्या और रकम</label><label><input type="checkbox" id="checkSource"> स्रोत और दस्तावेज</label><label><input type="checkbox" id="checkResponse"> संबंधित पक्ष का पक्ष</label></div></div>
          <div class="field"><label for="seoTitle">SEO शीर्षक</label><input id="seoTitle" maxlength="180"></div>
          <div class="field"><label for="seoDescription">SEO विवरण</label><input id="seoDescription" maxlength="300"></div>
@@ -521,7 +545,7 @@ button:focus-visible,.btn:focus-visible,.featurecard:focus-visible,.navbtn:focus
          <div class="field full"><div class="formactions"><button class="btn soft" type="button" id="aiTranslateBtn">अनुवाद करें</button><button class="btn soft" type="button" id="aiReviseBtn">निर्देश से दोबारा सुधारें</button><button class="btn soft" type="button" id="aiPolishBtn">केवल भाषा सुधारें</button></div></div>
         </div>
        </details>
-       <div class="notice good" style="margin:12px 0">AI की तैयार खबर पढ़ लें। सही हो तो नीचे एक बटन दबाकर संपादक को भेज दें।</div>
+        
        <div class="formactions" id="reporterSubmitActions"><button class="btn primary" type="button" id="sendToEditorBtn" style="width:100%;min-height:52px;font-size:16px">खबर संपादक को भेजें</button><button class="btn soft" type="button" id="resetArticleBtn">नई खबर लिखें</button></div>
        <div class="formactions hidden" id="editorSaveActions"><button class="btn soft" type="button" id="saveEditorDraftBtn">सुधार सुरक्षित करें</button><button class="btn primary" type="button" id="approveAndQueueBtn">स्वीकृत कर Blogger कतार में भेजें</button><button class="btn soft" type="button" id="resetArticleBtnEditor">नई खबर</button></div>
        <div id="editorSaveStatus" class="small muted" role="status" aria-live="polite"></div>
@@ -701,6 +725,7 @@ async function editArticle(id){
   $('articleId').value=a.id;
   $('rawFacts').value=a.raw_facts||'';
   $('title').value=a.title||'';
+   $('articleSlug').value=a.slug||'';
   $('summary').value=a.summary||'';
   $('body').value=a.body||'';
   $('dateline').value=a.dateline||'';
@@ -758,7 +783,7 @@ function bindArticleMediaPreview(inputId,previewId,kind){
 }
 bindArticleMediaPreview('articleImageFile','articleImagePreview','image');
 bindArticleMediaPreview('articleVideoFile','articleVideoPreview','video');
-function resetArticle(){ $('articleForm').reset();$('statusInput').value='submitted';$('generatedTitleWrap').classList.add('hidden');$('generatedSummaryWrap').classList.add('hidden');$('generatedBodyWrap').classList.add('hidden');$('rawInputPanel').classList.remove('hidden');$('changeRawActions').classList.add('hidden');$('aiStatus').textContent='';$('aiResult').classList.add('hidden');$('editorialHistoryPanel').classList.add('hidden');$('editorialHistory').textContent='';$('articleId').value='';$('rawFacts').value='';renderExistingArticleMedia(null,null);$('articleImageFile').value='';$('articleVideoFile').value='';$('articleImagePreview').textContent='';$('articleVideoPreview').textContent='';aiDraftResult=null;$('editorHeading').textContent='नई खबर लिखें';$('statusInput').innerHTML='<option value="submitted">समीक्षा हेतु भेजें</option>'; }
+function resetArticle(){ $('articleForm').reset();$('statusInput').value='submitted';$('generatedTitleWrap').classList.remove('hidden');$('generatedSummaryWrap').classList.add('hidden');$('generatedBodyWrap').classList.remove('hidden');$('rawInputPanel').classList.remove('hidden');$('changeRawActions').classList.add('hidden');$('aiStatus').textContent='';$('aiResult').classList.add('hidden');$('editorialHistoryPanel').classList.add('hidden');$('editorialHistory').textContent='';$('articleId').value='';$('rawFacts').value='';$('articleSlug').value='';renderExistingArticleMedia(null,null);$('articleImageFile').value='';$('articleVideoFile').value='';$('articleImagePreview').textContent='';$('articleVideoPreview').textContent='';aiDraftResult=null;$('editorHeading').textContent='नई खबर';$('statusInput').innerHTML='<option value="submitted">समीक्षा हेतु भेजें</option>'; }
 $('resetArticleBtn').onclick=resetArticle;
 async function resolveArticleSlug(title,id){
  const base=slugify(title);
@@ -778,7 +803,7 @@ async function saveArticle(statusOverride){
  const latitude=latText===''?null:Number(latText),longitude=lonText===''?null:Number(lonText);
  if((latitude===null)!==(longitude===null)){toast('न्यूज मैप के लिए अक्षांश और देशांतर दोनों भरें।');return}
  if(latitude!==null&&(!Number.isFinite(latitude)||latitude < -90||latitude > 90||!Number.isFinite(longitude)||longitude < -180||longitude > 180)){toast('अक्षांश -90 से 90 और देशांतर -180 से 180 के बीच होना चाहिए।');return}
- const payload={title,slug:slugify(title),raw_facts:$('rawFacts').value.trim()||body,dateline:$('dateline').value.trim(),latitude,longitude,category_id:$('category').value||null,summary:$('summary').value.trim(),body,source_note:$('sourceNote').value.trim(),fact_check_items:{names:$('checkNames').checked,place:$('checkPlace').checked,date:$('checkDate').checked,numbers:$('checkNumbers').checked,source:$('checkSource').checked,response:$('checkResponse').checked},featured_image_url:$('imageUrl').value.trim()||null,featured_video_url:$('videoUrl').value.trim()||null,seo_title:$('seoTitle').value.trim(),seo_description:$('seoDescription').value.trim(),status,updated_at:new Date().toISOString()};
+ const payload={title,slug:$('articleSlug').value.trim()||slugify(title),raw_facts:$('rawFacts').value.trim()||body,dateline:$('dateline').value.trim(),latitude,longitude,category_id:$('category').value||null,summary:$('summary').value.trim(),body,source_note:$('sourceNote').value.trim(),fact_check_items:{names:$('checkNames').checked,place:$('checkPlace').checked,date:$('checkDate').checked,numbers:$('checkNumbers').checked,source:$('checkSource').checked,response:$('checkResponse').checked},featured_image_url:$('imageUrl').value.trim()||null,featured_video_url:$('videoUrl').value.trim()||null,seo_title:$('seoTitle').value.trim(),seo_description:$('seoDescription').value.trim(),status,updated_at:new Date().toISOString()};
  if(!id)payload.reporter_name_snapshot=profile.display_name||currentUser.email||'रिपोर्टर';
  if(canEditAll()){payload.editor_id=currentUser.id;payload.editor_name_snapshot=profile.display_name||currentUser.email||'संपादकीय डेस्क'}
  const saveButtons=[$('sendToEditorBtn'),$('saveEditorDraftBtn'),$('approveAndQueueBtn')].filter(Boolean);
