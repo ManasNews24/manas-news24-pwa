@@ -674,9 +674,22 @@ function renderArticlesTable(){const term=$('articleSearch').value.toLowerCase()
 $('filterBtn').onclick=renderArticlesTable;$('articleSearch').oninput=renderArticlesTable;$('statusFilter').onchange=renderArticlesTable;
 function renderExistingArticleMedia(imageUrl,videoUrl){
  const box=$('existingArticleMedia'),items=[];
- if(imageUrl)items.push('<div class="field"><strong>मौजूदा फोटो</strong><a href="'+esc(imageUrl)+'" target="_blank" rel="noopener"><img src="'+esc(imageUrl)+'" alt="खबर की मौजूदा फोटो" style="display:block;width:100%;max-width:320px;max-height:220px;object-fit:contain;border-radius:10px;margin-top:7px;background:#eef1f5"></a></div>');
- if(videoUrl)items.push('<div class="field"><strong>मौजूदा वीडियो</strong><video src="'+esc(videoUrl)+'" controls playsinline preload="metadata" style="display:block;width:100%;max-width:360px;max-height:240px;border-radius:10px;margin-top:7px;background:#111"></video><a href="'+esc(videoUrl)+'" target="_blank" rel="noopener" class="small">वीडियो अलग से खोलें</a></div>');
+ if(imageUrl)items.push('<div class="field"><strong>मौजूदा फोटो</strong><a href="'+esc(imageUrl)+'" target="_blank" rel="noopener"><img src="'+esc(imageUrl)+'" alt="खबर की मौजूदा फोटो" style="display:block;width:100%;max-width:320px;max-height:220px;object-fit:contain;border-radius:10px;margin-top:7px;background:#eef1f5"></a><button type="button" class="btn danger" data-remove-existing-media="image" style="margin-top:8px">फोटो हटाएं</button></div>');
+ if(videoUrl)items.push('<div class="field"><strong>मौजूदा वीडियो</strong><video src="'+esc(videoUrl)+'" controls playsinline preload="metadata" style="display:block;width:100%;max-width:360px;max-height:240px;border-radius:10px;margin-top:7px;background:#111"></video><a href="'+esc(videoUrl)+'" target="_blank" rel="noopener" class="small">वीडियो अलग से खोलें</a><button type="button" class="btn danger" data-remove-existing-media="video" style="margin-top:8px">वीडियो हटाएं</button></div>');
  box.innerHTML=items.length?items.join(''):'<div class="small muted">इस खबर के साथ अभी कोई फोटो या वीडियो संलग्न नहीं है।</div>';
+ box.querySelectorAll('[data-remove-existing-media]').forEach(btn=>btn.onclick=()=>{
+  const kind=btn.dataset.removeExistingMedia;
+  if(kind==='image'){$('imageUrl').value='';$('articleImageFile').value='';$('articleImagePreview').innerHTML='';}
+  else{$('videoUrl').value='';$('articleVideoFile').value='';$('articleVideoPreview').innerHTML='';}
+  renderExistingArticleMedia($('imageUrl').value.trim(),$('videoUrl').value.trim());
+ });
+}
+function renderSelectedArticleFile(inputId,previewId,kind){
+ const input=$(inputId),box=$(previewId),file=input.files?.[0];
+ if(!file){box.innerHTML='';return}
+ const url=URL.createObjectURL(file),isImage=kind==='image';
+ box.innerHTML=(isImage?'<img':'<video')+' src="'+url+'" '+(isImage?'alt="चुनी गई खबर की फोटो"':'controls playsinline')+' style="display:block;width:100%;max-width:320px;max-height:220px;object-fit:contain;border-radius:10px;margin-top:7px;background:#eef1f5"></'+(isImage?'img':'video')+'><div class="small muted" style="margin-top:5px">'+esc(file.name)+' · '+(file.size/1024/1024).toFixed(1)+' MB · नई फाइल</div><button type="button" class="btn danger" data-remove-selected-media="'+kind+'" style="margin-top:7px">'+(isImage?'चुनी फोटो हटाएं':'चुना वीडियो हटाएं')+'</button>';
+ box.querySelector('[data-remove-selected-media]').onclick=()=>{URL.revokeObjectURL(url);input.value='';box.innerHTML='';};
 }
 async function editArticle(id){
  try{
@@ -736,10 +749,12 @@ async function uploadEditorMedia(file,kind){
  return publicUrl;
 }
 function bindArticleMediaPreview(inputId,previewId,kind){
- $(inputId).onchange=()=>{const file=$(inputId).files?.[0],box=$(previewId);if(!file){box.textContent='';return}
- const allowed=kind==='image'?['image/jpeg','image/png','image/webp']:['video/mp4','video/webm'];
- if(!allowed.includes(file.type)||file.size>50*1024*1024){$(inputId).value='';box.textContent=kind==='image'?'मान्य फोटो चुनें (JPG/PNG/WebP, 50 MB तक)।':'मान्य वीडियो चुनें (MP4/WebM, 50 MB तक)।';return}
- box.textContent='चयनित: '+file.name+' · '+(file.size/1024/1024).toFixed(1)+' MB';};
+ $(inputId).onchange=()=>{
+  const file=$(inputId).files?.[0],box=$(previewId);if(!file){box.innerHTML='';return}
+  const allowed=kind==='image'?['image/jpeg','image/png','image/webp']:['video/mp4','video/webm'];
+  if(!allowed.includes(file.type)||file.size>50*1024*1024){$(inputId).value='';box.textContent=kind==='image'?'मान्य फोटो चुनें (JPG/PNG/WebP, 50 MB तक)।':'मान्य वीडियो चुनें (MP4/WebM, 50 MB तक)।';return}
+  renderSelectedArticleFile(inputId,previewId,kind);
+ };
 }
 bindArticleMediaPreview('articleImageFile','articleImagePreview','image');
 bindArticleMediaPreview('articleVideoFile','articleVideoPreview','video');
