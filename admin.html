@@ -575,11 +575,19 @@ button:focus-visible,.btn:focus-visible,.featurecard:focus-visible,.navbtn:focus
   
        <div class="panel" id="articleMediaPanel" style="margin:8px 0;border:0;border-radius:12px;padding:10px;background:#fff">
          <div id="existingArticleMedia" class="formgrid" style="margin:4px 0 10px"></div>
-         <div class="field">
-          <label for="articleMediaFiles">फोटो या वीडियो चुनें</label>
-          <input id="articleMediaFiles" type="file" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm" multiple>
-          <div class="small muted">JPG, PNG, WebP, MP4, WebM · अधिकतम 50 MB प्रति फाइल</div>
-          <div id="articleMediaPreview" class="small muted" aria-live="polite"></div>
+         <div class="formgrid" style="gap:10px">
+          <div class="field">
+           <label for="articleImageFile">फोटो अपलोड करें</label>
+           <input id="articleImageFile" type="file" accept="image/jpeg,image/png,image/webp">
+           <div class="small muted">JPG, PNG, WebP · अधिकतम 50 MB</div>
+           <div id="articleImagePreview" class="small muted" aria-live="polite"></div>
+          </div>
+          <div class="field">
+           <label for="articleVideoFile">वीडियो अपलोड करें</label>
+           <input id="articleVideoFile" type="file" accept="video/mp4,video/webm">
+           <div class="small muted">MP4, WebM · अधिकतम 50 MB</div>
+           <div id="articleVideoPreview" class="small muted" aria-live="polite"></div>
+          </div>
          </div>
          <input type="hidden" id="imageUrl"><input type="hidden" id="videoUrl">
          <div class="small muted" style="margin-top:8px">वीडियो के साथ कम से कम एक कवर फोटो भी जोड़ें।</div>
@@ -781,14 +789,24 @@ function renderExistingArticleMedia(imageUrl,videoUrl){
   renderExistingArticleMedia($('imageUrl').value.trim(),$('videoUrl').value.trim());
  });
 }
-$('articleMediaFiles').onchange=()=>{
- const input=$('articleMediaFiles'),box=$('articleMediaPreview'),files=[...(input.files||[])];
- const images=files.filter(f=>f.type.startsWith('image/')),videos=files.filter(f=>f.type.startsWith('video/'));
- if(files.some(f=>!['image/jpeg','image/png','image/webp','video/mp4','video/webm'].includes(f.type))||files.some(f=>f.size>50*1024*1024)||images.length>1||videos.length>1){
-  input.value='';box.textContent='एक फोटो और एक वीडियो तक चुनें। मान्य फॉर्मेट JPG, PNG, WebP, MP4, WebM और अधिकतम 50 MB प्रति फाइल है।';return;
- }
- box.innerHTML=files.map(f=>'<div class="small muted" style="margin-top:5px">✓ '+esc(f.name)+' · '+(f.size/1024/1024).toFixed(1)+' MB</div>').join('');
-};
+function bindSingleMediaPicker(inputId,previewId,kind){
+ const input=$(inputId),box=$(previewId);
+ input.onchange=()=>{
+  const file=input.files?.[0];
+  if(!file){box.innerHTML='';return}
+  const allowed=kind==='image'?['image/jpeg','image/png','image/webp']:['video/mp4','video/webm'];
+  if(!allowed.includes(file.type)||file.size>50*1024*1024){
+   input.value='';box.textContent=kind==='image'?'JPG, PNG या WebP फोटो चुनें (50 MB तक)।':'MP4 या WebM वीडियो चुनें (50 MB तक)।';return;
+  }
+  const url=URL.createObjectURL(file),media=kind==='image'
+   ?'<img src="'+url+'" alt="चुनी गई फोटो" style="display:block;width:100%;max-width:300px;max-height:190px;object-fit:contain;border-radius:9px;margin-top:7px;background:#eef1f5">'
+   :'<video src="'+url+'" controls playsinline style="display:block;width:100%;max-width:300px;max-height:190px;border-radius:9px;margin-top:7px;background:#111"></video>';
+  box.innerHTML=media+'<div class="small muted" style="margin-top:5px">✓ '+esc(file.name)+' · '+(file.size/1024/1024).toFixed(1)+' MB</div><button type="button" class="btn danger" data-clear-picked="'+kind+'" style="margin-top:7px">चुनी '+(kind==='image'?'फोटो':'वीडियो')+' हटाएं</button>';
+  box.querySelector('[data-clear-picked]').onclick=()=>{URL.revokeObjectURL(url);input.value='';box.innerHTML='';};
+ };
+}
+bindSingleMediaPicker('articleImageFile','articleImagePreview','image');
+bindSingleMediaPicker('articleVideoFile','articleVideoPreview','video');
 async function editArticle(id){
  try{
   const {data:a,error}=await supabase.from('news_articles').select('*').eq('id',id).single();
@@ -848,7 +866,7 @@ async function uploadEditorMedia(file,kind){
  if(meta.error)throw new Error('मीडिया अपलोड हुआ, लेकिन लाइब्रेरी विवरण सेव नहीं हुआ: '+meta.error.message);
  return publicUrl;
 }
-function resetArticle(){ $('articleForm').reset();reporterRawBackup='';reporterGeneratedText='';reporterShowingRaw=false;reporterAiReady=false;$('rawToggleBtn').classList.add('hidden');$('rawToggleBtn').textContent='कच्ची जानकारी देखें';$('gpsStatus').textContent='GPS लोकेशन वैकल्पिक है। स्थान का नाम नीचे लिखें।';$('statusInput').value='submitted';$('generatedTitleWrap').classList.remove('hidden');$('generatedSummaryWrap').classList.add('hidden');$('rawInputPanel').classList.remove('hidden');$('aiStatus').textContent='';$('aiResult').classList.add('hidden');$('editorialHistoryPanel').classList.add('hidden');$('editorialHistory').textContent='';$('articleId').value='';$('rawFacts').value='';$('articleSlug').value='';renderExistingArticleMedia(null,null);$('articleMediaFiles').value='';$('articleMediaPreview').textContent='';aiDraftResult=null;$('editorHeading').textContent='नई खबर';$('statusInput').innerHTML='<option value="submitted">समीक्षा हेतु भेजें</option>'; }
+function resetArticle(){ $('articleForm').reset();reporterRawBackup='';reporterGeneratedText='';reporterShowingRaw=false;reporterAiReady=false;$('rawToggleBtn').classList.add('hidden');$('rawToggleBtn').textContent='कच्ची जानकारी देखें';$('gpsStatus').textContent='GPS लोकेशन वैकल्पिक है। स्थान का नाम नीचे लिखें।';$('statusInput').value='submitted';$('generatedTitleWrap').classList.remove('hidden');$('generatedSummaryWrap').classList.add('hidden');$('rawInputPanel').classList.remove('hidden');$('aiStatus').textContent='';$('aiResult').classList.add('hidden');$('editorialHistoryPanel').classList.add('hidden');$('editorialHistory').textContent='';$('articleId').value='';$('rawFacts').value='';$('articleSlug').value='';renderExistingArticleMedia(null,null);$('articleImageFile').value='';$('articleVideoFile').value='';$('articleImagePreview').innerHTML='';$('articleVideoPreview').innerHTML='';aiDraftResult=null;$('editorHeading').textContent='नई खबर';$('statusInput').innerHTML='<option value="submitted">समीक्षा हेतु भेजें</option>'; }
 $('resetArticleBtn').onclick=resetArticle;
 async function resolveArticleSlug(title,id){
  const base=slugify(title);
@@ -878,13 +896,9 @@ async function saveArticle(statusOverride){
  saveButtons.forEach(b=>b.disabled=true);
  $('editorSaveStatus').textContent='खबर सुरक्षित की जा रही है…';
  try{
-  const selectedMedia=[...($('articleMediaFiles').files||[])];
-  for(const mediaFile of selectedMedia){
-   const kind=mediaFile.type.startsWith('image/')?'image':'video';
-   $('editorSaveStatus').textContent=kind==='image'?'खबर की फोटो अपलोड हो रही है…':'खबर का वीडियो अपलोड हो रहा है…';
-   const publicUrl=await uploadEditorMedia(mediaFile,kind);
-   if(kind==='image')payload.featured_image_url=publicUrl;else payload.featured_video_url=publicUrl;
-  }
+  const imageFile=$('articleImageFile').files?.[0],videoFile=$('articleVideoFile').files?.[0];
+  if(imageFile){$('editorSaveStatus').textContent='खबर की फोटो अपलोड हो रही है…';payload.featured_image_url=await uploadEditorMedia(imageFile,'image')}
+  if(videoFile){$('editorSaveStatus').textContent='खबर का वीडियो अपलोड हो रहा है…';payload.featured_video_url=await uploadEditorMedia(videoFile,'video')}
   payload.slug=$('articleSlug').value.trim()?slugify($('articleSlug').value.trim()):await resolveArticleSlug(title,id);
   let result;
   if(id)result=await supabase.from('news_articles').update(payload).eq('id',id).select('id').single();
