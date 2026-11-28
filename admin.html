@@ -386,11 +386,13 @@ button:focus-visible,.btn:focus-visible,.featurecard:focus-visible,.navbtn:focus
 
 
 /* One-click reporter AI drafting flow */
-#page-editor #rawInputPanel{margin-top:14px}
-#page-editor #rawInputPanel>label,#page-editor #generatedTitleWrap>label,#page-editor #generatedBodyWrap>label{font-size:16px;font-weight:700;color:#242424}
+#page-editor #rawInputPanel{margin-top:12px}
+#page-editor #rawInputPanel>label,#page-editor #generatedTitleWrap>label{font-size:16px;font-weight:700;color:#242424}
 #page-editor #aiDraftBtn{background:#ef9b16;color:#fff;border-radius:9px}
-#page-editor #generatedBodyWrap textarea{min-height:320px;line-height:1.65}
-#page-editor #rawFacts{min-height:190px}
+#page-editor #rawFacts{min-height:300px;line-height:1.7}
+#page-editor .word-count{display:flex;justify-content:flex-end;color:#7b8492;font-size:12px;margin-top:3px}
+#page-editor #rawToggleBtn{font-size:13px;padding:8px 10px}
+#page-editor #gpsStatus{font-size:12px;color:#68768c;margin-top:5px}
 
 </style>
 </head>
@@ -506,37 +508,35 @@ button:focus-visible,.btn:focus-visible,.featurecard:focus-visible,.navbtn:focus
        <input type="hidden" id="articleId">
         
   
-       <div class="field full" style="margin-bottom:12px"><label for="category">विषय चुनें</label><select id="category"></select></div>
-       <div class="field full" style="margin-bottom:12px"><label for="dateline">स्थान चुनें / लिखें</label><input id="dateline" maxlength="120" placeholder="महेवा कला (मेजा), प्रयागराज"></div>
-       <div class="field full" style="margin-bottom:12px"><label for="articleSlug">स्लग</label><input id="articleSlug" maxlength="180" placeholder="खबर की URL पहचान (वैकल्पिक)"></div>
-       <div class="field full" id="generatedTitleWrap"><label for="title">हेडलाइन</label><textarea id="title" maxlength="180" rows="2" placeholder="हेडलाइन लिखें.." style="min-height:76px"></textarea></div>
-       <div class="field full" id="rawInputPanel" style="margin:12px 0">
-        <label for="rawFacts">कच्ची जानकारी</label>
-        <div class="formactions" style="margin:0 0 7px;gap:8px">
-         <button class="btn soft" type="button" id="voiceInputBtn" aria-label="बोलकर लिखें" title="बोलकर लिखें">🎙 बोलकर लिखें</button>
-         <button class="btn soft" type="button" id="pasteHelpBtn" aria-label="पेस्ट करें" title="पेस्ट करें">📋 पेस्ट करें</button>
-        </div>
-        <textarea id="rawFacts" required autocomplete="off" style="min-height:190px;font-size:16px" placeholder="घटना से जुड़ी पूरी जानकारी, नाम, स्थान, तारीख, बयान और अन्य तथ्य लिखें.."></textarea>
-        <button class="btn gold" type="button" id="aiDraftBtn" style="width:100%;margin-top:10px;min-height:50px;font-size:17px">खबर तैयार करें / दोबारा तैयार करें</button>
-        <div id="aiStatus" class="small muted" role="status" aria-live="polite" style="margin-top:8px"></div>
-        <div id="aiResult" class="notice hidden" role="alert" style="white-space:pre-wrap;margin-top:8px"></div>
-       </div>
-       <div class="field full" id="generatedBodyWrap"><label for="body">तैयार खबर — यहीं पढ़ें और संशोधन करें</label><textarea id="body" required style="min-height:300px" placeholder="AI से खबर तैयार होने पर यहां दिखाई देगी। आप सीधे बदलाव भी कर सकते हैं।"></textarea></div>
-       <div class="field full hidden" id="generatedSummaryWrap"><label for="summary">संक्षिप्त परिचय</label><textarea id="summary" style="min-height:76px" maxlength="500" placeholder="खबर का छोटा परिचय"></textarea></div>
-       <div class="panel" id="articleMediaPanel" style="margin:12px 0;border:1px solid var(--line);border-radius:14px;padding:14px">
+       <div class="panel" id="articleMediaPanel" style="margin:8px 0;border:0;border-radius:12px;padding:10px;background:#fff">
          <div style="text-align:center;margin:4px 0 12px"><div style="font-size:38px;color:#e99b17">⇧</div><strong style="color:#d99518">फोटो/वीडियो अपलोड करें</strong></div>
          <div id="existingArticleMedia" class="formgrid" style="margin:10px 0"></div>
          <div class="formgrid">
-          <div class="field"><label for="articleImageFile">फोटो चुनें / पुरानी फोटो बदलें</label><input id="articleImageFile" type="file" accept="image/jpeg,image/png,image/webp"><div class="small muted">JPG, PNG, WebP · अधिकतम 50 MB</div><div id="articleImagePreview" class="small muted" aria-live="polite"></div></div>
-          <div class="field"><label for="articleVideoFile">वीडियो चुनें / पुराना वीडियो बदलें</label><input id="articleVideoFile" type="file" accept="video/mp4,video/webm"><div class="small muted">MP4, WebM · अधिकतम 50 MB</div><div id="articleVideoPreview" class="small muted" aria-live="polite"></div></div>
+          <div class="field"><label for="articleImageFile">फोटो चुनें</label><input id="articleImageFile" type="file" accept="image/jpeg,image/png,image/webp"><div class="small muted">JPG, PNG, WebP · अधिकतम 50 MB</div><div id="articleImagePreview" class="small muted" aria-live="polite"></div></div>
+          <div class="field"><label for="articleVideoFile">वीडियो चुनें</label><input id="articleVideoFile" type="file" accept="video/mp4,video/webm"><div class="small muted">MP4, WebM · अधिकतम 50 MB</div><div id="articleVideoPreview" class="small muted" aria-live="polite"></div></div>
          </div>
-         <div class="formgrid" style="margin-top:8px">
-          <div class="field"><label for="imageUrl">या फोटो URL</label><input id="imageUrl" type="url" placeholder="मीडिया लाइब्रेरी URL"></div>
-          <div class="field"><label for="videoUrl">या वीडियो URL</label><input id="videoUrl" type="url" placeholder="वीडियो URL"></div>
-         </div>
+         <div class="formgrid" style="margin-top:8px"><div class="field"><label for="imageUrl">फोटो URL (वैकल्पिक)</label><input id="imageUrl" type="url" placeholder="मीडिया लाइब्रेरी URL"></div><div class="field"><label for="videoUrl">वीडियो URL (वैकल्पिक)</label><input id="videoUrl" type="url" placeholder="वीडियो URL"></div></div>
          <div class="small muted" style="margin-top:8px">वीडियो के साथ कम से कम एक कवर फोटो भी जोड़ें।</div>
         </div>
-       <input type="hidden" id="statusInput" value="submitted">
+       <div class="field full" style="margin-bottom:12px"><label for="gpsButton">GPS लोकेशन</label><button class="btn soft" type="button" id="gpsButton" style="width:100%;text-align:left">⌖ वर्तमान लोकेशन दर्ज करें</button><div id="gpsStatus" aria-live="polite">GPS लोकेशन वैकल्पिक है। स्थान का नाम नीचे लिखें।</div></div>
+       <div class="field full" style="margin-bottom:12px"><label for="category">विषय चुनें</label><select id="category"></select></div>
+       <div class="field full" style="margin-bottom:12px"><label for="dateline">स्थान चुनें</label><input id="dateline" maxlength="120" placeholder="महेवा कला (मेजा), प्रयागराज"></div>
+       <div class="field full" style="margin-bottom:12px"><label for="articleSlug">स्लग</label><input id="articleSlug" maxlength="120" placeholder="समाचार का संक्षिप्त स्लग"><div class="word-count" id="slugCount">0 / 10</div></div>
+       <div class="field full" id="generatedTitleWrap"><label for="title">हेडलाइन</label><textarea id="title" maxlength="300" rows="2" placeholder="हेडलाइन लिखें.." style="min-height:76px"></textarea><div class="word-count" id="titleCount">0 / 30</div></div>
+       <div class="field full" id="rawInputPanel" style="margin:12px 0">
+        <label for="rawFacts">विवरण लिखें..</label>
+        <div class="formactions" style="margin:0 0 7px;gap:8px">
+         <button class="btn soft" type="button" id="voiceInputBtn" aria-label="बोलकर लिखें" title="बोलकर लिखें">🎙 बोलकर लिखें</button>
+         <button class="btn soft" type="button" id="pasteHelpBtn" aria-label="पेस्ट करें" title="पेस्ट करें">📋 पेस्ट करें</button>
+         <button class="btn soft hidden" type="button" id="rawToggleBtn">कच्ची जानकारी देखें</button>
+        </div>
+        <textarea id="rawFacts" required autocomplete="off" style="min-height:300px;font-size:16px" placeholder="घटना से जुड़ी पूरी जानकारी, नाम, स्थान, तारीख, बयान और अन्य तथ्य लिखें.."></textarea>
+        <button class="btn gold" type="button" id="aiDraftBtn" style="width:100%;margin-top:10px;min-height:50px;font-size:17px">AI से खबर तैयार करें</button>
+        <div id="aiStatus" class="small muted" role="status" aria-live="polite" style="margin-top:8px"></div>
+        <div id="aiResult" class="notice hidden" role="alert" style="white-space:pre-wrap;margin-top:8px"></div>
+       </div>
+       <textarea id="body" class="hidden" aria-hidden="true"></textarea>
+       <div class="field full hidden" id="generatedSummaryWrap"><label for="summary">संक्षिप्त परिचय</label><textarea id="summary" style="min-height:76px" maxlength="500" placeholder="खबर का छोटा परिचय"></textarea></div>
        <details style="margin:14px 0;padding:12px;border:1px solid var(--line);border-radius:12px">
         <summary style="font-weight:700;cursor:pointer">वैकल्पिक जानकारी और अन्य सुविधाएं</summary>
         <div class="formgrid" style="margin-top:14px">
@@ -621,6 +621,7 @@ const supabase=createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persist
 const $=id=>document.getElementById(id);
 // Declare shared AI draft state before any editor/reset callbacks can access it.
 var aiDraftResult=null; // var is hoisted, preventing temporal-dead-zone failures in editor callbacks.
+let reporterRawBackup='',reporterGeneratedText='',reporterShowingRaw=false,reporterAiReady=false;
 // Early global bridge: make the AI action available as soon as the module initializes.
 window.runAiEditor=(mode='draft')=>runAiEditor(mode);
 let currentUser=null,profile=null,role='reporter',categories=[],articles=[],overview=null;
@@ -729,7 +730,8 @@ async function editArticle(id){
   if(!canEditAll()&&!['draft','changes_requested'].includes(a.status))throw new Error('यह खबर संपादक के पास समीक्षा में है। बदलाव के लिए संपादक की टिप्पणी/अनुमति की प्रतीक्षा करें।');
   $('articleForm').reset();
   $('articleId').value=a.id;
-  $('rawFacts').value=a.raw_facts||'';
+  reporterRawBackup=a.raw_facts||a.body||'';reporterGeneratedText=a.body||'';reporterAiReady=!!(a.raw_facts&&a.body);reporterShowingRaw=false;
+  $('rawFacts').value=a.body||a.raw_facts||'';$('body').value=a.body||'';$('rawToggleBtn').classList.toggle('hidden',!reporterAiReady);$('rawToggleBtn').textContent='कच्ची जानकारी देखें';
   $('title').value=a.title||'';
    $('articleSlug').value=a.slug||'';
   $('summary').value=a.summary||'';
@@ -757,7 +759,7 @@ async function editArticle(id){
   const checks=a.fact_check_items||{};
   $('checkNames').checked=!!checks.names;$('checkPlace').checked=!!checks.place;$('checkDate').checked=!!checks.date;
   $('checkNumbers').checked=!!checks.numbers;$('checkSource').checked=!!checks.source;$('checkResponse').checked=!!checks.response;
-  ['generatedTitleWrap','generatedSummaryWrap','generatedBodyWrap'].forEach(id=>$(id).classList.remove('hidden'));
+  ['generatedTitleWrap','generatedSummaryWrap'].forEach(id=>$(id).classList.remove('hidden'));
   $('aiStatus').textContent='मौजूदा खबर संपादन के लिए खुली है। बदलाव सुरक्षित करने से पहले सभी तथ्य जाँचें।';
   $('aiResult').classList.add('hidden');$('editorialHistoryPanel').classList.remove('hidden');
   $('editorHeading').textContent='खबर संपादित करें';
@@ -789,7 +791,7 @@ function bindArticleMediaPreview(inputId,previewId,kind){
 }
 bindArticleMediaPreview('articleImageFile','articleImagePreview','image');
 bindArticleMediaPreview('articleVideoFile','articleVideoPreview','video');
-function resetArticle(){ $('articleForm').reset();$('statusInput').value='submitted';$('generatedTitleWrap').classList.remove('hidden');$('generatedSummaryWrap').classList.add('hidden');$('generatedBodyWrap').classList.remove('hidden');$('rawInputPanel').classList.remove('hidden');$('aiStatus').textContent='';$('aiResult').classList.add('hidden');$('editorialHistoryPanel').classList.add('hidden');$('editorialHistory').textContent='';$('articleId').value='';$('rawFacts').value='';$('articleSlug').value='';renderExistingArticleMedia(null,null);$('articleImageFile').value='';$('articleVideoFile').value='';$('articleImagePreview').textContent='';$('articleVideoPreview').textContent='';aiDraftResult=null;$('editorHeading').textContent='नई खबर';$('statusInput').innerHTML='<option value="submitted">समीक्षा हेतु भेजें</option>'; }
+function resetArticle(){ $('articleForm').reset();reporterRawBackup='';reporterGeneratedText='';reporterShowingRaw=false;reporterAiReady=false;$('rawToggleBtn').classList.add('hidden');$('rawToggleBtn').textContent='कच्ची जानकारी देखें';$('gpsStatus').textContent='GPS लोकेशन वैकल्पिक है। स्थान का नाम नीचे लिखें।';$('statusInput').value='submitted';$('generatedTitleWrap').classList.remove('hidden');$('generatedSummaryWrap').classList.add('hidden');$('rawInputPanel').classList.remove('hidden');$('aiStatus').textContent='';$('aiResult').classList.add('hidden');$('editorialHistoryPanel').classList.add('hidden');$('editorialHistory').textContent='';$('articleId').value='';$('rawFacts').value='';$('articleSlug').value='';renderExistingArticleMedia(null,null);$('articleImageFile').value='';$('articleVideoFile').value='';$('articleImagePreview').textContent='';$('articleVideoPreview').textContent='';aiDraftResult=null;$('editorHeading').textContent='नई खबर';$('statusInput').innerHTML='<option value="submitted">समीक्षा हेतु भेजें</option>'; }
 $('resetArticleBtn').onclick=resetArticle;
 async function resolveArticleSlug(title,id){
  const base=slugify(title);
@@ -801,15 +803,17 @@ async function resolveArticleSlug(title,id){
 async function saveArticle(statusOverride){
  const id=$('articleId').value;
  const title=$('title').value.trim();
- const body=$('body').value.trim();
+ const body=(reporterAiReady?(reporterShowingRaw?reporterGeneratedText:raw):raw).trim();$('body').value=body;
  const status=statusOverride||$('statusInput').value||'submitted';
- if(!title||!body){toast('शीर्षक और पूरी खबर अनिवार्य हैं। पहले AI से खबर तैयार करें या दोनों स्वयं भरें।');$('title').focus();return}
+ if(!title||!body){toast('हेडलाइन और विवरण अनिवार्य हैं।');$('title').focus();return}
+ if(wordCount($('articleSlug').value)>10){toast('स्लग अधिकतम 10 शब्दों का रखें।');$('articleSlug').focus();return}
+ if(wordCount(title)>30){toast('हेडलाइन अधिकतम 30 शब्दों की रखें।');$('title').focus();return}
  if(!canEditAll()&&!['draft','submitted','changes_requested'].includes(status)){toast('रिपोर्टर केवल ड्राफ्ट या समीक्षा हेतु खबर भेज सकता है।');return}
  const latText=$('latitude').value.trim(),lonText=$('longitude').value.trim();
  const latitude=latText===''?null:Number(latText),longitude=lonText===''?null:Number(lonText);
  if((latitude===null)!==(longitude===null)){toast('न्यूज मैप के लिए अक्षांश और देशांतर दोनों भरें।');return}
  if(latitude!==null&&(!Number.isFinite(latitude)||latitude < -90||latitude > 90||!Number.isFinite(longitude)||longitude < -180||longitude > 180)){toast('अक्षांश -90 से 90 और देशांतर -180 से 180 के बीच होना चाहिए।');return}
- const payload={title,slug:$('articleSlug').value.trim()||slugify(title),raw_facts:$('rawFacts').value.trim()||body,dateline:$('dateline').value.trim(),latitude,longitude,category_id:$('category').value||null,summary:$('summary').value.trim(),body,source_note:$('sourceNote').value.trim(),fact_check_items:{names:$('checkNames').checked,place:$('checkPlace').checked,date:$('checkDate').checked,numbers:$('checkNumbers').checked,source:$('checkSource').checked,response:$('checkResponse').checked},featured_image_url:$('imageUrl').value.trim()||null,featured_video_url:$('videoUrl').value.trim()||null,seo_title:$('seoTitle').value.trim(),seo_description:$('seoDescription').value.trim(),status,updated_at:new Date().toISOString()};
+ const payload={title,slug:$('articleSlug').value.trim()||slugify(title),raw_facts:(reporterAiReady?reporterRawBackup:raw)||body,dateline:$('dateline').value.trim(),latitude,longitude,category_id:$('category').value||null,summary:$('summary').value.trim(),body,source_note:$('sourceNote').value.trim(),fact_check_items:{names:$('checkNames').checked,place:$('checkPlace').checked,date:$('checkDate').checked,numbers:$('checkNumbers').checked,source:$('checkSource').checked,response:$('checkResponse').checked},featured_image_url:$('imageUrl').value.trim()||null,featured_video_url:$('videoUrl').value.trim()||null,seo_title:$('seoTitle').value.trim(),seo_description:$('seoDescription').value.trim(),status,updated_at:new Date().toISOString()};
  if(!id)payload.reporter_name_snapshot=profile.display_name||currentUser.email||'रिपोर्टर';
  if(canEditAll()){payload.editor_id=currentUser.id;payload.editor_name_snapshot=profile.display_name||currentUser.email||'संपादकीय डेस्क'}
  const saveButtons=[$('sendToEditorBtn'),$('saveEditorDraftBtn'),$('approveAndQueueBtn')].filter(Boolean);
@@ -927,8 +931,9 @@ $('resetAd').onclick=()=>{$('adForm').reset();$('adId').value='';$('adActive').c
 $('refreshProfile').onclick=()=>enterApp(currentUser);
 
 async function runAiEditor(mode){
- const raw=$('rawFacts').value.trim();
- if(!raw){$('aiStatus').textContent='पहले कच्ची खबर के बॉक्स में जानकारी लिखें या पेस्ट करें।';$('rawFacts').focus();return}
+ const visibleText=$('rawFacts').value.trim();
+ const raw=(mode==='draft'&&reporterAiReady)?reporterRawBackup:(reporterShowingRaw?reporterRawBackup:visibleText);
+ if(!raw){$('aiStatus').textContent='पहले विवरण वाले बॉक्स में जानकारी लिखें या पेस्ट करें।';$('rawFacts').focus();return}
  const btn=mode==='draft'?$('aiDraftBtn'):(mode==='revise'?$('aiReviseBtn'):(mode==='translate'?$('aiTranslateBtn'):$('aiPolishBtn')));
  btn.disabled=true;btn.textContent='AI खबर तैयार कर रहा है…';
  $('aiResult').classList.add('hidden');$('aiStatus').textContent='AI से संपर्क हो रहा है… कृपया इस पेज को बंद न करें।';
@@ -943,15 +948,14 @@ async function runAiEditor(mode){
   if(!response.ok)throw new Error(payload.error||('AI सर्वर त्रुटि ('+response.status+')'));
   if(!payload.result||!payload.result.body)throw new Error('AI से अधूरी खबर मिली। कृपया दोबारा प्रयास करें।');
   aiDraftResult=payload.result;
+  if(mode==='draft'){reporterRawBackup=raw;reporterAiReady=true;}reporterGeneratedText=aiDraftResult.body;reporterShowingRaw=false;$('rawToggleBtn').classList.remove('hidden');$('rawToggleBtn').textContent='कच्ची जानकारी देखें';
   const missing=(aiDraftResult.missing_facts||[]).map(x=>'• '+x).join('\n');
   const cautions=(aiDraftResult.cautions||[]).map(x=>'• '+x).join('\n');
   $('aiResult').textContent=(missing?'पुष्टि करें:\n'+missing+'\n\n':'')+(cautions?'सावधानी:\n'+cautions:'');
   $('aiResult').classList.toggle('hidden',!missing&&!cautions);
-  $('title').value=aiDraftResult.title||$('title').value||'';$('summary').value=aiDraftResult.summary||'';$('body').value=aiDraftResult.body;
-  $('generatedTitleWrap').classList.remove('hidden');$('generatedSummaryWrap').classList.add('hidden');$('generatedBodyWrap').classList.remove('hidden');
-  $('rawInputPanel').classList.remove('hidden');
-  $('aiStatus').textContent='खबर तैयार है। पढ़ें, इसी बॉक्स में संशोधन करें या उसी बटन से नया प्रारूप बनवाएं।';
-  $('generatedBodyWrap').scrollIntoView({behavior:'smooth',block:'start'});
+  $('title').value=aiDraftResult.title||$('title').value||'';$('summary').value=aiDraftResult.summary||'';$('body').value=aiDraftResult.body;$('rawFacts').value=aiDraftResult.body;
+  $('generatedTitleWrap').classList.remove('hidden');$('generatedSummaryWrap').classList.add('hidden');$('rawInputPanel').classList.remove('hidden');
+  $('aiStatus').textContent='खबर तैयार है। इसी बॉक्स में पढ़ें और संशोधन करें। दोबारा दबाने पर नया प्रारूप बनेगा।';
  }catch(err){
   const message=err.name==='AbortError'?'AI को उत्तर देने में 90 सेकंड से अधिक लगे। इंटरनेट जांचकर दोबारा प्रयास करें।':(err.message||'AI खबर तैयार नहीं हो सकी।');
   $('aiStatus').textContent='खबर तैयार नहीं हुई: '+message;$('aiResult').textContent='समस्या: '+message+'\nकच्ची खबर सुरक्षित है। आप दोबारा प्रयास कर सकते हैं।';$('aiResult').classList.remove('hidden');
@@ -960,6 +964,12 @@ async function runAiEditor(mode){
  }
 }
 window.runAiEditor=runAiEditor; $('aiDraftBtn').onclick=()=>runAiEditor('draft');
+$('rawToggleBtn').onclick=()=>{if(!reporterAiReady)return;if(reporterShowingRaw){$('rawFacts').value=reporterGeneratedText;$('rawToggleBtn').textContent='कच्ची जानकारी देखें';reporterShowingRaw=false;}else{reporterGeneratedText=$('rawFacts').value;$('rawFacts').value=reporterRawBackup;$('rawToggleBtn').textContent='तैयार खबर पर लौटें';reporterShowingRaw=true;}};
+function wordCount(v){return String(v||'').trim()?String(v).trim().split(/\\s+/u).length:0}
+function updateWordCounts(){$('slugCount').textContent=wordCount($('articleSlug').value)+' / 10';$('titleCount').textContent=wordCount($('title').value)+' / 30';}
+$('articleSlug').addEventListener('input',updateWordCounts);$('title').addEventListener('input',updateWordCounts);updateWordCounts();
+$('rawFacts').addEventListener('input',()=>{if(reporterShowingRaw)reporterRawBackup=$('rawFacts').value;else if(reporterAiReady)reporterGeneratedText=$('rawFacts').value;});
+$('gpsButton').onclick=()=>{if(!navigator.geolocation){$('gpsStatus').textContent='इस डिवाइस में GPS उपलब्ध नहीं है।';return}$('gpsButton').disabled=true;$('gpsStatus').textContent='GPS लोकेशन प्राप्त हो रही है…';navigator.geolocation.getCurrentPosition(pos=>{$('latitude').value=pos.coords.latitude.toFixed(7);$('longitude').value=pos.coords.longitude.toFixed(7);$('gpsStatus').textContent='GPS लोकेशन दर्ज: '+$('latitude').value+', '+$('longitude').value;$('gpsButton').disabled=false;},err=>{$('gpsStatus').textContent=err.code===1?'लोकेशन अनुमति नहीं मिली। ब्राउज़र सेटिंग में अनुमति दें।':'GPS लोकेशन प्राप्त नहीं हुई।';$('gpsButton').disabled=false;},{enableHighAccuracy:true,timeout:15000,maximumAge:60000});};
 $('aiTranslateBtn').onclick=()=>{const value=$('translateLanguage').value;if(value==='none'){toast('यह खबर हिंदी में ही रहेगी। अनुवाद की जरूरत हो तो सूची से दूसरी भाषा चुनें।');return}const lang=$('translateLanguage').selectedOptions[0]?.textContent||'English';$('aiInstruction').value='Translate the complete news story into '+lang+'. Preserve all names, places, dates, numbers, allegations and attributions exactly. Do not add facts. Return the translated headline, summary and body.';runAiEditor('translate')};
 $('aiReviseBtn').onclick=()=>runAiEditor('revise');
 $('aiPolishBtn').onclick=()=>runAiEditor('polish');
