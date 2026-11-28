@@ -624,6 +624,13 @@ button:focus-visible,.btn:focus-visible,.featurecard:focus-visible,.navbtn:focus
  #page-overview.reporter-dashboard-role .dashboard-panel .panelhead{min-height:30px}
 }
 
+
+/* Brand logo stays in the top bar; personal DP appears only once on dashboard */
+#appView .newsroom-logo-mark{overflow:hidden;display:grid;place-items:center;background:#fff;border:1px solid #ffffff55}
+#appView .newsroom-logo-mark img{display:block;width:100%;height:100%;object-fit:contain;border-radius:inherit}
+#appView .dashboard-mark{overflow:hidden;position:relative}
+#appView .dashboard-mark img{display:block;width:100%;height:100%;object-fit:cover;border-radius:inherit}
+
 </style>
 </head>
 <body>
@@ -649,7 +656,7 @@ button:focus-visible,.btn:focus-visible,.featurecard:focus-visible,.navbtn:focus
 <div id="credentialResult" class="hidden" style="position:fixed;inset:0;z-index:50;background:#081225bb;padding:16px;overflow:auto"><div class="login" style="margin:5vh auto;max-width:560px"><div class="eyebrow">NEW TEAM MEMBER</div><h2>लॉगिन विवरण तैयार</h2><p>यह पासवर्ड केवल अभी दिखाया जाएगा। इसे सुरक्षित रूप से संबंधित सदस्य तक पहुँचाएँ।</p><div class="field"><label>लॉगिन आईडी</label><input id="generatedLoginId" readonly></div><div class="field"><label>ऑटो जनरेट पासवर्ड</label><input id="generatedPassword" readonly></div><div class="field"><label>ऐप लिंक</label><input id="generatedAppLink" readonly></div><button class="btn primary" id="copyCredentialsBtn" type="button">लॉगिन विवरण कॉपी करें</button><a class="btn soft" id="shareCredentialsBtn" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none;margin-top:8px">WhatsApp पर साझा करें</a><button class="btn soft" id="closeCredentialsBtn" type="button" style="margin-top:8px">बंद करें</button></div></div>
 <div id="appView" class="hidden">
  <header class="topbar">
-  <div class="brand"><div class="brandmark" id="topProfileMark">म</div><div><h1>मानस न्यूज-24</h1><small>डिजिटल न्यूज़रूम • Editorial Control</small></div></div>
+  <div class="brand"><div class="brandmark newsroom-logo-mark"><img src="./icon-192.png" alt="मानस न्यूज-24 लोगो"></div><div><h1>मानस न्यूज-24</h1><small>डिजिटल न्यूज़रूम • Editorial Control</small></div></div>
   <div class="top-actions"><span id="userBadge" class="small"></span><button id="refreshBtn">↻ अपडेट</button><button id="logoutBtn">लॉगआउट</button></div>
  </header>
  <div class="shell">
@@ -877,11 +884,11 @@ function updateReporterDashboardProfile(user=currentUser){
  const rawPhoto=user?.user_metadata?.profile_photo_url||user?.user_metadata?.avatar_url||user?.user_metadata?.picture||'';
  let photo='';
  try{const u=new URL(rawPhoto,location.href);if(['https:','http:'].includes(u.protocol))photo=u.href}catch(e){}
- const marks=[$('dashboardProfileMark'),$('topProfileMark')].filter(Boolean);
- marks.forEach(mark=>{
+ const mark=$('dashboardProfileMark');
+ if(mark){
   if(photo){mark.innerHTML='<img src="'+esc(photo)+'" alt="'+esc(name)+' की प्रोफाइल फोटो" referrerpolicy="no-referrer">';mark.classList.add('has-profile-photo')}
   else{mark.textContent='म';mark.classList.remove('has-profile-photo')}
- });
+ }
 }
 async function saveProfilePhoto(file){
  if(!file||!currentUser)return;
