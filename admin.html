@@ -1316,11 +1316,37 @@ async function runAiEditor(mode){
  }
 }
 
+function normalizeSourceArticleUrl(value){
+ const raw=String(value||'').trim().replace(/[\\s]+/g,'');
+ if(!raw)return '';
+ // मोबाइल से कई बार https:// हटाकर केवल www./domain पेस्ट होता है।
+ const candidate=/^(https?:\\/\\/)/i.test(raw)?raw:('https://'+raw);
+ try{
+  const parsed=new URL(candidate);
+  if(parsed.protocol!=='https:'||!parsed.hostname||!parsed.hostname.includes('.'))return '';
+  return parsed.href;
+ }catch{return ''}
+}
+$('sourceArticleUrl').addEventListener('paste',event=>{
+ const html=event.clipboardData?.getData('text/html')||'';
+ // किसी खबर के शीर्षक/हाइपरलिंक को कॉपी किया गया हो तो उसके पीछे का वास्तविक href लें।
+ const match=html.match(/<a\\b[^>]*href=["']([^"']+)["']/i);
+ if(match&&match[1]){
+  const href=match[1].replace(/&amp;/g,'&');
+  if(/^https:\\/\\//i.test(href)){event.preventDefault();$('sourceArticleUrl').value=href;$('sourceImportStatus').textContent='कॉपी किए गए समाचार शीर्षक से वास्तविक लिंक प्राप्त कर लिया गया है।';}
+ }
+});
 async function importSourceArticle(){
  if(!canEditAll()){toast('यह सुविधा केवल संपादक और एडमिन के लिए है।');return}
- const rawUrl=$('sourceArticleUrl').value.trim();if(!rawUrl){toast('पहले समाचार लिंक पेस्ट करें।');return}
- let parsed;try{parsed=new URL(rawUrl)}catch{toast('सही समाचार लिंक दर्ज करें।');return}
+ const rawUrl=$('sourceArticleUrl').value.trim();if(!rawUrl){toast('पहले समाचार का वेब लिंक पेस्ट करें।');return}
+ const normalizedUrl=normalizeSourceArticleUrl(rawUrl);
+ if(!normalizedUrl){
+  $('sourceImportStatus').textContent='यहाँ समाचार का शीर्षक/पाठ नहीं, पूरा वेब लिंक पेस्ट करें। लिंक https://, www. या वेबसाइट के डोमेन से शुरू होना चाहिए। खबर का शीर्षक कॉपी किया है तो मूल खबर खोलकर शेयर/कॉपी लिंक चुनें।';
+  toast('बॉक्स में वेब लिंक नहीं मिला। समाचार खोलकर उसका लिंक कॉपी करें।');return
+ }
+ let parsed;try{parsed=new URL(normalizedUrl)}catch{toast('समाचार लिंक पढ़ा नहीं जा सका।');return}
  if(parsed.protocol!=='https:'){toast('सुरक्षित HTTPS समाचार लिंक ही स्वीकार है।');return}
+ $('sourceArticleUrl').value=parsed.href;
  const button=$('importSourceArticleBtn');button.disabled=true;button.textContent='स्रोत पढ़ा जा रहा है…';$('sourceImportStatus').textContent='स्रोत पेज से उपलब्ध तथ्य प्राप्त किए जा रहे हैं…';
  try{
   const {data:{session}}=await supabase.auth.getSession();if(!session)throw new Error('लॉगिन सत्र समाप्त है।');
