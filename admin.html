@@ -384,6 +384,14 @@ button:focus-visible,.btn:focus-visible,.featurecard:focus-visible,.navbtn:focus
 #page-editor #sendToEditorBtn{background:#ef9b16;color:#fff;border-radius:9px;font-size:17px}
 @media(max-width:560px){#page-editor>.panel{padding:12px}#page-editor #articleForm input:not([type=file]),#page-editor #articleForm select,#page-editor #articleForm textarea{font-size:16px;padding:13px}#page-editor #generatedBodyWrap textarea{min-height:300px!important}}
 
+
+/* One-click reporter AI drafting flow */
+#page-editor #rawInputPanel{margin-top:14px}
+#page-editor #rawInputPanel>label,#page-editor #generatedTitleWrap>label,#page-editor #generatedBodyWrap>label{font-size:16px;font-weight:700;color:#242424}
+#page-editor #aiDraftBtn{background:#ef9b16;color:#fff;border-radius:9px}
+#page-editor #generatedBodyWrap textarea{min-height:320px;line-height:1.65}
+#page-editor #rawFacts{min-height:190px}
+
 </style>
 </head>
 <body>
@@ -516,21 +524,20 @@ button:focus-visible,.btn:focus-visible,.featurecard:focus-visible,.navbtn:focus
        <div class="field full" id="generatedTitleWrap"><label for="title">हेडलाइन</label><textarea id="title" maxlength="180" rows="2" placeholder="हेडलाइन लिखें.." style="min-height:76px"></textarea></div>
        <div class="field full" id="generatedBodyWrap"><label for="body">विवरण</label><textarea id="body" required style="min-height:260px" placeholder="खबर का पूरा विवरण लिखें.."></textarea></div>
        <div class="field full hidden" id="generatedSummaryWrap"><label for="summary">संक्षिप्त परिचय</label><textarea id="summary" style="min-height:76px" maxlength="500" placeholder="खबर का छोटा परिचय"></textarea></div>
-       <details id="aiAssistDetails" style="margin:12px 0;padding:10px 0;border-top:1px solid var(--line)">
-        <summary style="font-weight:700;cursor:pointer;color:var(--muted)">AI से खबर तैयार करें (वैकल्पिक)</summary>
-        <div class="field full" id="rawInputPanel" style="margin-top:10px">
-         <div class="formactions" style="margin:0 0 8px;gap:8px">
-          <button class="btn soft" type="button" id="voiceInputBtn" aria-label="बोलकर लिखें" title="बोलकर लिखें">🎙 बोलकर लिखें</button>
-          <button class="btn soft" type="button" id="pasteHelpBtn" aria-label="कॉपी की जानकारी पेस्ट करें" title="कॉपी की जानकारी पेस्ट करें">📋 पेस्ट करें</button>
-         </div>
-         <textarea id="rawFacts" autocomplete="off" style="min-height:120px;font-size:16px" placeholder="मिली हुई मूल जानकारी यहां लिखें.."></textarea>
-         <button class="btn gold" type="button" id="aiDraftBtn" style="width:100%;margin-top:8px;min-height:44px">AI से खबर तैयार करें</button>
-         <div id="aiStatus" class="small muted" role="status" aria-live="polite" style="margin-top:8px"></div>
-         <div id="aiResult" class="notice hidden" role="alert" style="white-space:pre-wrap;margin-top:8px"></div>
+       <div class="field full" id="rawInputPanel" style="margin:12px 0">
+        <label for="rawFacts">कच्ची जानकारी</label>
+        <div class="formactions" style="margin:0 0 7px;gap:8px">
+         <button class="btn soft" type="button" id="voiceInputBtn" aria-label="बोलकर लिखें" title="बोलकर लिखें">🎙 बोलकर लिखें</button>
+         <button class="btn soft" type="button" id="pasteHelpBtn" aria-label="पेस्ट करें" title="पेस्ट करें">📋 पेस्ट करें</button>
         </div>
-       </details>
-       <div class="formactions hidden" id="changeRawActions"><button class="btn soft" type="button" id="changeRawBtn">मूल जानकारी बदलें</button></div>
-     <input type="hidden" id="statusInput" value="submitted">
+        <textarea id="rawFacts" required autocomplete="off" style="min-height:190px;font-size:16px" placeholder="घटना से जुड़ी पूरी जानकारी, नाम, स्थान, तारीख, बयान और अन्य तथ्य लिखें.."></textarea>
+        <button class="btn gold" type="button" id="aiDraftBtn" style="width:100%;margin-top:10px;min-height:50px;font-size:17px">खबर तैयार करें / दोबारा तैयार करें</button>
+        <div id="aiStatus" class="small muted" role="status" aria-live="polite" style="margin-top:8px"></div>
+        <div id="aiResult" class="notice hidden" role="alert" style="white-space:pre-wrap;margin-top:8px"></div>
+       </div>
+       <div class="field full" id="generatedBodyWrap"><label for="body">तैयार खबर — यहीं पढ़ें और संशोधन करें</label><textarea id="body" required style="min-height:300px" placeholder="AI से खबर तैयार होने पर यहां दिखाई देगी। आप सीधे बदलाव भी कर सकते हैं।"></textarea></div>
+       <div class="field full hidden" id="generatedSummaryWrap"><label for="summary">संक्षिप्त परिचय</label><textarea id="summary" style="min-height:76px" maxlength="500" placeholder="खबर का छोटा परिचय"></textarea></div>
+       <input type="hidden" id="statusInput" value="submitted">
        <details style="margin:14px 0;padding:12px;border:1px solid var(--line);border-radius:12px">
         <summary style="font-weight:700;cursor:pointer">वैकल्पिक जानकारी और अन्य सुविधाएं</summary>
         <div class="formgrid" style="margin-top:14px">
@@ -943,14 +950,14 @@ async function runAiEditor(mode){
   $('aiResult').classList.toggle('hidden',!missing&&!cautions);
   $('title').value=aiDraftResult.title||$('title').value||'';$('summary').value=aiDraftResult.summary||'';$('body').value=aiDraftResult.body;
   $('generatedTitleWrap').classList.remove('hidden');$('generatedSummaryWrap').classList.add('hidden');$('generatedBodyWrap').classList.remove('hidden');
-  $('rawInputPanel').classList.add('hidden');$('changeRawActions').classList.remove('hidden');
-  $('aiStatus').textContent='';
-  $('generatedTitleWrap').scrollIntoView({behavior:'smooth',block:'start'});
+  $('rawInputPanel').classList.remove('hidden');
+  $('aiStatus').textContent='खबर तैयार है। पढ़ें, इसी बॉक्स में संशोधन करें या उसी बटन से नया प्रारूप बनवाएं।';
+  $('generatedBodyWrap').scrollIntoView({behavior:'smooth',block:'start'});
  }catch(err){
   const message=err.name==='AbortError'?'AI को उत्तर देने में 90 सेकंड से अधिक लगे। इंटरनेट जांचकर दोबारा प्रयास करें।':(err.message||'AI खबर तैयार नहीं हो सकी।');
   $('aiStatus').textContent='खबर तैयार नहीं हुई: '+message;$('aiResult').textContent='समस्या: '+message+'\nकच्ची खबर सुरक्षित है। आप दोबारा प्रयास कर सकते हैं।';$('aiResult').classList.remove('hidden');
  }finally{
-  btn.disabled=false;btn.textContent=mode==='draft'?'AI से खबर तैयार करें':(mode==='revise'?'निर्देशानुसार फिर से संपादित करें':(mode==='translate'?'चुनी भाषा में अनुवाद':'भाषा और व्याकरण सुधारें'));
+  btn.disabled=false;btn.textContent=mode==='draft'?'खबर तैयार करें / दोबारा तैयार करें':(mode==='revise'?'निर्देशानुसार फिर से संपादित करें':(mode==='translate'?'चुनी भाषा में अनुवाद':'भाषा और व्याकरण सुधारें'));
  }
 }
 window.runAiEditor=runAiEditor; $('aiDraftBtn').onclick=()=>runAiEditor('draft');
