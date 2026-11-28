@@ -466,7 +466,6 @@ button:focus-visible,.btn:focus-visible,.featurecard:focus-visible,.navbtn:focus
 #page-editor .editor-topic-location .field{min-width:0}
 #page-editor .editor-topic-location label{font-size:14px}
 #page-editor .editor-topic-location input,#page-editor .editor-topic-location select{min-width:0;width:100%;font-size:15px;padding:11px 9px}
-#page-editor #reporterDatelineHint{font-size:10px;line-height:1.35;overflow-wrap:anywhere}
 @media(max-width:600px){#page-editor .editor-topic-location{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}#page-editor .editor-topic-location input,#page-editor .editor-topic-location select{font-size:14px;padding:10px 7px}}
 
 /* Modern, uncluttered newsroom editor controls */
@@ -917,7 +916,7 @@ async function uploadEditorMedia(file,kind){
  if(meta.error)throw new Error('मीडिया अपलोड हुआ, लेकिन लाइब्रेरी विवरण सेव नहीं हुआ: '+meta.error.message);
  return publicUrl;
 }
-function resetArticle(){ $('articleForm').reset();reporterRawBackup='';reporterGeneratedText='';reporterShowingRaw=false;reporterAiReady=false;$('rawToggleBtn').classList.add('hidden');$('rawToggleBtn').textContent='कच्ची जानकारी देखें';$('statusInput').value='submitted';$('generatedTitleWrap').classList.remove('hidden');$('generatedSummaryWrap').classList.add('hidden');$('rawInputPanel').classList.remove('hidden');$('aiStatus').textContent='';$('aiResult').classList.add('hidden');$('editorialHistoryPanel').classList.add('hidden');$('editorialHistory').textContent='';$('articleId').value='';$('rawFacts').value='';$('dateline').value=profile?.dateline||'';$('reporterDatelineHint').textContent=profile?.display_name?'रिपोर्टर: '+profile.display_name+' · एडमिन द्वारा निर्धारित डेटलाइन: '+(profile.dateline||'दर्ज नहीं'):'';renderExistingArticleMedia(null,null);$('articleImageFile').value='';$('articleVideoFile').value='';$('articleImagePreview').innerHTML='';$('articleVideoPreview').innerHTML='';aiDraftResult=null;$('editorHeading').textContent='नई खबर';$('statusInput').innerHTML='<option value="submitted">समीक्षा हेतु भेजें</option>'; }
+function resetArticle(){ $('articleForm').reset();reporterRawBackup='';reporterGeneratedText='';reporterShowingRaw=false;reporterAiReady=false;$('rawToggleBtn').classList.add('hidden');$('rawToggleBtn').textContent='कच्ची जानकारी देखें';$('statusInput').value='submitted';$('generatedTitleWrap').classList.remove('hidden');$('generatedSummaryWrap').classList.add('hidden');$('rawInputPanel').classList.remove('hidden');$('aiStatus').textContent='';$('aiResult').classList.add('hidden');$('editorialHistoryPanel').classList.add('hidden');$('editorialHistory').textContent='';$('articleId').value='';$('rawFacts').value='';$('dateline').value=profile?.dateline||'';renderExistingArticleMedia(null,null);$('articleImageFile').value='';$('articleVideoFile').value='';$('articleImagePreview').innerHTML='';$('articleVideoPreview').innerHTML='';aiDraftResult=null;$('editorHeading').textContent='नई खबर';$('statusInput').innerHTML='<option value="submitted">समीक्षा हेतु भेजें</option>'; }
 async function resolveArticleSlug(title,id){
  const base=slugify(title);
  const {data,error}=await supabase.from('news_articles').select('id').eq('slug',base).limit(1);
@@ -972,7 +971,6 @@ $('saveReporterDraftBtn').onclick=()=>saveArticle('draft');
 $('editorBackBtn').onclick=()=>{if(confirm('क्या बिना भेजे डैशबोर्ड पर वापस जाना चाहते हैं?'))showPage('overview')};
 $('saveEditorDraftBtn').onclick=()=>saveArticle(null);
 $('approveAndQueueBtn').onclick=()=>saveArticle('approved');
-$('resetArticleBtn').onclick=resetArticle;
 $('resetArticleBtnEditor').onclick=resetArticle;
 
 let activeReviewId=null,activeReviewArticle=null;
