@@ -496,6 +496,20 @@ button:focus-visible,.btn:focus-visible,.featurecard:focus-visible,.navbtn:focus
      <div class="panel">
       <form id="articleForm">
        <input type="hidden" id="articleId">
+        <div class="panel" id="articleMediaPanel" style="margin:12px 0;border:1px solid var(--line);border-radius:14px;padding:14px">
+         <div style="text-align:center;margin:4px 0 12px"><div style="font-size:38px;color:#e99b17">⇧</div><strong style="color:#d99518">फोटो/वीडियो अपलोड करें</strong></div>
+         <div id="existingArticleMedia" class="formgrid" style="margin:10px 0"></div>
+         <div class="formgrid">
+          <div class="field"><label for="articleImageFile">फोटो चुनें / पुरानी फोटो बदलें</label><input id="articleImageFile" type="file" accept="image/jpeg,image/png,image/webp"><div class="small muted">JPG, PNG, WebP · अधिकतम 50 MB</div><div id="articleImagePreview" class="small muted" aria-live="polite"></div></div>
+          <div class="field"><label for="articleVideoFile">वीडियो चुनें / पुराना वीडियो बदलें</label><input id="articleVideoFile" type="file" accept="video/mp4,video/webm"><div class="small muted">MP4, WebM · अधिकतम 50 MB</div><div id="articleVideoPreview" class="small muted" aria-live="polite"></div></div>
+         </div>
+         <div class="formgrid" style="margin-top:8px">
+          <div class="field"><label for="imageUrl">या फोटो URL</label><input id="imageUrl" type="url" placeholder="मीडिया लाइब्रेरी URL"></div>
+          <div class="field"><label for="videoUrl">या वीडियो URL</label><input id="videoUrl" type="url" placeholder="वीडियो URL"></div>
+         </div>
+         <div class="small muted" style="margin-top:8px">वीडियो के साथ कम से कम एक कवर फोटो भी जोड़ें।</div>
+        </div>
+  
        <div class="field full" style="margin-bottom:12px"><label for="category">विषय चुनें</label><select id="category"></select></div>
        <div class="field full" style="margin-bottom:12px"><label for="dateline">स्थान चुनें / लिखें</label><input id="dateline" maxlength="120" placeholder="महेवा कला (मेजा), प्रयागराज"></div>
        <div class="field full" style="margin-bottom:12px"><label for="articleSlug">स्लग</label><input id="articleSlug" maxlength="180" placeholder="खबर की URL पहचान (वैकल्पिक)"></div>
@@ -516,27 +530,13 @@ button:focus-visible,.btn:focus-visible,.featurecard:focus-visible,.navbtn:focus
         </div>
        </details>
        <div class="formactions hidden" id="changeRawActions"><button class="btn soft" type="button" id="changeRawBtn">मूल जानकारी बदलें</button></div>
-        <div class="panel" id="articleMediaPanel" style="margin:12px 0;border:1px solid var(--line);border-radius:14px;padding:14px">
-         <div style="text-align:center;margin:4px 0 12px"><div style="font-size:38px;color:#e99b17">⇧</div><strong style="color:#d99518">फोटो/वीडियो अपलोड करें</strong></div>
-         <div id="existingArticleMedia" class="formgrid" style="margin:10px 0"></div>
-         <div class="formgrid">
-          <div class="field"><label for="articleImageFile">फोटो चुनें / पुरानी फोटो बदलें</label><input id="articleImageFile" type="file" accept="image/jpeg,image/png,image/webp"><div class="small muted">JPG, PNG, WebP · अधिकतम 50 MB</div><div id="articleImagePreview" class="small muted" aria-live="polite"></div></div>
-          <div class="field"><label for="articleVideoFile">वीडियो चुनें / पुराना वीडियो बदलें</label><input id="articleVideoFile" type="file" accept="video/mp4,video/webm"><div class="small muted">MP4, WebM · अधिकतम 50 MB</div><div id="articleVideoPreview" class="small muted" aria-live="polite"></div></div>
-         </div>
-         <div class="formgrid" style="margin-top:8px">
-          <div class="field"><label for="imageUrl">या फोटो URL</label><input id="imageUrl" type="url" placeholder="मीडिया लाइब्रेरी URL"></div>
-          <div class="field"><label for="videoUrl">या वीडियो URL</label><input id="videoUrl" type="url" placeholder="वीडियो URL"></div>
-         </div>
-         <div class="small muted" style="margin-top:8px">वीडियो के साथ कम से कम एक कवर फोटो भी जोड़ें।</div>
-        </div>
-       <input type="hidden" id="statusInput" value="submitted">
+     <input type="hidden" id="statusInput" value="submitted">
        <details style="margin:14px 0;padding:12px;border:1px solid var(--line);border-radius:12px">
         <summary style="font-weight:700;cursor:pointer">वैकल्पिक जानकारी और अन्य सुविधाएं</summary>
         <div class="formgrid" style="margin-top:14px">
          <div class="field"><label for="sourceNote">डेस्क एडिटर के लिए सूचना (वैकल्पिक)</label><input id="sourceNote" placeholder="कोई अतिरिक्त सूचना हो तो लिखें"></div>
          <div class="field hidden"><label for="latitude">अक्षांश</label><input id="latitude" type="number" step="any" min="-90" max="90" placeholder="25.30"></div>
          <div class="field hidden"><label for="longitude">देशांतर</label><input id="longitude" type="number" step="any" min="-180" max="180" placeholder="82.00"></div>
-         <div class="field full"><label for="sourceNote">जानकारी का स्रोत / पुष्टि नोट</label><input id="sourceNote" placeholder="पुलिस सूचना, अधिकारी का बयान आदि"></div>
          <div class="field full"><label>तथ्य जांच — पुष्टि होने पर ही निशान लगाएं</label><div class="notice" style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><label><input type="checkbox" id="checkNames"> नाम और पद</label><label><input type="checkbox" id="checkPlace"> स्थान</label><label><input type="checkbox" id="checkDate"> तारीख और समय</label><label><input type="checkbox" id="checkNumbers"> संख्या और रकम</label><label><input type="checkbox" id="checkSource"> स्रोत और दस्तावेज</label><label><input type="checkbox" id="checkResponse"> संबंधित पक्ष का पक्ष</label></div></div>
          <div class="field"><label for="seoTitle">SEO शीर्षक</label><input id="seoTitle" maxlength="180"></div>
          <div class="field"><label for="seoDescription">SEO विवरण</label><input id="seoDescription" maxlength="300"></div>
