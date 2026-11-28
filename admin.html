@@ -468,6 +468,50 @@ button:focus-visible,.btn:focus-visible,.featurecard:focus-visible,.navbtn:focus
 #page-editor .editor-topic-location input,#page-editor .editor-topic-location select{min-width:0;width:100%;font-size:15px;padding:11px 9px}
 #page-editor #reporterDatelineHint{font-size:10px;line-height:1.35;overflow-wrap:anywhere}
 @media(max-width:600px){#page-editor .editor-topic-location{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}#page-editor .editor-topic-location input,#page-editor .editor-topic-location select{font-size:14px;padding:10px 7px}}
+
+/* Modern, uncluttered newsroom editor controls */
+#page-editor .page-shortcuts{display:none!important}
+#page-editor .welcome{margin:0 0 8px!important}
+#page-editor .welcome h2{font-size:22px;letter-spacing:-.02em}
+#page-editor #articleForm>.panel{border:1px solid #e7ebf2;border-radius:20px;box-shadow:0 12px 34px rgba(20,35,65,.07);padding:14px}
+#page-editor #reporterSubmitActions{display:grid;grid-template-columns:44px 44px minmax(0,1fr);gap:9px;align-items:center;margin:0 0 14px;padding:0 0 12px;border-bottom:1px solid #edf0f5}
+#page-editor #reporterSubmitActions .btn{height:44px;min-height:44px;padding:0;border-radius:13px;font-size:15px;box-shadow:0 4px 12px rgba(18,35,66,.08);transition:transform .15s ease,box-shadow .15s ease}
+#page-editor #reporterSubmitActions .btn:active,#page-editor .formactions .btn:active{transform:scale(.98)}
+#page-editor #reporterSubmitActions #sendToEditorBtn{display:flex;align-items:center;justify-content:center;gap:9px;background:linear-gradient(135deg,#f5a51b,#e88908);color:#fff;border:0;font-size:15px;font-weight:850;letter-spacing:.01em;box-shadow:0 7px 18px rgba(232,137,8,.22)}
+#page-editor #reporterSubmitActions #editorBackBtn,#page-editor #reporterSubmitActions #saveReporterDraftBtn{background:#f3f6fb;color:#243653;border:1px solid #e2e8f1}
+#page-editor #articleMediaPanel{background:linear-gradient(180deg,#fbfcff,#fff)!important;border:1px solid #edf0f5!important;border-radius:16px!important;padding:10px!important}
+#page-editor #articleMediaPanel>.formgrid:not(#existingArticleMedia){grid-template-columns:repeat(2,minmax(0,1fr));gap:9px!important}
+#page-editor #articleMediaPanel .field{min-width:0;background:#fff;border:1px solid #e7ebf2;border-radius:14px;padding:10px;gap:7px}
+#page-editor #articleMediaPanel .field label{font-size:13px;font-weight:800;color:#26344c}
+#page-editor #articleMediaPanel input[type=file]{width:100%;min-width:0;font-size:11px;color:#65738a;background:#f8faff;border:1px dashed #cbd5e3;border-radius:10px;padding:7px}
+#page-editor #articleMediaPanel input[type=file]::file-selector-button{border:0;border-radius:8px;background:#e9eff9;color:#23395d;padding:7px 9px;margin-right:7px;font-weight:800}
+#page-editor .editor-topic-location{margin:0 0 14px}
+#page-editor .editor-topic-location .field label,#page-editor #generatedTitleWrap>label,#page-editor #rawInputPanel>label{font-size:14px;font-weight:850;color:#24324a}
+#page-editor .editor-topic-location input,#page-editor .editor-topic-location select,#page-editor #generatedTitleWrap textarea,#page-editor #rawFacts{border:1px solid #dfe5ef;border-radius:13px;background:#fbfcff;box-shadow:inset 0 1px 2px rgba(20,35,65,.025)}
+#page-editor #generatedTitleWrap textarea{min-height:76px!important}
+#page-editor #rawInputPanel{margin:12px 0!important}
+#page-editor #rawInputPanel .formactions{display:grid;grid-template-columns:1fr 1fr;gap:9px!important}
+#page-editor #voiceInputBtn,#page-editor #pasteHelpBtn{min-width:0;min-height:42px!important;height:42px;padding:8px 10px!important;border:1px solid #e2e8f1;border-radius:12px;background:#f3f6fb;color:#263a5c;font-size:13px!important;font-weight:800;box-shadow:0 3px 10px rgba(18,35,66,.05)}
+#page-editor #aiDraftBtn{min-height:46px!important;height:46px;margin-top:9px!important;border:0;border-radius:13px;background:linear-gradient(135deg,#f5a51b,#e88908);color:#fff;font-size:15px!important;font-weight:850;box-shadow:0 7px 18px rgba(232,137,8,.2)}
+#page-editor #editorSaveActions{display:grid;grid-template-columns:1fr;gap:8px}
+#page-editor #editorSaveActions .btn{min-height:42px;border-radius:12px;font-size:13px}
+#page-editor .page-home-btn{width:42px;height:42px;border-radius:13px;background:linear-gradient(145deg,#243d68,#10213e);box-shadow:0 7px 18px rgba(16,28,54,.2);font-size:23px}
+#page-editor #editorialHistoryPanel{margin-top:10px}
+@media(max-width:600px){
+ #page-editor .page{padding-top:54px!important}
+ #page-editor #articleForm>.panel{padding:10px!important}
+ #page-editor #reporterSubmitActions{grid-template-columns:42px 42px minmax(0,1fr);gap:7px;margin-bottom:10px;padding-bottom:10px}
+ #page-editor #reporterSubmitActions .btn{height:42px;min-height:42px}
+ #page-editor #articleMediaPanel{margin:6px 0 10px!important;padding:8px!important}
+ #page-editor #articleMediaPanel>.formgrid:not(#existingArticleMedia){grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important}
+ #page-editor #articleMediaPanel .field{padding:8px 7px}
+ #page-editor #articleMediaPanel .field label{font-size:12px}
+ #page-editor #articleMediaPanel input[type=file]{font-size:10px;padding:5px}
+ #page-editor #articleMediaPanel input[type=file]::file-selector-button{padding:6px;margin-right:3px}
+ #page-editor .editor-topic-location{gap:8px!important;margin-bottom:10px}
+ #page-editor .editor-topic-location input,#page-editor .editor-topic-location select{font-size:14px!important;padding:10px 7px!important}
+ #page-editor #rawFacts{min-height:230px!important}
+}
 </style>
 </head>
 <body>
@@ -580,10 +624,8 @@ button:focus-visible,.btn:focus-visible,.featurecard:focus-visible,.navbtn:focus
      <div class="panel">
       <form id="articleForm">
        <input type="hidden" id="articleId">
-       <div class="formactions" id="reporterSubmitActions"><button class="btn soft" type="button" id="editorBackBtn" aria-label="वापस जाएं">←</button><button class="btn soft" type="button" id="saveReporterDraftBtn" title="ड्राफ्ट सुरक्षित करें">▣</button><button class="btn primary" type="button" id="sendToEditorBtn" style="flex:1;min-height:48px">पोस्ट करें</button></div>
-        
-  
-       <div class="panel" id="articleMediaPanel" style="margin:8px 0;border:0;border-radius:12px;padding:10px;background:#fff">
+       <div class="formactions" id="reporterSubmitActions"><button class="btn soft" type="button" id="editorBackBtn" aria-label="वापस जाएं" title="डैशबोर्ड पर लौटें">←</button><button class="btn soft" type="button" id="saveReporterDraftBtn" title="ड्राफ्ट सुरक्षित करें" aria-label="ड्राफ्ट सुरक्षित करें">▣</button><button class="btn primary" type="button" id="sendToEditorBtn"><span>पोस्ट करें</span><span aria-hidden="true">→</span></button></div>
+        <div class="panel" id="articleMediaPanel" style="margin:8px 0;border:0;border-radius:12px;padding:10px;background:#fff">
          <div id="existingArticleMedia" class="formgrid" style="margin:4px 0 10px"></div>
          <div class="formgrid" style="gap:10px">
           <div class="field">
@@ -600,11 +642,11 @@ button:focus-visible,.btn:focus-visible,.featurecard:focus-visible,.navbtn:focus
           </div>
          </div>
          <input type="hidden" id="imageUrl"><input type="hidden" id="videoUrl">
-         <div class="small muted" style="margin-top:8px">वीडियो के साथ कम से कम एक कवर फोटो भी जोड़ें।</div>
+         
         </div>
        <div class="editor-topic-location">
         <div class="field"><label for="category">विषय चुनें</label><select id="category"></select></div>
-        <div class="field"><label for="dateline">स्थान चुनें</label><input id="dateline" maxlength="120" placeholder="एडमिन द्वारा निर्धारित डेटलाइन स्वतः दर्ज होगी"><div id="reporterDatelineHint" class="small muted" aria-live="polite"></div></div>
+        <div class="field"><label for="dateline">स्थान चुनें</label><input id="dateline" maxlength="120" placeholder="एडमिन द्वारा निर्धारित डेटलाइन स्वतः दर्ज होगी"></div>
        </div>
        <div class="field full" id="generatedTitleWrap"><label for="title">हेडलाइन</label><textarea id="title" maxlength="300" rows="2" placeholder="हेडलाइन लिखें.." style="min-height:76px"></textarea><div class="word-count" id="titleCount">0 / 30</div></div>
        <div class="field full" id="rawInputPanel" style="margin:12px 0">
@@ -637,7 +679,7 @@ button:focus-visible,.btn:focus-visible,.featurecard:focus-visible,.navbtn:focus
         </div>
        </details>
         
-       <div class="formactions" id="reporterResetAction"><button class="btn soft" type="button" id="resetArticleBtn">नई खबर लिखें</button></div>
+       
        <div class="formactions hidden" id="editorSaveActions"><button class="btn soft" type="button" id="saveEditorDraftBtn">सुधार सुरक्षित करें</button><button class="btn primary" type="button" id="approveAndQueueBtn">स्वीकृत कर Blogger कतार में भेजें</button><button class="btn soft" type="button" id="resetArticleBtnEditor">नई खबर</button></div>
        <div id="editorSaveStatus" class="small muted" role="status" aria-live="polite"></div>
       </form>
@@ -715,8 +757,8 @@ function toast(msg){$('toast').textContent=msg;$('toast').classList.remove('hidd
 function esc(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function slugify(s){return s.toLowerCase().trim().replace(/[^\p{L}\p{N}]+/gu,'-').replace(/^-|-$/g,'').slice(0,90)||'news'}
 function canEditAll(){return role==='admin'||role==='editor'}
-function showPage(page){document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));$('page-'+page).classList.remove('hidden');document.body.classList.toggle('page-focus',page!=='overview');document.body.classList.toggle('editor-focus',page==='editor');document.querySelectorAll('.navbtn').forEach(x=>x.classList.toggle('active',x.dataset.page===page));if(page==='editor'&&!$('articleId').value){$('dateline').value=profile?.dateline||'';$('reporterDatelineHint').textContent=profile?.display_name?'रिपोर्टर: '+profile.display_name+' · एडमिन द्वारा निर्धारित डेटलाइन: '+(profile.dateline||'दर्ज नहीं'):'';}if(page==='articles'){if(role==='editor')$('statusFilter').value='queue';loadArticles();}if(page==='media')loadMedia();if(page==='readerReports')loadReaderReports();if(page==='confidential')loadConfidentialTips();if(page==='analytics')loadNewsroomAnalytics();if(page==='team')loadTeam();if(page==='ads')loadAds();if(page==='overview')loadOverview();window.scrollTo({top:0,behavior:'instant'});if(page==='editor')setTimeout(()=>$('rawFacts')?.focus({preventScroll:true}),80)}
-function ensurePageHomeButtons(){document.querySelectorAll('.page:not(#page-overview)').forEach(page=>{if(!page.querySelector('.page-home-btn')){const btn=document.createElement('button');btn.type='button';btn.className='page-home-btn';btn.title='डैशबोर्ड पर जाएं';btn.setAttribute('aria-label','डैशबोर्ड पर जाएं');btn.textContent='⌂';btn.addEventListener('click',()=>showPage('overview'));page.insertBefore(btn,page.firstChild)}if(page.querySelector('.page-shortcuts'))return;const bar=document.createElement('nav');bar.className='page-shortcuts';bar.setAttribute('aria-label','इस पेज के त्वरित विकल्प');const targets=[...page.querySelectorAll(':scope > .panel,:scope > .welcome,:scope > .featuregrid,:scope > .notice')].filter(el=>!el.classList.contains('page-shortcuts'));targets.forEach((el,index)=>{if(!el.id)el.id='quick-'+page.id+'-'+index;const title=el.querySelector('h2,h3,.panelhead h3')?.textContent?.trim()||el.querySelector('button')?.textContent?.trim()||'विकल्प '+(index+1);const b=document.createElement('button');b.type='button';b.textContent=title.slice(0,18);b.title=title;b.addEventListener('click',()=>el.scrollIntoView({behavior:'smooth',block:'start'}));bar.appendChild(b)});page.insertBefore(bar,page.children[1]||null)})}
+function showPage(page){document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));$('page-'+page).classList.remove('hidden');document.body.classList.toggle('page-focus',page!=='overview');document.body.classList.toggle('editor-focus',page==='editor');document.querySelectorAll('.navbtn').forEach(x=>x.classList.toggle('active',x.dataset.page===page));if(page==='editor'&&!$('articleId').value){$('dateline').value=profile?.dateline||'';}if(page==='articles'){if(role==='editor')$('statusFilter').value='queue';loadArticles();}if(page==='media')loadMedia();if(page==='readerReports')loadReaderReports();if(page==='confidential')loadConfidentialTips();if(page==='analytics')loadNewsroomAnalytics();if(page==='team')loadTeam();if(page==='ads')loadAds();if(page==='overview')loadOverview();window.scrollTo({top:0,behavior:'instant'});if(page==='editor')setTimeout(()=>$('rawFacts')?.focus({preventScroll:true}),80)}
+function ensurePageHomeButtons(){document.querySelectorAll('.page:not(#page-overview)').forEach(page=>{if(!page.querySelector('.page-home-btn')){const btn=document.createElement('button');btn.type='button';btn.className='page-home-btn';btn.title='डैशबोर्ड पर जाएं';btn.setAttribute('aria-label','डैशबोर्ड पर जाएं');btn.textContent='⌂';btn.addEventListener('click',()=>showPage('overview'));page.insertBefore(btn,page.firstChild)}if(page.id==='page-editor'||page.querySelector('.page-shortcuts'))return;const bar=document.createElement('nav');bar.className='page-shortcuts';bar.setAttribute('aria-label','इस पेज के त्वरित विकल्प');const targets=[...page.querySelectorAll(':scope > .panel,:scope > .welcome,:scope > .featuregrid,:scope > .notice')].filter(el=>!el.classList.contains('page-shortcuts'));targets.forEach((el,index)=>{if(!el.id)el.id='quick-'+page.id+'-'+index;const title=el.querySelector('h2,h3,.panelhead h3')?.textContent?.trim()||el.querySelector('button')?.textContent?.trim()||'विकल्प '+(index+1);const b=document.createElement('button');b.type='button';b.textContent=title.slice(0,18);b.title=title;b.addEventListener('click',()=>el.scrollIntoView({behavior:'smooth',block:'start'}));bar.appendChild(b)});page.insertBefore(bar,page.children[1]||null)})}
 function setRoleUI(){$('reporterSubmitActions').classList.toggle('hidden',canEditAll());$('editorSaveActions').classList.toggle('hidden',!canEditAll());const adminOnly=['team','ads','features','confidential','analytics'];adminOnly.forEach(p=>{const el=document.querySelector('[data-page="'+p+'"]');if(el)el.classList.toggle('hidden',role!=='admin')});document.querySelectorAll('[data-admin-only]').forEach(x=>x.classList.toggle('hidden',role!=='admin'));document.querySelectorAll('.admin-editor-only,.editor-admin-only').forEach(x=>x.classList.toggle('hidden',!canEditAll()));const settings=document.querySelector('[data-page="settings"]');if(settings)settings.classList.add('hidden');$('dashboardHeading').textContent=role==='reporter'?'रिपोर्टर डेस्क':role==='editor'?'संपादकीय डेस्क':'एडमिन डैशबोर्ड';$('dashboardSubheading').textContent=role==='reporter'?'एक जगह से खबर लिखें, भेजें और उसका परिणाम देखें।':role==='editor'?'रिपोर्टरों की खबरें जांचें, सुधारें और प्रकाशन पूरा करें।':'टीम, खबरें, मीडिया और न्यूज़रूम की सभी व्यवस्थाएं नियंत्रित करें।';$('rolePrimaryAction').textContent=role==='editor'?'समीक्षा कतार खोलें':role==='admin'?'सभी खबरें देखें':'＋ नई खबर लिखें';$('roleSecondaryAction').textContent=role==='reporter'?'मेरी खबरें':role==='editor'?'नई खबर लिखें':'टीम प्रबंधन';$('rolePrimaryAction').onclick=()=>{if(role==='reporter')showPage('editor');else{showPage('articles');if(role==='editor'){$('statusFilter').value='queue';renderArticlesTable()}}};$('roleSecondaryAction').onclick=()=>showPage(role==='admin'?'team':role==='editor'?'editor':'articles');const filter=$('statusFilter');if(role==='editor'){filter.value='queue';filter.options[0].textContent='सभी खबरें';}else{filter.value='';filter.options[0].textContent='सभी स्थिति';}}
 function showLogin(){ $('recoveryView').classList.add('hidden');$('loginForm').classList.remove('hidden');$('loginView').classList.remove('hidden');$('pendingAccessView').classList.add('hidden');$('appView').classList.add('hidden') }
 function showPasswordRecovery(){ $('loginForm').classList.add('hidden');$('recoveryView').classList.remove('hidden');$('loginView').classList.remove('hidden');$('appView').classList.add('hidden') }
@@ -876,7 +918,6 @@ async function uploadEditorMedia(file,kind){
  return publicUrl;
 }
 function resetArticle(){ $('articleForm').reset();reporterRawBackup='';reporterGeneratedText='';reporterShowingRaw=false;reporterAiReady=false;$('rawToggleBtn').classList.add('hidden');$('rawToggleBtn').textContent='कच्ची जानकारी देखें';$('statusInput').value='submitted';$('generatedTitleWrap').classList.remove('hidden');$('generatedSummaryWrap').classList.add('hidden');$('rawInputPanel').classList.remove('hidden');$('aiStatus').textContent='';$('aiResult').classList.add('hidden');$('editorialHistoryPanel').classList.add('hidden');$('editorialHistory').textContent='';$('articleId').value='';$('rawFacts').value='';$('dateline').value=profile?.dateline||'';$('reporterDatelineHint').textContent=profile?.display_name?'रिपोर्टर: '+profile.display_name+' · एडमिन द्वारा निर्धारित डेटलाइन: '+(profile.dateline||'दर्ज नहीं'):'';renderExistingArticleMedia(null,null);$('articleImageFile').value='';$('articleVideoFile').value='';$('articleImagePreview').innerHTML='';$('articleVideoPreview').innerHTML='';aiDraftResult=null;$('editorHeading').textContent='नई खबर';$('statusInput').innerHTML='<option value="submitted">समीक्षा हेतु भेजें</option>'; }
-$('resetArticleBtn').onclick=resetArticle;
 async function resolveArticleSlug(title,id){
  const base=slugify(title);
  const {data,error}=await supabase.from('news_articles').select('id').eq('slug',base).limit(1);
