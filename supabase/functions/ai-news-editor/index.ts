@@ -67,8 +67,8 @@ Deno.serve(async (req: Request) => {
     if (!result.title || !result.body) throw new Error("incomplete");
     if (importedSource) {
       // मूल प्रकाशक का नाम किसी प्रकाशित टेक्स्ट फ़ील्ड में न जाने दें।
-      const publisherPatterns = [/अमर\\s*उजाला/gi, /amar\\s*ujala/gi, /amarujala\\.com/gi, /दैनिक\\s*जागरण/gi, /dainik\\s*jagran/gi, /दैनिक\\s*भास्कर/gi, /bhaskar\\.com/gi, /हिंदुस्तान\\s*अखबार/gi, /livehindustan\\.com/gi, /आज\\s*तक/gi, /aajtak\\.in/gi, /ndtv\\.com/gi, /एनडीटीवी/gi, /इंडिया\\s*टुडे/gi, /indiatoday\\.in/gi, /news18/gi, /एबीपी\\s*न्यूज़/gi, /abplive\\.com/gi, /tv9hindi\\.com/gi, /नवभारत\\s*टाइम्स/gi, /navbharattimes/gi, /thehindu\\.com/gi, /प्रभात\\s*खबर/gi];
-      const cleanPublishedText = (value: unknown) => publisherPatterns.reduce((text, pattern) => text.replace(pattern, "").replace(/\\s{2,}/g, " ").trim(), String(value || ""));
+      const publisherPatterns = [/अमर\s*उजाला/gi, /amar\s*ujala/gi, /amarujala\.com/gi, /दैनिक\s*जागरण/gi, /dainik\s*jagran/gi, /दैनिक\s*भास्कर/gi, /bhaskar\.com/gi, /हिंदुस्तान\s*अखबार/gi, /livehindustan\.com/gi, /आज\s*तक/gi, /aajtak\.in/gi, /ndtv\.com/gi, /एनडीटीवी/gi, /इंडिया\s*टुडे/gi, /indiatoday\.in/gi, /news18/gi, /एबीपी\s*न्यूज़/gi, /abplive\.com/gi, /tv9hindi\.com/gi, /नवभारत\s*टाइम्स/gi, /navbharattimes/gi, /thehindu\.com/gi, /प्रभात\s*खबर/gi];
+      const cleanPublishedText = (value: unknown) => publisherPatterns.reduce((text, pattern) => text.replace(pattern, "").replace(/\s{2,}/g, " ").trim(), String(value || ""));
       for (const key of ["title", "summary", "body", "seo_title", "seo_description"]) result[key] = cleanPublishedText(result[key]);
     }
     return reply(200, { result });
