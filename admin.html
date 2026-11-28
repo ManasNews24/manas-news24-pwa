@@ -813,7 +813,7 @@ async function saveArticle(statusOverride){
   const imageFile=$('articleImageFile').files?.[0],videoFile=$('articleVideoFile').files?.[0];
   if(imageFile){$('editorSaveStatus').textContent='खबर की फोटो अपलोड हो रही है…';payload.featured_image_url=await uploadEditorMedia(imageFile,'image')}
   if(videoFile){$('editorSaveStatus').textContent='खबर का वीडियो अपलोड हो रहा है…';payload.featured_video_url=await uploadEditorMedia(videoFile,'video')}
-  payload.slug=await resolveArticleSlug(title,id);
+  payload.slug=$('articleSlug').value.trim()?slugify($('articleSlug').value.trim()):await resolveArticleSlug(title,id);
   let result;
   if(id)result=await supabase.from('news_articles').update(payload).eq('id',id).select('id').single();
   else result=await supabase.from('news_articles').insert({...payload,author_id:currentUser.id}).select('id').single();
