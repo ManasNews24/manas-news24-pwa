@@ -535,7 +535,7 @@ button:focus-visible,.btn:focus-visible,.featurecard:focus-visible,.navbtn:focus
         <textarea id="rawFacts" required autocomplete="off" style="min-height:300px;font-size:16px" placeholder="घटना से जुड़ी पूरी जानकारी, नाम, स्थान, तारीख, बयान और अन्य तथ्य लिखें.."></textarea>
         <button class="btn gold" type="button" id="aiDraftBtn" style="width:100%;margin-top:10px;min-height:50px;font-size:17px">AI से खबर तैयार करें</button>
         <div id="aiStatus" class="small muted" role="status" aria-live="polite" style="margin-top:8px"></div>
-        <div id="aiResult" class="notice hidden" role="alert" style="white-space:pre-wrap;margin-top:8px"></div>
+        <div id="aiResult" class="small muted hidden" role="alert" style="white-space:pre-wrap;margin-top:6px"></div>
        </div>
        <textarea id="body" class="hidden" aria-hidden="true"></textarea>
        <input type="hidden" id="statusInput" value="submitted">
@@ -959,14 +959,14 @@ async function runAiEditor(mode){
   const cautions=(aiDraftResult.cautions||[]).map(x=>'• '+x).join('\n');
   $('aiResult').textContent=(missing?'पुष्टि करें:\n'+missing+'\n\n':'')+(cautions?'सावधानी:\n'+cautions:'');
   $('aiResult').classList.toggle('hidden',!missing&&!cautions);
-  $('title').value=aiDraftResult.title||$('title').value||'';$('summary').value=aiDraftResult.summary||'';$('body').value=aiDraftResult.body;$('rawFacts').value=aiDraftResult.body;
+  $('title').value=aiDraftResult.title||$('title').value||'';$('summary').value=aiDraftResult.summary||'';$('body').value=aiDraftResult.body;$('rawFacts').value=aiDraftResult.body;updateWordCounts();
   $('generatedTitleWrap').classList.remove('hidden');$('generatedSummaryWrap').classList.add('hidden');$('rawInputPanel').classList.remove('hidden');
   $('aiStatus').textContent='खबर तैयार है। इसी बॉक्स में पढ़ें और संशोधन करें। दोबारा दबाने पर नया प्रारूप बनेगा।';
  }catch(err){
   const message=err.name==='AbortError'?'AI को उत्तर देने में 90 सेकंड से अधिक लगे। इंटरनेट जांचकर दोबारा प्रयास करें।':(err.message||'AI खबर तैयार नहीं हो सकी।');
   $('aiStatus').textContent='खबर तैयार नहीं हुई: '+message;$('aiResult').textContent='समस्या: '+message+'\nकच्ची खबर सुरक्षित है। आप दोबारा प्रयास कर सकते हैं।';$('aiResult').classList.remove('hidden');
  }finally{
-  btn.disabled=false;btn.textContent=mode==='draft'?'खबर तैयार करें / दोबारा तैयार करें':(mode==='revise'?'निर्देशानुसार फिर से संपादित करें':(mode==='translate'?'चुनी भाषा में अनुवाद':'भाषा और व्याकरण सुधारें'));
+  btn.disabled=false;btn.textContent=mode==='draft'?'AI से खबर तैयार करें / दोबारा तैयार करें':(mode==='revise'?'निर्देशानुसार फिर से संपादित करें':(mode==='translate'?'चुनी भाषा में अनुवाद':'भाषा और व्याकरण सुधारें'));
  }
 }
 window.runAiEditor=runAiEditor; $('aiDraftBtn').onclick=()=>runAiEditor('draft');
