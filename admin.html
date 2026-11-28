@@ -571,13 +571,14 @@ button:focus-visible,.btn:focus-visible,.featurecard:focus-visible,.navbtn:focus
  <div style="max-width:850px;margin:4vh auto;background:#fff;border-radius:16px;padding:18px;box-shadow:0 24px 70px #0005">
   <div class="panelhead"><div><div class="eyebrow">EDITORIAL REVIEW DESK</div><h3 id="reviewTitle">संपादकीय समीक्षा</h3></div><button class="btn soft" type="button" id="closeReview">बंद करें</button></div>
   <div id="reviewMeta" class="small muted" style="margin-bottom:12px"></div>
+  <div id="reviewMediaPreview" class="notice" style="margin:10px 0;display:grid;gap:10px"></div>
   <div class="field"><label for="reviewEditTitle">शीर्षक</label><input id="reviewEditTitle" maxlength="180"></div>
   <div class="field" style="margin-top:10px"><label for="reviewEditSummary">संक्षिप्त परिचय</label><textarea id="reviewEditSummary" style="min-height:65px"></textarea></div>
   <div class="field" style="margin-top:10px"><label for="reviewEditBody">पूरी खबर — यहीं सुधार करें</label><textarea id="reviewEditBody" style="min-height:280px;line-height:1.75"></textarea></div>
   <details style="margin-top:10px"><summary style="cursor:pointer;font-weight:700">मूल कच्ची जानकारी और स्रोत देखें</summary><div id="reviewStory" style="white-space:pre-wrap;line-height:1.7;max-height:28vh;overflow:auto;background:#f7f8fb;padding:12px;border-radius:10px;margin-top:8px"></div></details>
   <div class="field" style="margin-top:12px"><label for="reviewNote">संपादकीय टिप्पणी (वैकल्पिक)</label><textarea id="reviewNote" style="min-height:65px" placeholder="केवल जरूरत होने पर टिप्पणी लिखें"></textarea></div>
   <div id="reviewAiStatus" class="notice hidden" style="margin-top:10px"></div>
-  <div class="formactions"><button class="btn soft" type="button" id="editReviewedStory">पूरे संपादक में खोलें</button><button class="btn gold" type="button" id="reviewAiRevise">✦ AI से अंतिम खबर सुधारें</button><button class="btn primary" type="button" id="saveReview">सुधार सुरक्षित करें और स्वीकृत करें</button><button class="btn soft" type="button" id="requestChanges">रिपोर्टर से सुधार मांगें</button></div>
+  <div class="formactions"><button class="btn soft" type="button" id="editReviewedStory">फोटो-वीडियो सहित संपादन खोलें</button><button class="btn gold" type="button" id="reviewAiRevise">✦ AI से अंतिम खबर सुधारें</button><button class="btn primary" type="button" id="saveReview">सुधार सुरक्षित करें और स्वीकृत करें</button><button class="btn soft" type="button" id="requestChanges">रिपोर्टर से सुधार मांगें</button></div>
  </div>
 </div>
 <div id="toast" class="toast hidden" role="status"></div>
@@ -801,7 +802,11 @@ let activeReviewId=null,activeReviewArticle=null;
 async function reviewArticle(id){
  const {data:a,error}=await supabase.from('news_articles').select('*,user_profiles!news_articles_author_id_fkey(display_name,phone_e164,login_identifier,dateline),news_categories(name)').eq('id',id).single();
  if(error||!a){toast('खबर समीक्षा के लिए नहीं खुली: '+(error?.message||''));return}
- activeReviewId=id;activeReviewArticle=a;$('reviewTitle').textContent=a.title;$('reviewMeta').textContent=(a.dateline||'स्थान नहीं दिया')+' · रिपोर्टर: '+(a.reporter_name_snapshot||a.user_profiles?.display_name||'रिपोर्टर')+' · '+(a.news_categories?.name||'अश्रेणीकृत')+' · '+(statusHi[a.status]||a.status);
+ activeReviewId=id;activeReviewArticle=a;
+ const reviewMedia=[];
+ if(a.featured_image_url)reviewMedia.push('<div><strong>रिपोर्टर की भेजी फोटो</strong><a href="'+esc(a.featured_image_url)+'" target="_blank" rel="noopener"><img src="'+esc(a.featured_image_url)+'" alt="खबर की फोटो" style="display:block;max-width:100%;max-height:260px;object-fit:contain;border-radius:10px;margin-top:6px;background:#eef1f5"></a></div>');
+ if(a.featured_video_url)reviewMedia.push('<div><strong>रिपोर्टर का भेजा वीडियो</strong><video src="'+esc(a.featured_video_url)+'" controls playsinline preload="metadata" style="display:block;width:100%;max-height:280px;border-radius:10px;margin-top:6px;background:#111"></video></div>');
+ $('reviewMediaPreview').innerHTML=reviewMedia.length?reviewMedia.join(''):'<span class="small muted">इस खबर के साथ फोटो या वीडियो संलग्न नहीं है।</span>';$('reviewTitle').textContent=a.title;$('reviewMeta').textContent=(a.dateline||'स्थान नहीं दिया')+' · रिपोर्टर: '+(a.reporter_name_snapshot||a.user_profiles?.display_name||'रिपोर्टर')+' · '+(a.news_categories?.name||'अश्रेणीकृत')+' · '+(statusHi[a.status]||a.status);
  $('reviewEditTitle').value=a.title||'';$('reviewEditSummary').value=a.summary||'';$('reviewEditBody').value=a.body||'';
  $('reviewStory').textContent=(a.source_note?'स्रोत/सत्यापन नोट: '+a.source_note+'\\n\\n':'')+(a.raw_facts?'रिपोर्टर की मूल कच्ची खबर:\\n'+a.raw_facts:'मूल कच्ची जानकारी उपलब्ध नहीं है।')+(a.featured_image_url?'\\n\\nमुख्य फोटो: '+a.featured_image_url:'')+(a.featured_video_url?'\\n\\nवीडियो: '+a.featured_video_url:'');$('reviewNote').value='';$('reviewModal').classList.remove('hidden');
 }
