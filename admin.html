@@ -460,6 +460,14 @@ button:focus-visible,.btn:focus-visible,.featurecard:focus-visible,.navbtn:focus
 
 /* Reporter media controls: side-by-side on phones */
 @media(max-width:600px){#page-editor #articleMediaPanel>.formgrid:not(#existingArticleMedia){grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}#page-editor #articleMediaPanel>.formgrid:not(#existingArticleMedia) .field{min-width:0;padding:9px 7px}#page-editor #articleMediaPanel input[type=file]{width:100%;min-width:0;font-size:12px}}
+
+/* Keep subject and dateline controls on one horizontal row */
+#page-editor .editor-topic-location{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0 0 12px}
+#page-editor .editor-topic-location .field{min-width:0}
+#page-editor .editor-topic-location label{font-size:14px}
+#page-editor .editor-topic-location input,#page-editor .editor-topic-location select{min-width:0;width:100%;font-size:15px;padding:11px 9px}
+#page-editor #reporterDatelineHint{font-size:10px;line-height:1.35;overflow-wrap:anywhere}
+@media(max-width:600px){#page-editor .editor-topic-location{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}#page-editor .editor-topic-location input,#page-editor .editor-topic-location select{font-size:14px;padding:10px 7px}}
 </style>
 </head>
 <body>
@@ -594,8 +602,10 @@ button:focus-visible,.btn:focus-visible,.featurecard:focus-visible,.navbtn:focus
          <input type="hidden" id="imageUrl"><input type="hidden" id="videoUrl">
          <div class="small muted" style="margin-top:8px">वीडियो के साथ कम से कम एक कवर फोटो भी जोड़ें।</div>
         </div>
-       <div class="field full" style="margin-bottom:12px"><label for="category">विषय चुनें</label><select id="category"></select></div>
-       <div class="field full" style="margin-bottom:12px"><label for="dateline">स्थान चुनें</label><input id="dateline" maxlength="120" placeholder="एडमिन द्वारा निर्धारित डेटलाइन स्वतः दर्ज होगी"><div id="reporterDatelineHint" class="small muted" aria-live="polite"></div></div>
+       <div class="editor-topic-location">
+        <div class="field"><label for="category">विषय चुनें</label><select id="category"></select></div>
+        <div class="field"><label for="dateline">स्थान चुनें</label><input id="dateline" maxlength="120" placeholder="एडमिन द्वारा निर्धारित डेटलाइन स्वतः दर्ज होगी"><div id="reporterDatelineHint" class="small muted" aria-live="polite"></div></div>
+       </div>
        <div class="field full" id="generatedTitleWrap"><label for="title">हेडलाइन</label><textarea id="title" maxlength="300" rows="2" placeholder="हेडलाइन लिखें.." style="min-height:76px"></textarea><div class="word-count" id="titleCount">0 / 30</div></div>
        <div class="field full" id="rawInputPanel" style="margin:12px 0">
         <label for="rawFacts">विवरण लिखें..</label>
