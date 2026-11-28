@@ -306,6 +306,65 @@ button:focus-visible,.btn:focus-visible,.featurecard:focus-visible,.navbtn:focus
  .btn,.top-actions button,.actions button,.featurecard,.navbtn{transition:none}
 }
 
+
+/* Premium dashboard layout */
+.dashboard-page{padding-top:0!important}
+.dashboard-hero{position:relative;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;padding:22px 24px;margin:0 0 18px;border-radius:20px;background:radial-gradient(circle at 90% 0%,#49618e 0,transparent 34%),linear-gradient(120deg,#101c36,#243d68);color:#fff;box-shadow:0 12px 28px rgba(16,28,54,.18);overflow:hidden}
+.dashboard-brandline{display:flex;align-items:center;gap:14px;min-width:220px;flex:1}
+.dashboard-mark{width:54px;height:54px;flex:0 0 54px;display:grid;place-items:center;border-radius:16px;background:linear-gradient(145deg,#f6d88f,#dfad4f);color:#17233b;font-size:28px;font-weight:950;box-shadow:0 7px 18px #0003}
+.dashboard-hero .eyebrow{color:#f0cb78;font-size:10px}
+.dashboard-hero h2{color:#fff;font-size:26px;font-weight:950;margin:4px 0}
+.dashboard-hero p{color:#d9e2f2;font-size:13px;margin:0;line-height:1.5}
+.dashboard-hero-actions{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+.dashboard-hero-actions .btn{min-height:46px;padding:11px 16px;font-size:14px}
+.dashboard-hero-actions .btn.soft{background:#ffffff18;color:#fff;border-color:#ffffff42}
+.dashboard-date{position:absolute;right:22px;top:10px;color:#d9e2f2;font-size:11px}
+.dashboard-section-title{display:flex;justify-content:space-between;align-items:center;margin:4px 2px 10px;font-size:16px;font-weight:900;color:#1b2d4c}
+.dashboard-live{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;color:#60708a}
+.dashboard-live i{width:7px;height:7px;border-radius:50%;background:#25a56a;box-shadow:0 0 0 3px #25a56a20}
+.dashboard-stats .stat{position:relative;overflow:hidden;border:1px solid #e0e6f0;box-shadow:0 4px 14px rgba(16,28,54,.055);padding:16px}
+.dashboard-stats .stat:after{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(#e8c878,#c99a43)}
+.dashboard-quickgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin:0 0 18px}
+.dashboard-quickcard{display:flex;align-items:center;gap:12px;min-width:0;text-align:left;padding:14px;border:1px solid #dce4f0;border-radius:15px;background:linear-gradient(145deg,#fff,#f5f8fd);color:#1b2d4c;box-shadow:0 4px 13px rgba(16,28,54,.06);transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease}
+.dashboard-quickcard:hover{transform:translateY(-2px);border-color:#a9bad4;box-shadow:0 10px 22px rgba(16,28,54,.11)}
+.quick-icon{width:43px;height:43px;flex:0 0 43px;display:grid;place-items:center;border-radius:13px;background:linear-gradient(145deg,#eaf0fa,#dce6f5);color:#263f68;font-size:22px;font-weight:900}
+.dashboard-quickcard strong{display:block;font-size:14px;font-weight:900;line-height:1.35}
+.dashboard-quickcard small{display:block;margin-top:3px;color:#66758d;font-size:11px;font-weight:650;line-height:1.4}
+.dashboard-panels{display:grid;grid-template-columns:1.15fr 1fr;gap:14px}
+.dashboard-panel{margin-bottom:12px;padding:15px}
+.dashboard-panel .panelhead h3{font-size:15px;font-weight:900}
+.dashboard-note{margin-top:2px;font-size:12px}
+@media(max-width:700px){
+ .dashboard-hero{padding:16px;margin-bottom:12px;border-radius:16px;gap:12px}
+ .dashboard-brandline{gap:10px;min-width:0}
+ .dashboard-mark{width:44px;height:44px;flex-basis:44px;border-radius:13px;font-size:23px}
+ .dashboard-hero h2{font-size:21px}
+ .dashboard-hero p{font-size:11px}
+ .dashboard-date{position:static;width:100%;text-align:right;margin-top:-6px}
+ .dashboard-hero-actions{display:grid;grid-template-columns:1fr 1fr;width:100%}
+ .dashboard-hero-actions .btn{width:100%;min-height:48px;padding:9px 8px;font-size:13px}
+ .dashboard-section-title{font-size:14px;margin-bottom:8px}
+ .dashboard-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .dashboard-stats .stat{padding:11px}
+ .dashboard-quickgrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:12px}
+ .dashboard-quickcard{padding:10px;gap:8px;border-radius:12px;min-height:76px}
+ .quick-icon{width:35px;height:35px;flex-basis:35px;border-radius:10px;font-size:18px}
+ .dashboard-quickcard strong{font-size:12px}
+ .dashboard-quickcard small{font-size:10px}
+ .dashboard-panels{grid-template-columns:1fr;gap:2px}
+ .dashboard-panel{padding:11px;margin-bottom:9px}
+ .dashboard-panel .panelhead{align-items:center}
+ .dashboard-panel .panelhead h3{font-size:13px}
+ .dashboard-note{font-size:10px;padding:9px}
+}
+@media(max-width:380px){
+ .dashboard-hero{padding:13px}
+ .dashboard-mark{width:39px;height:39px;flex-basis:39px}
+ .dashboard-hero h2{font-size:19px}
+ .dashboard-quickcard{flex-direction:column;align-items:flex-start;min-height:100px}
+ .quick-icon{width:32px;height:32px;flex-basis:32px}
+}
+
 </style>
 </head>
 <body>
@@ -387,14 +446,27 @@ button:focus-visible,.btn:focus-visible,.featurecard:focus-visible,.navbtn:focus
     </div>
     <div class="notice warn" style="margin-top:14px">सुरक्षा नियम: गोपनीय सूचना डेस्क, पाठक सबमिशन, विज्ञापन प्रकाशन और पुश भेजने जैसी सुविधाओं को आवश्यक अनुमति, डेटा सुरक्षा और परीक्षण के बाद ही सक्रिय किया जाएगा।</div>
    </section>
-   <section id="page-overview" class="page">
-    <div class="welcome"><div><div class="eyebrow">NEWSROOM OVERVIEW</div><h2 id="dashboardHeading">न्यूज़रूम डैशबोर्ड</h2><p id="dashboardSubheading">खबरों, संपादकीय काम और टीम की गतिविधियों का एकीकृत दृश्य।</p><div class="formactions" style="margin-top:12px"><button class="btn gold" id="rolePrimaryAction" type="button">＋ नई खबर लिखें</button><button class="btn soft" id="roleSecondaryAction" type="button">मेरी खबरें</button></div></div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="btn soft hidden" id="enableNewsAlerts" type="button">खबर अपडेट नोटिफिकेशन चालू करें</button><div class="datepill" id="today"></div></div></div>
-    <div class="stats" id="stats"></div>
-    <div class="grid2">
-     <div class="panel"><div class="panelhead"><h3>हाल की खबरें</h3><button class="btn soft" data-goto="articles">सभी खबरें देखें</button></div><div id="recentArticles"></div></div>
-     <div class="panel"><div class="panelhead"><h3>संपादकीय कतार</h3><span class="muted small">Review queue</span></div><div id="queue"></div></div>
+   <section id="page-overview" class="page dashboard-page">
+    <div class="dashboard-hero">
+     <div class="dashboard-brandline"><span class="dashboard-mark">म</span><div><div class="eyebrow">MANAS NEWS-24 · NEWSROOM</div><h2 id="dashboardHeading">न्यूज़रूम डैशबोर्ड</h2><p id="dashboardSubheading">खबरों, संपादकीय काम और टीम की गतिविधियों का एकीकृत दृश्य।</p></div></div>
+     <div class="dashboard-hero-actions"><button class="btn gold" id="rolePrimaryAction" type="button">＋ नई खबर लिखें</button><button class="btn soft" id="roleSecondaryAction" type="button">मेरी खबरें</button><button class="btn soft hidden" id="enableNewsAlerts" type="button">🔔 नोटिफिकेशन</button></div>
+     <div class="dashboard-date" id="today"></div>
     </div>
-    <div class="notice">प्रकाशन क्रम: पहले खबर को संपादकीय समीक्षा में स्वीकृत करें। इसके बाद Blogger प्रकाशन डेस्क से Google खाते की अनुमति लेकर प्रकाशित करें। वास्तविक Blogger लिंक और प्रकाशन स्थिति न्यूज़रूम में स्वतः दर्ज होगी।</div>
+    <div class="dashboard-section-title"><span>आज का न्यूज़रूम</span><span class="dashboard-live"><i></i> कार्यक्षमता सारांश</span></div>
+    <div class="stats dashboard-stats" id="stats"></div>
+    <div class="dashboard-quickgrid" aria-label="त्वरित सुविधाएं">
+     <button class="dashboard-quickcard" data-goto="articles"><span class="quick-icon">▤</span><strong>समाचार प्रबंधन</strong><small>खबरें देखें और व्यवस्थित करें</small></button>
+     <button class="dashboard-quickcard" data-goto="editor"><span class="quick-icon">✎</span><strong>नई खबर लिखें</strong><small>कच्ची जानकारी से खबर तैयार करें</small></button>
+     <button class="dashboard-quickcard" data-goto="media"><span class="quick-icon">▧</span><strong>मीडिया लाइब्रेरी</strong><small>फोटो और वीडियो प्रबंधन</small></button>
+     <button class="dashboard-quickcard admin-editor-only" data-goto="team"><span class="quick-icon">♙</span><strong>टीम प्रबंधन</strong><small>रिपोर्टर और संपादक</small></button>
+     <button class="dashboard-quickcard admin-editor-only" data-goto="ads"><span class="quick-icon">▣</span><strong>विज्ञापन प्रबंधन</strong><small>अभियान और विज्ञापन</small></button>
+     <button class="dashboard-quickcard" data-goto="features"><span class="quick-icon">✦</span><strong>सभी सुविधाएं</strong><small>न्यूज़रूम टूल और सेवाएं</small></button>
+    </div>
+    <div class="dashboard-panels">
+     <div class="panel dashboard-panel"><div class="panelhead"><h3>📰 हाल की खबरें</h3><button class="btn soft" data-goto="articles">सभी खबरें देखें →</button></div><div id="recentArticles"></div></div>
+     <div class="panel dashboard-panel"><div class="panelhead"><h3>☷ संपादकीय कतार</h3><span class="dashboard-live"><i></i> समीक्षा</span></div><div id="queue"></div></div>
+    </div>
+    <div class="notice dashboard-note">प्रकाशन क्रम: पहले खबर को संपादकीय समीक्षा में स्वीकृत करें। इसके बाद Blogger प्रकाशन डेस्क से Google खाते की अनुमति लेकर प्रकाशित करें। वास्तविक Blogger लिंक और प्रकाशन स्थिति न्यूज़रूम में स्वतः दर्ज होगी।</div>
    </section>
    <section id="page-articles" class="page hidden">
     <div class="welcome"><div><div class="eyebrow">CONTENT DESK</div><h2>समाचार प्रबंधन</h2><p>ड्राफ्ट, समीक्षा, स्वीकृत और प्रकाशित खबरों को व्यवस्थित करें।</p></div><button class="btn gold" data-goto="editor">＋ नई खबर लिखें</button></div>
