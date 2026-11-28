@@ -661,6 +661,16 @@ button:focus-visible,.btn:focus-visible,.featurecard:focus-visible,.navbtn:focus
  #appView.reporter-role .sidebar .navicon{display:none}
 }
 
+
+/* Profile image itself is the photo picker; no separate action button */
+#page-overview .dashboard-mark[role="button"]{cursor:pointer;outline-offset:4px;transition:transform .16s ease,box-shadow .16s ease}
+#page-overview .dashboard-mark[role="button"]:hover{transform:translateY(-1px);box-shadow:0 9px 22px #0004}
+#page-overview .dashboard-mark[role="button"]:focus-visible{outline:3px solid #f2c65d}
+#page-overview .dashboard-mark.uploading-profile-photo{opacity:.65;filter:saturate(.6);pointer-events:none}
+#page-overview.reporter-dashboard-role .dashboard-hero-actions{grid-template-columns:repeat(2,minmax(0,1fr))}
+#page-overview.reporter-dashboard-role .dashboard-hero-actions #rolePrimaryAction,
+#page-overview.reporter-dashboard-role .dashboard-hero-actions #roleSecondaryAction{grid-column:auto;width:100%}
+
 </style>
 </head>
 <body>
@@ -744,8 +754,8 @@ button:focus-visible,.btn:focus-visible,.featurecard:focus-visible,.navbtn:focus
    </section>
    <section id="page-overview" class="page dashboard-page">
     <div class="dashboard-hero">
-     <div class="dashboard-brandline"><span class="dashboard-mark" id="dashboardProfileMark">म</span><div><div class="eyebrow">MANAS NEWS-24 · NEWSROOM</div><h2 id="dashboardHeading">न्यूज़रूम डैशबोर्ड</h2><p id="dashboardSubheading">खबरों, संपादकीय काम और टीम की गतिविधियों का एकीकृत दृश्य।</p></div></div>
-     <div class="dashboard-hero-actions"><button class="btn gold" id="rolePrimaryAction" type="button">＋ नई खबर लिखें</button><button class="btn soft" id="roleSecondaryAction" type="button">मेरी खबरें</button><button class="btn soft" id="profilePhotoBtn" type="button">📷 फोटो बदलें</button><input id="profilePhotoInput" type="file" accept="image/jpeg,image/png,image/webp" hidden><button class="btn soft hidden" id="enableNewsAlerts" type="button">🔔 नोटिफिकेशन</button></div>
+     <div class="dashboard-brandline"><span class="dashboard-mark" id="dashboardProfileMark" role="button" tabindex="0" title="प्रोफाइल फोटो बदलने के लिए क्लिक करें" aria-label="प्रोफाइल फोटो चुनें">म</span><div><div class="eyebrow">MANAS NEWS-24 · NEWSROOM</div><h2 id="dashboardHeading">न्यूज़रूम डैशबोर्ड</h2><p id="dashboardSubheading">खबरों, संपादकीय काम और टीम की गतिविधियों का एकीकृत दृश्य।</p></div></div>
+     <div class="dashboard-hero-actions"><button class="btn gold" id="rolePrimaryAction" type="button">＋ नई खबर लिखें</button><button class="btn soft" id="roleSecondaryAction" type="button">मेरी खबरें</button><input id="profilePhotoInput" type="file" accept="image/jpeg,image/png,image/webp" hidden><button class="btn soft hidden" id="enableNewsAlerts" type="button">🔔 नोटिफिकेशन</button></div>
      <div class="dashboard-date" id="today"></div>
     </div>
     <div class="dashboard-section-title"><span>आज का न्यूज़रूम</span><span class="dashboard-live"><i></i> कार्यक्षमता सारांश</span></div>
@@ -926,7 +936,7 @@ async function saveProfilePhoto(file){
  if(file.size>5*1024*1024){toast('प्रोफाइल फोटो अधिकतम 5 MB की हो सकती है।');return}
  const ext=file.type==='image/png'?'png':file.type==='image/webp'?'webp':'jpg';
  const path=currentUser.id+'/profile-'+Date.now()+'.'+ext;
- const btn=$('profilePhotoBtn');btn.disabled=true;btn.textContent='फोटो अपलोड हो रही है…';
+ const mark=$('dashboardProfileMark');if(mark){mark.setAttribute('aria-busy','true');mark.classList.add('uploading-profile-photo')}
  try{
   const {error:uploadError}=await supabase.storage.from('news-media').upload(path,file,{contentType:file.type,upsert:false});
   if(uploadError)throw new Error('फोटो अपलोड नहीं हुई: '+uploadError.message);
@@ -938,9 +948,11 @@ async function saveProfilePhoto(file){
   updateReporterDashboardProfile(currentUser);
   toast('आपकी प्रोफाइल फोटो सफलतापूर्वक सेट हो गई।');
  }catch(error){toast(error.message||'प्रोफाइल फोटो सेव नहीं हो सकी।')}
- finally{btn.disabled=false;btn.textContent='📷 फोटो बदलें';$('profilePhotoInput').value=''}
+ finally{if(mark){mark.removeAttribute('aria-busy');mark.classList.remove('uploading-profile-photo')}$('profilePhotoInput').value=''}
 }
-$('profilePhotoBtn').onclick=()=>$('profilePhotoInput').click();
+const profilePhotoBox=$('dashboardProfileMark');
+profilePhotoBox.onclick=()=>$('profilePhotoInput').click();
+profilePhotoBox.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();$('profilePhotoInput').click()}};
 $('profilePhotoInput').onchange=()=>saveProfilePhoto($('profilePhotoInput').files?.[0]);
 
 function setRoleUI(){$('appView').classList.toggle('reporter-role',role==='reporter');$('page-overview').classList.toggle('reporter-dashboard-role',role==='reporter');$('reporterSubmitActions').classList.toggle('hidden',canEditAll());$('editorSaveActions').classList.toggle('hidden',!canEditAll());const adminOnly=['team','ads','features','confidential','analytics'];adminOnly.forEach(p=>{const el=document.querySelector('[data-page="'+p+'"]');if(el)el.classList.toggle('hidden',role!=='admin')});document.querySelectorAll('[data-admin-only]').forEach(x=>x.classList.toggle('hidden',role!=='admin'));document.querySelectorAll('.reporter-hide').forEach(x=>x.classList.toggle('hidden',role==='reporter'));document.querySelectorAll('.admin-editor-only,.editor-admin-only').forEach(x=>x.classList.toggle('hidden',!canEditAll()));const settings=document.querySelector('[data-page="settings"]');if(settings)settings.classList.add('hidden');$('dashboardHeading').textContent=role==='reporter'?(profile?.display_name||'रिपोर्टर'):role==='editor'?'संपादकीय डेस्क':'एडमिन डैशबोर्ड';$('dashboardSubheading').textContent=role==='reporter'?(profile?.dateline||'स्थान निर्धारित नहीं'):role==='editor'?'रिपोर्टरों की खबरें जांचें, सुधारें और प्रकाशन पूरा करें।':'टीम, खबरें, मीडिया और न्यूज़रूम की सभी व्यवस्थाएं नियंत्रित करें।';updateReporterDashboardProfile(currentUser);$('rolePrimaryAction').textContent=role==='editor'?'समीक्षा कतार खोलें':role==='admin'?'सभी खबरें देखें':'＋ नई खबर लिखें';$('roleSecondaryAction').textContent=role==='reporter'?'मेरी खबरें':role==='editor'?'नई खबर लिखें':'टीम प्रबंधन';$('rolePrimaryAction').onclick=()=>{if(role==='reporter')showPage('editor');else{showPage('articles');if(role==='editor'){$('statusFilter').value='queue';renderArticlesTable()}}};$('roleSecondaryAction').onclick=()=>showPage(role==='admin'?'team':role==='editor'?'editor':'articles');const filter=$('statusFilter');if(role==='editor'){filter.value='queue';filter.options[0].textContent='सभी खबरें';}else{filter.value='';filter.options[0].textContent='सभी स्थिति';}}
