@@ -1065,6 +1065,7 @@ function bindSingleMediaPicker(inputId,previewId,kind){
 bindSingleMediaPicker('articleImageFile','articleImagePreview','image');
 bindSingleMediaPicker('articleVideoFile','articleVideoPreview','video');
 async function editArticle(id){
+ sourceImportMeta=null;$('sourceArticleUrl').value='';$('sourceImportStatus').textContent='स्रोत से प्राप्त सामग्री की पुष्टि करें। स्रोत का नाम और लिंक संपादकीय रिकॉर्ड में सुरक्षित रहेगा।';
  try{
   const {data:a,error}=await supabase.from('news_articles').select('*').eq('id',id).single();
   if(error||!a)throw new Error(error?.message||'खबर नहीं मिली।');
