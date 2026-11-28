@@ -848,14 +848,6 @@ async function uploadEditorMedia(file,kind){
  if(meta.error)throw new Error('मीडिया अपलोड हुआ, लेकिन लाइब्रेरी विवरण सेव नहीं हुआ: '+meta.error.message);
  return publicUrl;
 }
-function bindArticleMediaPreview(inputId,previewId,kind){
- $(inputId).onchange=()=>{
-  const file=$(inputId).files?.[0],box=$(previewId);if(!file){box.innerHTML='';return}
-  const allowed=kind==='image'?['image/jpeg','image/png','image/webp']:['video/mp4','video/webm'];
-  if(!allowed.includes(file.type)||file.size>50*1024*1024){$(inputId).value='';box.textContent=kind==='image'?'मान्य फोटो चुनें (JPG/PNG/WebP, 50 MB तक)।':'मान्य वीडियो चुनें (MP4/WebM, 50 MB तक)।';return}
-  renderSelectedArticleFile(inputId,previewId,kind);
- };
-}
 function resetArticle(){ $('articleForm').reset();reporterRawBackup='';reporterGeneratedText='';reporterShowingRaw=false;reporterAiReady=false;$('rawToggleBtn').classList.add('hidden');$('rawToggleBtn').textContent='कच्ची जानकारी देखें';$('gpsStatus').textContent='GPS लोकेशन वैकल्पिक है। स्थान का नाम नीचे लिखें।';$('statusInput').value='submitted';$('generatedTitleWrap').classList.remove('hidden');$('generatedSummaryWrap').classList.add('hidden');$('rawInputPanel').classList.remove('hidden');$('aiStatus').textContent='';$('aiResult').classList.add('hidden');$('editorialHistoryPanel').classList.add('hidden');$('editorialHistory').textContent='';$('articleId').value='';$('rawFacts').value='';$('articleSlug').value='';renderExistingArticleMedia(null,null);$('articleMediaFiles').value='';$('articleMediaPreview').textContent='';aiDraftResult=null;$('editorHeading').textContent='नई खबर';$('statusInput').innerHTML='<option value="submitted">समीक्षा हेतु भेजें</option>'; }
 $('resetArticleBtn').onclick=resetArticle;
 async function resolveArticleSlug(title,id){
