@@ -969,7 +969,7 @@ async function runAiEditor(mode){
   btn.disabled=false;btn.textContent=mode==='draft'?'AI से खबर तैयार करें / दोबारा तैयार करें':(mode==='revise'?'निर्देशानुसार फिर से संपादित करें':(mode==='translate'?'चुनी भाषा में अनुवाद':'भाषा और व्याकरण सुधारें'));
  }
 }
-window.runAiEditor=runAiEditor; $('aiDraftBtn').onclick=()=>runAiEditor('draft');
+window.runAiEditor=runAiEditor; const aiApplyBtn=$('aiDraftBtn'); aiApplyBtn.onclick=()=>runAiEditor('draft');
 $('rawToggleBtn').onclick=()=>{if(!reporterAiReady)return;if(reporterShowingRaw){$('rawFacts').value=reporterGeneratedText;$('rawToggleBtn').textContent='कच्ची जानकारी देखें';reporterShowingRaw=false;}else{reporterGeneratedText=$('rawFacts').value;$('rawFacts').value=reporterRawBackup;$('rawToggleBtn').textContent='तैयार खबर पर लौटें';reporterShowingRaw=true;}};
 function wordCount(v){return String(v||'').trim()?String(v).trim().split(/\s+/u).length:0}
 function updateWordCounts(){$('slugCount').textContent=wordCount($('articleSlug').value)+' / 10';$('titleCount').textContent=wordCount($('title').value)+' / 30';}
