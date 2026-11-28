@@ -1338,6 +1338,7 @@ async function importSourceArticle(){
  finally{button.disabled=false;button.textContent='लिंक से तथ्य प्राप्त करें'}
 }
 $('importSourceArticleBtn').onclick=importSourceArticle;
+$('sourceArticleUrl').addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();importSourceArticle()}});
 
 window.runAiEditor=runAiEditor; const aiApplyBtn=$('aiDraftBtn'); aiApplyBtn.onclick=()=>runAiEditor('draft');
 $('rawToggleBtn').onclick=()=>{if(!reporterAiReady)return;if(reporterShowingRaw){$('rawFacts').value=reporterGeneratedText;$('rawToggleBtn').textContent='कच्ची जानकारी देखें';reporterShowingRaw=false;}else{reporterGeneratedText=$('rawFacts').value;$('rawFacts').value=reporterRawBackup;$('rawToggleBtn').textContent='तैयार खबर पर लौटें';reporterShowingRaw=true;}};
