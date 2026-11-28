@@ -607,6 +607,23 @@ button:focus-visible,.btn:focus-visible,.featurecard:focus-visible,.navbtn:focus
  #page-overview.reporter-dashboard-role .dashboard-quickcard strong{font-size:11px}
 }
 
+
+/* Remove reporter dashboard duplicate shortcuts; keep one clear action per task */
+#page-overview.reporter-dashboard-role .dashboard-quickgrid{display:none!important}
+#page-overview.reporter-dashboard-role .dashboard-panels .dashboard-panel:first-child .panelhead>[data-goto="articles"]{display:none!important}
+#page-overview.reporter-dashboard-role .dashboard-hero-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:stretch}
+#page-overview.reporter-dashboard-role .dashboard-hero-actions .btn{min-width:0}
+#page-overview.reporter-dashboard-role .dashboard-section-title{margin-top:0}
+#page-overview.reporter-dashboard-role .dashboard-panels{margin-top:4px}
+#page-overview.reporter-dashboard-role .dashboard-panel .panelhead{display:flex;align-items:center;justify-content:space-between;gap:8px}
+#page-overview.reporter-dashboard-role .dashboard-note{padding:10px 12px;border-radius:12px;line-height:1.45}
+@media(max-width:560px){
+ #page-overview.reporter-dashboard-role .dashboard-hero-actions{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+ #page-overview.reporter-dashboard-role .dashboard-hero-actions .btn{white-space:normal;min-height:40px;padding:6px 4px;font-size:10px}
+ #page-overview.reporter-dashboard-role .dashboard-panels{margin-top:2px}
+ #page-overview.reporter-dashboard-role .dashboard-panel .panelhead{min-height:30px}
+}
+
 </style>
 </head>
 <body>
