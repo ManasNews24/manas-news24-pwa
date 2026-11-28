@@ -538,6 +538,13 @@ button:focus-visible,.btn:focus-visible,.featurecard:focus-visible,.navbtn:focus
 #appView .brandmark,#appView .dashboard-mark{overflow:hidden;position:relative}
 #appView .brandmark img,#appView .dashboard-mark img{display:block;width:100%;height:100%;object-fit:cover;border-radius:inherit}
 #appView .brandmark.has-profile-photo,#appView .dashboard-mark.has-profile-photo{background:#e8edf5;color:transparent}
+
+/* Personal profile photo for every newsroom role */
+#appView .brandmark,#appView .dashboard-mark{overflow:hidden;position:relative}
+#appView .brandmark img,#appView .dashboard-mark img{display:block;width:100%;height:100%;object-fit:cover;border-radius:inherit}
+#appView .brandmark.has-profile-photo,#appView .dashboard-mark.has-profile-photo{background:#e8edf5;color:transparent}
+#appView #profilePhotoBtn{border:1px solid #ffffff55;background:#ffffff18;color:#fff}
+@media(max-width:560px){#appView #profilePhotoBtn{font-size:11px;padding:8px 9px;min-height:38px}}
 </style>
 </head>
 <body>
@@ -622,7 +629,7 @@ button:focus-visible,.btn:focus-visible,.featurecard:focus-visible,.navbtn:focus
    <section id="page-overview" class="page dashboard-page">
     <div class="dashboard-hero">
      <div class="dashboard-brandline"><span class="dashboard-mark" id="dashboardProfileMark">म</span><div><div class="eyebrow">MANAS NEWS-24 · NEWSROOM</div><h2 id="dashboardHeading">न्यूज़रूम डैशबोर्ड</h2><p id="dashboardSubheading">खबरों, संपादकीय काम और टीम की गतिविधियों का एकीकृत दृश्य।</p></div></div>
-     <div class="dashboard-hero-actions"><button class="btn gold" id="rolePrimaryAction" type="button">＋ नई खबर लिखें</button><button class="btn soft" id="roleSecondaryAction" type="button">मेरी खबरें</button><button class="btn soft hidden" id="enableNewsAlerts" type="button">🔔 नोटिफिकेशन</button></div>
+     <div class="dashboard-hero-actions"><button class="btn gold" id="rolePrimaryAction" type="button">＋ नई खबर लिखें</button><button class="btn soft" id="roleSecondaryAction" type="button">मेरी खबरें</button><button class="btn soft" id="profilePhotoBtn" type="button">📷 फोटो बदलें</button><input id="profilePhotoInput" type="file" accept="image/jpeg,image/png,image/webp" hidden><button class="btn soft hidden" id="enableNewsAlerts" type="button">🔔 नोटिफिकेशन</button></div>
      <div class="dashboard-date" id="today"></div>
     </div>
     <div class="dashboard-section-title"><span>आज का न्यूज़रूम</span><span class="dashboard-live"><i></i> कार्यक्षमता सारांश</span></div>
@@ -633,7 +640,7 @@ button:focus-visible,.btn:focus-visible,.featurecard:focus-visible,.navbtn:focus
      <button class="dashboard-quickcard reporter-hide" data-goto="media"><span class="quick-icon">▧</span><strong>मीडिया लाइब्रेरी</strong><small>फोटो और वीडियो प्रबंधन</small></button>
      <button class="dashboard-quickcard admin-editor-only" data-goto="team"><span class="quick-icon">♙</span><strong>टीम प्रबंधन</strong><small>रिपोर्टर और संपादक</small></button>
      <button class="dashboard-quickcard admin-editor-only" data-goto="ads"><span class="quick-icon">▣</span><strong>विज्ञापन प्रबंधन</strong><small>अभियान और विज्ञापन</small></button>
-     <button class="dashboard-quickcard" data-goto="features"><span class="quick-icon">✦</span><strong>सभी सुविधाएं</strong><small>न्यूज़रूम टूल और सेवाएं</small></button>
+     <button class="dashboard-quickcard reporter-hide" data-goto="features"><span class="quick-icon">✦</span><strong>सभी सुविधाएं</strong><small>न्यूज़रूम टूल और सेवाएं</small></button>
     </div>
     <div class="dashboard-panels">
      <div class="panel dashboard-panel"><div class="panelhead"><h3>📰 हाल की खबरें</h3><button class="btn soft" data-goto="articles">सभी खबरें देखें →</button></div><div id="recentArticles"></div></div>
@@ -787,13 +794,8 @@ function updateEditorIdentity(){$('editorIdentity').textContent=profile?.display
 function showPage(page){document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));$('page-'+page).classList.remove('hidden');document.body.classList.toggle('page-focus',page!=='overview');document.body.classList.toggle('editor-focus',page==='editor');document.querySelectorAll('.navbtn').forEach(x=>x.classList.toggle('active',x.dataset.page===page));if(page==='editor'){updateEditorIdentity();if(!$('articleId').value){$('dateline').value=profile?.dateline||'';}}if(page==='articles'){if(role==='editor')$('statusFilter').value='queue';loadArticles();}if(page==='media')loadMedia();if(page==='readerReports')loadReaderReports();if(page==='confidential')loadConfidentialTips();if(page==='analytics')loadNewsroomAnalytics();if(page==='team')loadTeam();if(page==='ads')loadAds();if(page==='overview')loadOverview();window.scrollTo({top:0,behavior:'instant'});if(page==='editor')setTimeout(()=>$('rawFacts')?.focus({preventScroll:true}),80)}
 function ensurePageHomeButtons(){document.querySelectorAll('.page:not(#page-overview)').forEach(page=>{if(page.id!=='page-editor'&&!page.querySelector('.page-home-btn')){const btn=document.createElement('button');btn.type='button';btn.className='page-home-btn';btn.title='डैशबोर्ड पर जाएं';btn.setAttribute('aria-label','डैशबोर्ड पर जाएं');btn.textContent='⌂';btn.addEventListener('click',()=>showPage('overview'));page.insertBefore(btn,page.firstChild)}if(page.id==='page-editor'||page.querySelector('.page-shortcuts'))return;const bar=document.createElement('nav');bar.className='page-shortcuts';bar.setAttribute('aria-label','इस पेज के त्वरित विकल्प');const targets=[...page.querySelectorAll(':scope > .panel,:scope > .welcome,:scope > .featuregrid,:scope > .notice')].filter(el=>!el.classList.contains('page-shortcuts'));targets.forEach((el,index)=>{if(!el.id)el.id='quick-'+page.id+'-'+index;const title=el.querySelector('h2,h3,.panelhead h3')?.textContent?.trim()||el.querySelector('button')?.textContent?.trim()||'विकल्प '+(index+1);const b=document.createElement('button');b.type='button';b.textContent=title.slice(0,18);b.title=title;b.addEventListener('click',()=>el.scrollIntoView({behavior:'smooth',block:'start'}));bar.appendChild(b)});page.insertBefore(bar,page.children[1]||null)})}
 function updateReporterDashboardProfile(user=currentUser){
- if(role!=='reporter')return;
- const name=profile?.display_name?.trim()||'रिपोर्टर';
- const place=profile?.dateline?.trim()||'स्थान निर्धारित नहीं';
- $('dashboardHeading').textContent=name;
- $('dashboardSubheading').textContent=place;
- const meta=user?.user_metadata||{},appMeta=user?.app_metadata||{};
- const rawPhoto=meta.profile_photo_url||meta.avatar_url||meta.photo_url||meta.picture||appMeta.avatar_url||appMeta.picture||'';
+ const name=profile?.display_name?.trim()||'मानस न्यूज-24';
+ const rawPhoto=user?.user_metadata?.profile_photo_url||user?.user_metadata?.avatar_url||user?.user_metadata?.picture||'';
  let photo='';
  try{const u=new URL(rawPhoto,location.href);if(['https:','http:'].includes(u.protocol))photo=u.href}catch(e){}
  const marks=[$('dashboardProfileMark'),$('topProfileMark')].filter(Boolean);
@@ -802,7 +804,30 @@ function updateReporterDashboardProfile(user=currentUser){
   else{mark.textContent='म';mark.classList.remove('has-profile-photo')}
  });
 }
-function setRoleUI(){$('reporterSubmitActions').classList.toggle('hidden',canEditAll());$('editorSaveActions').classList.toggle('hidden',!canEditAll());const adminOnly=['team','ads','features','confidential','analytics'];adminOnly.forEach(p=>{const el=document.querySelector('[data-page="'+p+'"]');if(el)el.classList.toggle('hidden',role!=='admin')});document.querySelectorAll('[data-admin-only]').forEach(x=>x.classList.toggle('hidden',role!=='admin'));document.querySelectorAll('.reporter-hide').forEach(x=>x.classList.toggle('hidden',role==='reporter'));document.querySelectorAll('.admin-editor-only,.editor-admin-only').forEach(x=>x.classList.toggle('hidden',!canEditAll()));const settings=document.querySelector('[data-page="settings"]');if(settings)settings.classList.add('hidden');$('dashboardHeading').textContent=role==='reporter'?(profile?.display_name||'रिपोर्टर'):role==='editor'?'संपादकीय डेस्क':'एडमिन डैशबोर्ड';$('dashboardSubheading').textContent=role==='reporter'?(profile?.dateline||'स्थान निर्धारित नहीं'):role==='editor'?'रिपोर्टरों की खबरें जांचें, सुधारें और प्रकाशन पूरा करें।':'टीम, खबरें, मीडिया और न्यूज़रूम की सभी व्यवस्थाएं नियंत्रित करें।';if(role==='reporter')updateReporterDashboardProfile();else{ $('dashboardProfileMark').textContent='म';$('topProfileMark').textContent='म';$('dashboardProfileMark').classList.remove('has-profile-photo');$('topProfileMark').classList.remove('has-profile-photo');}$('rolePrimaryAction').textContent=role==='editor'?'समीक्षा कतार खोलें':role==='admin'?'सभी खबरें देखें':'＋ नई खबर लिखें';$('roleSecondaryAction').textContent=role==='reporter'?'मेरी खबरें':role==='editor'?'नई खबर लिखें':'टीम प्रबंधन';$('rolePrimaryAction').onclick=()=>{if(role==='reporter')showPage('editor');else{showPage('articles');if(role==='editor'){$('statusFilter').value='queue';renderArticlesTable()}}};$('roleSecondaryAction').onclick=()=>showPage(role==='admin'?'team':role==='editor'?'editor':'articles');const filter=$('statusFilter');if(role==='editor'){filter.value='queue';filter.options[0].textContent='सभी खबरें';}else{filter.value='';filter.options[0].textContent='सभी स्थिति';}}
+async function saveProfilePhoto(file){
+ if(!file||!currentUser)return;
+ if(!['image/jpeg','image/png','image/webp'].includes(file.type)){toast('फोटो JPG, PNG या WebP फॉर्मेट में चुनें।');return}
+ if(file.size>5*1024*1024){toast('प्रोफाइल फोटो अधिकतम 5 MB की हो सकती है।');return}
+ const ext=file.type==='image/png'?'png':file.type==='image/webp'?'webp':'jpg';
+ const path=currentUser.id+'/profile-'+Date.now()+'.'+ext;
+ const btn=$('profilePhotoBtn');btn.disabled=true;btn.textContent='फोटो अपलोड हो रही है…';
+ try{
+  const {error:uploadError}=await supabase.storage.from('news-media').upload(path,file,{contentType:file.type,upsert:false});
+  if(uploadError)throw new Error('फोटो अपलोड नहीं हुई: '+uploadError.message);
+  const {data}=supabase.storage.from('news-media').getPublicUrl(path);
+  const nextMeta={...(currentUser.user_metadata||{}),profile_photo_url:data.publicUrl};
+  const {data:updated,error:updateError}=await supabase.auth.updateUser({data:nextMeta});
+  if(updateError)throw new Error('फोटो सेव नहीं हुई: '+updateError.message);
+  currentUser=updated.user||currentUser;
+  updateReporterDashboardProfile(currentUser);
+  toast('आपकी प्रोफाइल फोटो सफलतापूर्वक सेट हो गई।');
+ }catch(error){toast(error.message||'प्रोफाइल फोटो सेव नहीं हो सकी।')}
+ finally{btn.disabled=false;btn.textContent='📷 फोटो बदलें';$('profilePhotoInput').value=''}
+}
+$('profilePhotoBtn').onclick=()=>$('profilePhotoInput').click();
+$('profilePhotoInput').onchange=()=>saveProfilePhoto($('profilePhotoInput').files?.[0]);
+
+function setRoleUI(){$('reporterSubmitActions').classList.toggle('hidden',canEditAll());$('editorSaveActions').classList.toggle('hidden',!canEditAll());const adminOnly=['team','ads','features','confidential','analytics'];adminOnly.forEach(p=>{const el=document.querySelector('[data-page="'+p+'"]');if(el)el.classList.toggle('hidden',role!=='admin')});document.querySelectorAll('[data-admin-only]').forEach(x=>x.classList.toggle('hidden',role!=='admin'));document.querySelectorAll('.reporter-hide').forEach(x=>x.classList.toggle('hidden',role==='reporter'));document.querySelectorAll('.admin-editor-only,.editor-admin-only').forEach(x=>x.classList.toggle('hidden',!canEditAll()));const settings=document.querySelector('[data-page="settings"]');if(settings)settings.classList.add('hidden');$('dashboardHeading').textContent=role==='reporter'?(profile?.display_name||'रिपोर्टर'):role==='editor'?'संपादकीय डेस्क':'एडमिन डैशबोर्ड';$('dashboardSubheading').textContent=role==='reporter'?(profile?.dateline||'स्थान निर्धारित नहीं'):role==='editor'?'रिपोर्टरों की खबरें जांचें, सुधारें और प्रकाशन पूरा करें।':'टीम, खबरें, मीडिया और न्यूज़रूम की सभी व्यवस्थाएं नियंत्रित करें।';updateReporterDashboardProfile(currentUser);$('rolePrimaryAction').textContent=role==='editor'?'समीक्षा कतार खोलें':role==='admin'?'सभी खबरें देखें':'＋ नई खबर लिखें';$('roleSecondaryAction').textContent=role==='reporter'?'मेरी खबरें':role==='editor'?'नई खबर लिखें':'टीम प्रबंधन';$('rolePrimaryAction').onclick=()=>{if(role==='reporter')showPage('editor');else{showPage('articles');if(role==='editor'){$('statusFilter').value='queue';renderArticlesTable()}}};$('roleSecondaryAction').onclick=()=>showPage(role==='admin'?'team':role==='editor'?'editor':'articles');const filter=$('statusFilter');if(role==='editor'){filter.value='queue';filter.options[0].textContent='सभी खबरें';}else{filter.value='';filter.options[0].textContent='सभी स्थिति';}}
 function showLogin(){ $('recoveryView').classList.add('hidden');$('loginForm').classList.remove('hidden');$('loginView').classList.remove('hidden');$('pendingAccessView').classList.add('hidden');$('appView').classList.add('hidden') }
 function showPasswordRecovery(){ $('loginForm').classList.add('hidden');$('recoveryView').classList.remove('hidden');$('loginView').classList.remove('hidden');$('appView').classList.add('hidden') }
 async function boot(){const {data:{session}}=await supabase.auth.getSession();if(new URLSearchParams(location.search).has('reset')){showPasswordRecovery();return}if(session)await enterApp(session.user);else showLogin()}
